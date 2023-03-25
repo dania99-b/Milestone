@@ -42,6 +42,18 @@ return [
         ],
     ],
 
+    'defaults' => [
+        'guard' => 'api',
+        'passwords' => 'users',
+    ],
+    
+    'guards' => [
+        'api' => [
+            'driver' => 'jwt',
+            'provider' => 'users',
+        ],
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | User Providers
@@ -107,5 +119,6 @@ return [
     */
 
     'password_timeout' => 10800,
+    'email_verification'=>true
 
 ];

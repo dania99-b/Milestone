@@ -13,24 +13,22 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('guests', function (Blueprint $table) {
+        Schema::create('questions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('email')->unique();
-            $table->string('phone')->unique();
-          //  $table->unsignedBigInteger('question_list_id'); 
-          //  $table->foreign('question_list_id')->references('id')->on('question_lists');
-       
+            $table->string('text');
+            $table->unsignedBigInteger('type_id'); 
+            $table->foreign('type_id')->references('id')->on('types');
+            $table->string('level');
         });
     }
 
     /**
      * Reverse the migrations.
-     * 
      *
      * @return void
      */
     public function down()
     {
-        Schema::dropIfExists('guests');
+        Schema::dropIfExists('questions'); 
     }
 };
