@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Reception extends Model
 {
     use HasFactory;
-
-
+    protected $fillable=[
+        'id',
+        'employee_id'
+        ];
+        public $timestamps = false;
     public function user(){
         $this->belongsTo(User::class);
     }

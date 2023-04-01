@@ -39,13 +39,31 @@ Route::post('/CreateTeacher',[\App\Http\Controllers\RegisterController::class,'R
 Route::post('/CreateReception',[\App\Http\Controllers\RegisterController::class,'RegisterReception']);
 Route::post('/CreateHr',[\App\Http\Controllers\RegisterController::class,'RegisterHR']);
 Route::post('/CreateAdmin',[\App\Http\Controllers\RegisterController::class,'RegisterAdmin']);
+Route::post('/AddRole',[PermissionController::class,'AddRole']);
 });
 
-Route::post('/AddRole',[PermissionController::class,'AddRole']);
+
 Route::post('/CreateGuest',[\App\Http\Controllers\RegisterController::class,'GuestVertification']);
 Route::post('/verify',[\App\Http\Controllers\RegisterController::class,'verifyEmail']);
 Route::get('/test',[\App\Http\Controllers\RegisterController::class,'test']);
 
 Route::group(['prefix' => 'reception', 'middleware' => ['role:Reception']], function() {
 Route::post('/CreatStudent',[\App\Http\Controllers\RegisterController::class,'RegisterStudent']);
+Route::post('/CreatClass',[\App\Http\Controllers\ReceptionController::class,'OpenClass']);
+Route::post('/CreatCourse',[\App\Http\Controllers\ReceptionController::class,'OpenCourse']);
+Route::post('/EditCourse',[\App\Http\Controllers\ReceptionController::class,'EditClass']);
+Route::post('/DeleteCourse',[\App\Http\Controllers\ReceptionController::class,'DeleteCourse']);
+Route::post('/DeleteClass',[\App\Http\Controllers\ReceptionController::class,'DeleteClass']);
+
+
+
+
 });
+Route::group(['prefix' => 'student', 'middleware' => ['role:Student']], function() {
+Route::post('/Attendence',[\App\Http\Controllers\StudentController::class,'scan']);
+
+});
+
+
+
+Route::post('/ResentVerificationCode',[\App\Http\Controllers\RegisterController::class,'resent_code']);

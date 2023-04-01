@@ -5,16 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Admin;
 use App\Models\Guest;
+use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\Employee;
+use App\Mail\VerifyEmail;
 use App\Models\Reception;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Human_Resource;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\EmployeeRequest;
-use App\Models\Student;
-use Illuminate\Support\Str;
 use Tymon\JWTAuth\Contracts\Providers\Auth;
+use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
 
 class RegisterController extends Controller
 {
@@ -22,7 +24,8 @@ class RegisterController extends Controller
     public function RegisterAdmin(EmployeeRequest $request)
     {
        
-       // $upload = $request->file('photo')->move('appimages/', $request->file('photo')->getClientOriginalName());
+        $upload = $request->file('images')->move('images/', $request->file('images')->getClientOriginalName());
+
         $mainuser = User::firstOrCreate([
             'first_name' => $request->validated()['first_name'],
             'last_name' => $request->validated()['last_name'],
@@ -30,10 +33,12 @@ class RegisterController extends Controller
             'password' => bcrypt($request->validated()['password']),
             'phone' => $request->validated()['phone'],
             'username' => $request->validated()['username'],
+          
            
         ]);
         $mainemployee = Admin::firstOrCreate([
-            'user_id' => $mainuser->id
+            'user_id' => $mainuser->id,
+            
         ]);
        
           
@@ -55,7 +60,7 @@ class RegisterController extends Controller
     public function RegisterTeacher(EmployeeRequest $request)
     {
    
-   // $upload = $request->file('photo')->move('appimages/', $request->file('photo')->getClientOriginalName());
+        $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
     $mainuser = User::firstOrCreate([
         'first_name' => $request->validated()['first_name'],
             'last_name' => $request->validated()['last_name'],
@@ -63,10 +68,12 @@ class RegisterController extends Controller
             'password' => bcrypt($request->validated()['password']),
             'phone' => $request->validated()['phone'],
             'username' => $request->validated()['username'],
+           
        
     ]);
     $mainemployee = Employee::firstOrCreate([
-        'user_id' => $mainuser->id
+        'user_id' => $mainuser->id,
+        'image'=>$upload
     ]);
     $mainteacher = Teacher::firstOrCreate([
         'employee_id' => $mainemployee->id,
@@ -90,8 +97,8 @@ public function RegisterReception(EmployeeRequest $request)
     {
 
         
-   
-   // $upload = $request->file('photo')->move('appimages/', $request->file('photo')->getClientOriginalName());
+        $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
+
     $mainuser = User::firstOrCreate([
           'first_name' => $request->validated()['first_name'],
             'last_name' => $request->validated()['last_name'],
@@ -99,10 +106,12 @@ public function RegisterReception(EmployeeRequest $request)
             'password' => bcrypt($request->validated()['password']),
             'phone' => $request->validated()['phone'],
             'username' => $request->validated()['username'],
+            
        
     ]);
     $mainemployee = Employee::firstOrCreate([
-        'user_id' => $mainuser->id
+        'user_id' => $mainuser->id,
+        'image'=>$upload
     ]);
     $mainreception = Reception::firstOrCreate([
         'employee_id' => $mainemployee->id,
@@ -125,8 +134,8 @@ public function RegisterReception(EmployeeRequest $request)
 
 public function RegisterHR(EmployeeRequest $request)
     {
-       
-       // $upload = $request->file('photo')->move('appimages/', $request->file('photo')->getClientOriginalName());
+        $upload = $request->file('images')->move('images/', $request->file('images')->getClientOriginalName());
+
         $mainuser = User::firstOrCreate([
             'first_name' => $request->validated()['first_name'],
             'last_name' => $request->validated()['last_name'],
@@ -134,10 +143,12 @@ public function RegisterHR(EmployeeRequest $request)
             'password' => bcrypt($request->validated()['password']),
             'phone' => $request->validated()['phone'],
             'username' => $request->validated()['username'],
+            'image'=>$upload
            
         ]);
         $mainemployee = Employee::firstOrCreate([
-            'user_id' => $mainuser->id
+            'user_id' => $mainuser->id,
+            'image'=>$upload
         ]);
         $mainreception = Human_Resource::firstOrCreate([
             'employee_id' => $mainemployee->id,
@@ -158,7 +169,8 @@ public function RegisterHR(EmployeeRequest $request)
 
 public function RegisterStudent(EmployeeRequest $request)
     {
-       
+        $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
+
         $mainstudent = User::firstOrCreate([
             'first_name' => $request->validated()['first_name'],
             'last_name' => $request->validated()['last_name'],
@@ -166,10 +178,12 @@ public function RegisterStudent(EmployeeRequest $request)
             'password' => bcrypt($request->validated()['password']),
             'phone' => $request->validated()['phone'],
             'username' => $request->validated()['username'],
+            
            
         ]);
         $student = Student::firstOrCreate([
-            'user_id' => $mainstudent->id
+            'user_id' => $mainstudent->id,
+            'image'=>$upload
         ]);
        
           
@@ -203,6 +217,7 @@ public function RegisterStudent(EmployeeRequest $request)
             'verification_code' => Str::random(4), // Generate a verification code
         ]);
 
+        
         // Send the verification code to the user's email
       //  Mail::send('emails.verification_code', ['code' => $guest->verification_code], function ($message) use ($guest) {
       //      $message->to($guest->email)->subject('Verify Your Email Address');
@@ -241,6 +256,29 @@ public function RegisterStudent(EmployeeRequest $request)
     $users = User::whereRoleIs('Admin')->get();
     return $users;
     }
+
+
+public function resent_code(Request $request){
+
+
+    $guest = Guest::where('email', $request->email)->first();
+
+    // If the user exists, generate a new verification code and send it to their email
+    if ($guest) {
+        $newVerificationCode = Str::random(4);
+        $guest->verification_code = $newVerificationCode;
+        $guest->save();
+
+        Mail::to($guest->email)->send(new VerifyEmail($guest));
+
+        // Return a success response
+        return response()->json(['message' => 'New verification code sent.'], 200);
+    }
+
+    // If the user doesn't exist, return an error response
+    return response()->json(['message' => 'User not found.'], 404);
+
+}
 
     
 
