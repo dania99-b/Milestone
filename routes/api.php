@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PermissionController;
 use Illuminate\Http\Request;
@@ -40,6 +41,10 @@ Route::post('/CreateReception',[\App\Http\Controllers\RegisterController::class,
 Route::post('/CreateHr',[\App\Http\Controllers\RegisterController::class,'RegisterHR']);
 Route::post('/CreateAdmin',[\App\Http\Controllers\RegisterController::class,'RegisterAdmin']);
 Route::post('/AddRole',[PermissionController::class,'AddRole']);
+Route::post('/EditTeacherInfo',[AdminController::class,'EditTeacherInfo']);
+Route::post('/EditReceptionInfo',[AdminController::class,'EditReceptionInfo']);
+Route::post('/EditHrnInfo',[AdminController::class,'EditHrInfo']);
+
 });
 
 
@@ -54,6 +59,9 @@ Route::post('/CreatCourse',[\App\Http\Controllers\ReceptionController::class,'Op
 Route::post('/EditCourse',[\App\Http\Controllers\ReceptionController::class,'EditClass']);
 Route::post('/DeleteCourse',[\App\Http\Controllers\ReceptionController::class,'DeleteCourse']);
 Route::post('/DeleteClass',[\App\Http\Controllers\ReceptionController::class,'DeleteClass']);
+Route::post('/EditCourse',[\App\Http\Controllers\ReceptionController::class,'EditCourse']);
+Route::post('/EditStudentInfo',[\App\Http\Controllers\ReceptionController::class,'EditStudentInfo']);
+
 
 
 

@@ -51,7 +51,7 @@ class RegisterController extends Controller
             'user' => $mainuser,
             'token' => $mainuser->createToken('tokens')->plainTextToken
     
-        ], '201');
+        ], '200');
 
 }
 
@@ -88,7 +88,7 @@ class RegisterController extends Controller
         'user' => $mainuser,
         'token' => $mainuser->createToken('tokens')->plainTextToken
 
-    ], '201');
+    ], '200');
 
 
 }
@@ -126,7 +126,7 @@ public function RegisterReception(EmployeeRequest $request)
         'user' => $mainuser,
         'token' => $mainuser->createToken('tokens')->plainTextToken
 
-    ], '201');
+    ], '200');
 
 
 }
@@ -163,7 +163,7 @@ public function RegisterHR(EmployeeRequest $request)
             'user' => $mainuser,
             'token' => $mainuser->createToken('tokens')->plainTextToken
     
-        ], '201');
+        ], '200');
 
 }
 
@@ -196,7 +196,7 @@ public function RegisterStudent(EmployeeRequest $request)
             'user' => $mainstudent,
             'token' => $mainstudent->createToken('tokens')->plainTextToken
     
-        ], '201');
+        ], '200');
 
 
 
