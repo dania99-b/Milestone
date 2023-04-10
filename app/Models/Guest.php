@@ -12,6 +12,10 @@ class Guest extends Model implements MustVerifyEmail
 
 {
     protected $fillable=[
+		'first_name',
+		'last_name',
+		'education',
+		'city_id',
         'id',
         'email',
         'password',

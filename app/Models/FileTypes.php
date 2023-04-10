@@ -5,17 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Type extends Model
+class FileTypes extends Model
 {
-    
     use HasFactory;
-    public $timestamps = false;
     protected $fillable = [
         'name'
-   
     ];
-    public function questions(){
-        $this->hasMany(Question::class);
+    public function files(){
+        $this->hasMany(EducationFile::class);
     }
 
 }

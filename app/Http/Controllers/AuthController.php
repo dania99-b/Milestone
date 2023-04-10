@@ -2,14 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Guest;
 use Illuminate\Http\Request;
+use App\Events\NotificationRecieved;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\WebSocketSuccessNotification;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 class AuthController extends Controller
 {
+
+
+    public function sendWebSocketRequest()
+{
+    // Send the WebSocket request here using Laravel WebSockets
+
+    // Trigger the event to notify the user
+    $user = User::find(auth()->user()->id);
+    event(new NotificationRecieved($user));
+
+    // Trigger the notification
+    Notification::send($user, new WebSocketSuccessNotification());
+}
     public function __construct()
     {
         $this->middleware('auth:api', ['except' => ['login']]);
@@ -22,15 +40,20 @@ class AuthController extends Controller
      */
     public function login()
     {
+       
         $credentials = request(['email', 'password']);
 
         if (! $token = auth()->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
+        //here to controle who to send the notification 
 
          $user = Auth::user();
         $user_roles = $user->roles()->pluck('name');
-
+      //  $user->notify(new WebSocketSuccessNotification('New order placed!'));
+       Notification::send($user, new WebSocketSuccessNotification('you are logged in'));
+    
+       event(new NotificationRecieved($user));
         return response()->json([
             'token' => $token,
             'user' => [

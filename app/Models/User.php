@@ -13,6 +13,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 class User extends Authenticatable implements JWTSubject
 {
     use LaratrustUserTrait;
+    use Notifiable;
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
@@ -30,6 +31,7 @@ class User extends Authenticatable implements JWTSubject
         'username',
     ];
 
+    
     /**
      * The attributes that should be hidden for serialization.
      *

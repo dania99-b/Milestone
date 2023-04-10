@@ -17,4 +17,7 @@ class Cv extends Model
     public function guest(){
         $this->belongsTo(Guest::class);
     }
+    public function advertisement(){
+        $this->belongsTo(Advertisment::class);
+    }
 }

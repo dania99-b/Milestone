@@ -52,9 +52,7 @@ class RegisterController extends Controller
             'token' => $mainuser->createToken('tokens')->plainTextToken
     
         ], '200');
-
 }
-
 
 
     public function RegisterTeacher(EmployeeRequest $request)
@@ -168,7 +166,7 @@ public function RegisterHR(EmployeeRequest $request)
 }
 
 public function RegisterStudent(EmployeeRequest $request)
-    {
+    {              
         $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
 
         $mainstudent = User::firstOrCreate([
@@ -198,13 +196,7 @@ public function RegisterStudent(EmployeeRequest $request)
     
         ], '200');
 
-
-
-
     }
-
-
-
 
     public function GuestVertification(Request $request)
     {

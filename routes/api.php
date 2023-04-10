@@ -71,7 +71,13 @@ Route::group(['prefix' => 'student', 'middleware' => ['role:Student']], function
 Route::post('/Attendence',[\App\Http\Controllers\StudentController::class,'scan']);
 
 });
+Route::group(['prefix' => 'teacher', 'middleware' => ['role:Teacher']], function() {
+    Route::post('/AddType',[\App\Http\Controllers\TeacherController::class,'AddType']);
+    Route::post('/AddQuestion',[\App\Http\Controllers\TeacherController::class,'AddQuestion']);
+    Route::post('/DeleteQuestion',[\App\Http\Controllers\TeacherController::class,'DeleteQuestion']);
+    Route::post('/MakeTest',[\App\Http\Controllers\TeacherController::class,'MakeTest']);
+   
 
-
+});
 
 Route::post('/ResentVerificationCode',[\App\Http\Controllers\RegisterController::class,'resent_code']);

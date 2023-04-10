@@ -29,7 +29,7 @@ class StudentController extends Controller
         $attendance->course_id = $course->id;
         $attendance->save();
         
-        return response()->json(['message' => 'Attendance recorded']);
+        return response()->json(['message' => 'Attendance recorded'],200);
     } else {
         // The QR code is incorrect
         return response()->json(['message' => 'Invalid QR code'], 400);
