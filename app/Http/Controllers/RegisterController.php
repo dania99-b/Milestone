@@ -201,10 +201,13 @@ public function RegisterStudent(EmployeeRequest $request)
     public function GuestVertification(Request $request)
     {
         $guest = Guest::create([
-            'name' => $request->name,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => bcrypt($request->password),
+            'education' => $request->education,
+            'city_id' => $request->city_id,
            // 'question_list_id'=>3,
             'verification_code' => Str::random(4), // Generate a verification code
         ]);

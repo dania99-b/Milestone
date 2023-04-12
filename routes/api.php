@@ -46,8 +46,7 @@ Route::post('/EditReceptionInfo',[AdminController::class,'EditReceptionInfo']);
 Route::post('/EditHrnInfo',[AdminController::class,'EditHrInfo']);
 
 });
-
-
+Route::post('/GuestAnswers',[\App\Http\Controllers\GuestController::class,'storeAnswers']);
 Route::post('/CreateGuest',[\App\Http\Controllers\RegisterController::class,'GuestVertification']);
 Route::post('/verify',[\App\Http\Controllers\RegisterController::class,'verifyEmail']);
 Route::get('/test',[\App\Http\Controllers\RegisterController::class,'test']);
@@ -76,7 +75,8 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['role:Teacher']], function
     Route::post('/AddQuestion',[\App\Http\Controllers\TeacherController::class,'AddQuestion']);
     Route::post('/DeleteQuestion',[\App\Http\Controllers\TeacherController::class,'DeleteQuestion']);
     Route::post('/MakeTest',[\App\Http\Controllers\TeacherController::class,'MakeTest']);
-   
+    Route::post('/AddQuestionExistTest',[\App\Http\Controllers\TeacherController::class,'AddQuestionExistTest']);
+    
 
 });
 

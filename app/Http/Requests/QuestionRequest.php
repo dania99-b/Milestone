@@ -27,6 +27,10 @@ class QuestionRequest extends FormRequest
             'text' => 'required|string|max:255',
             'level' => 'required|string|max:255',
             'type_id' => 'required',
+            'answers' => 'required|array',
+            'answers.*.name' => 'required|string|max:255',
+            'answers.*.is_true' => 'required',
+          
             ];
     }
 }

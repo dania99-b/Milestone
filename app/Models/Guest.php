@@ -26,6 +26,16 @@ class Guest extends Model implements MustVerifyEmail
 		public function cvs(){
 			$this->hasMany(Cv::class);
 		}
+		public function test()
+		{
+			return $this->hasOne(Test::class);
+		}
+		public function questions()
+    {
+		return $this->hasMany(GuestQuestionList::class);
+
+    }
+	
     public $timestamps = false;
     use HasFactory;
 	/**

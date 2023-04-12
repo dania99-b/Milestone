@@ -2,6 +2,8 @@
 
 namespace App\Console;
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -15,7 +17,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->call(function () {
+            Log::info('Cron job started');                                                                                                                                            
+          //  DB::table('guests')->delete();
+            DB::table('guest_question_lists')->delete();
+            Log::info('Cron job finished');
+        })->everyMinute();
+        
     }
 
     /**

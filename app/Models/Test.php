@@ -18,6 +18,10 @@ class Test extends Model
 
     public function questions()
     {
-        return $this->belongsToMany(Question::class,'question_lists');
+        return $this->hasMany(Question::class,'question_lists');
+    }
+    public function guests()
+    {
+        return $this->belongsToMany(Guest::class);
     }
 }
