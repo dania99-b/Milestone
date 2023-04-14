@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Test;
 use App\Models\Type;
+use App\Models\Answer;
 use App\Models\Question;
 use Illuminate\Http\Request;
 use App\Http\Requests\TestRequest;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\QuestionRequest;
-use App\Models\Answer;
 
 class TeacherController extends Controller
 {
@@ -61,10 +62,10 @@ class TeacherController extends Controller
             'end_date' => $request->validated()['end_date'],
             
           ]);
-          $questions = $request->input('question_id');
+          $questions = $questions = Question::orderBy(DB::raw('RAND()'))->take(6)->get();
           foreach ($questions as $question) {
-            $questionModel = Question::where('id', $question)->firstOrFail();
-            $newTest->questions()->attach($questionModel);
+        
+            $newTest->questions()->attach($question);
           }
         }
       
@@ -82,4 +83,12 @@ class TeacherController extends Controller
             return response()->json(['message' => 'Question deleted Successfully'], 200);
           }
       
-      }}
+      }
+    
+    public function getrand(){
+      $questions = Question::orderBy(DB::raw('RAND()'))->take(10)->get();
+      return $questions;
+    }
+    
+    
+    }

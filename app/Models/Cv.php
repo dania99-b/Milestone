@@ -11,9 +11,10 @@ class Cv extends Model
     protected $fillable=[
         'id',
         'guest_id',
-        'file_path'
+        'file',
+        'advertisment_id'
         ];
-    public $timestamps = true;
+    public $timestamps = false;
     public function guest(){
         $this->belongsTo(Guest::class);
     }

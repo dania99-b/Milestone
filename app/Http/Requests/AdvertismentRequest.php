@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class TestRequest extends FormRequest
+class AdvertismentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +24,12 @@ class TestRequest extends FormRequest
     public function rules()
     {
         return [
-          
-                'start_date' => 'required|date|max:255',
-                'end_date' => 'required|date|max:255'
-                
-                ];
+            'title'=>'required',
+            'images'=>'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'advertisment_type_id'=>'required',
+            'tips'=>'string',
+            'is_shown'=>'required',
+            'description'=>'string|max:255'   
+        ];
     }
 }

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CvRequest;
+use App\Models\Advertisment;
+use App\Models\Cv;
 use App\Models\Test;
 use App\Models\Guest;
 use App\Models\GuestQuestionList;
@@ -36,5 +39,15 @@ class GuestController extends Controller
         return response()->json(['message' => 'Answers stored successfully']);
     }
     
+    public function uploadCv(CvRequest $request){
+        $file=$request->file('file')->move('pdf/', $request->file('file')->getClientOriginalName());
+        $guest = Guest::find($request->validated()['guest_id']);
+     //   $advertisment = Advertisment::find($request->validated()['advertisment_id']);
+        if($guest){
+        $cv=Cv::firstOrCreate([
+         'guest_id'=>$request->validated()['guest_id'],
+         'file'=>$file
+        ]);
+    }}
 
 }

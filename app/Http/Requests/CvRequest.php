@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class TestRequest extends FormRequest
+class CvRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +24,9 @@ class TestRequest extends FormRequest
     public function rules()
     {
         return [
-          
-                'start_date' => 'required|date|max:255',
-                'end_date' => 'required|date|max:255'
-                
-                ];
+            'file' => 'required|mimes:pdf|max:2048',
+            'guest_id'=>'required',
+        
+        ];
     }
 }

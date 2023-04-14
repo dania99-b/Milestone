@@ -13,9 +13,10 @@ class Advertisment extends Model
         'title',
         'image',
         'advertisment_type_id',
+        'tips',
         'is_shown',
-        'description'
-   
+        'description'.
+        'publish_data'	
         ];
         public function advertismentType(){
             $this->belongsTo(AdvertismentType::class);

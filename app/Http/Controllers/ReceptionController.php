@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AdvertismentRequest;
 use App\Models\Day;
 use App\Models\User;
 use App\Models\Classs;
@@ -11,6 +12,8 @@ use App\Models\Course_Day;
 use Illuminate\Http\Request;
 use App\Http\Requests\ClassRequest;
 use App\Http\Requests\CourseRequest;
+use App\Models\Advertisment;
+use App\Models\AdvertismentType;
 
 class ReceptionController extends Controller
 {
@@ -171,4 +174,21 @@ class ReceptionController extends Controller
     return response()->json(['message' => 'Student info updated successfully'], 200);
 
   }
+  public function AddAdvertisment(AdvertismentRequest $request){
+    $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
+
+   //$id= $request->validated()['advertisment_type_id'];
+    $newadd = Advertisment::firstOrCreate([
+      'title' => $request->validated()['title'],
+      'image' => $upload,
+      'description' => $request->validated()['description'],
+      'tips' => $request->validated()['tips'],
+      'is_shown' => $request->validated()['is_shown'],
+      'advertisment_type_id' => $request->validated()['advertisment_type_id']
+
+    ]);
+   
+
+    return response()->json(['message' => 'Class added successfully'], 200);
+}
 }

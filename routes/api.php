@@ -50,6 +50,9 @@ Route::post('/GuestAnswers',[\App\Http\Controllers\GuestController::class,'store
 Route::post('/CreateGuest',[\App\Http\Controllers\RegisterController::class,'GuestVertification']);
 Route::post('/verify',[\App\Http\Controllers\RegisterController::class,'verifyEmail']);
 Route::get('/test',[\App\Http\Controllers\RegisterController::class,'test']);
+Route::post('/uploadCv',[\App\Http\Controllers\GuestController::class,'uploadCv']);
+
+
 
 Route::group(['prefix' => 'reception', 'middleware' => ['role:Reception']], function() {
 Route::post('/CreatStudent',[\App\Http\Controllers\RegisterController::class,'RegisterStudent']);
@@ -60,7 +63,7 @@ Route::post('/DeleteCourse',[\App\Http\Controllers\ReceptionController::class,'D
 Route::post('/DeleteClass',[\App\Http\Controllers\ReceptionController::class,'DeleteClass']);
 Route::post('/EditCourse',[\App\Http\Controllers\ReceptionController::class,'EditCourse']);
 Route::post('/EditStudentInfo',[\App\Http\Controllers\ReceptionController::class,'EditStudentInfo']);
-
+Route::post('/AddAdvertisment',[\App\Http\Controllers\ReceptionController::class,'AddAdvertisment']);
 
 
 
@@ -76,7 +79,7 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['role:Teacher']], function
     Route::post('/DeleteQuestion',[\App\Http\Controllers\TeacherController::class,'DeleteQuestion']);
     Route::post('/MakeTest',[\App\Http\Controllers\TeacherController::class,'MakeTest']);
     Route::post('/AddQuestionExistTest',[\App\Http\Controllers\TeacherController::class,'AddQuestionExistTest']);
-    
+    Route::get('/rand',[\App\Http\Controllers\TeacherController::class,'getrand']);
 
 });
 

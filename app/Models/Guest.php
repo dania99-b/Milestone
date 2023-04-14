@@ -21,7 +21,7 @@ class Guest extends Model implements MustVerifyEmail
         'password',
         'phone',
         'verification_code',
-       // 'question_list_id'
+       
         ];
 		public function cvs(){
 			$this->hasMany(Cv::class);
