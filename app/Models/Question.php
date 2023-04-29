@@ -13,7 +13,8 @@ class Question extends Model
         'id',
         'text',
         'level',
-        'type_id'
+        'type_id',
+        'mark'
         ];
    
     public function answers(){

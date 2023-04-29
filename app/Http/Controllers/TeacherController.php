@@ -4,12 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Test;
 use App\Models\Type;
+use App\Models\User;
 use App\Models\Answer;
+use App\Models\Teacher;
 use App\Models\Question;
 use Illuminate\Http\Request;
 use App\Http\Requests\TestRequest;
 use Illuminate\Support\Facades\DB;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Requests\QuestionRequest;
+use App\Models\Employee;
 
 class TeacherController extends Controller
 {
@@ -24,7 +28,8 @@ class TeacherController extends Controller
         $question = Question::firstOrCreate([
         'text' => $request->validated()['text'],
         'level' => $request->validated()['level'],
-        'type_id'=>$type->id
+        'type_id'=>$type->id,
+        'mark'=>$request->validated()['mark']
         ]);
         foreach ($request->validated()['answers'] as $answerData) {
           Answer::create([
@@ -62,7 +67,7 @@ class TeacherController extends Controller
             'end_date' => $request->validated()['end_date'],
             
           ]);
-          $questions = $questions = Question::orderBy(DB::raw('RAND()'))->take(6)->get();
+          $questions = $questions = Question::orderBy(DB::raw('RAND()'))->take(7)->get();
           foreach ($questions as $question) {
         
             $newTest->questions()->attach($question);
@@ -89,6 +94,14 @@ class TeacherController extends Controller
       $questions = Question::orderBy(DB::raw('RAND()'))->take(10)->get();
       return $questions;
     }
-    
+    public function viewProfileTeacher(){
+      $teacher = Teacher::where('user_id',JWTAuth::parseToken()->authenticate()->id)->get()->pluck('employee_id');
+      $employee=Employee::where('id',$teacher)->get()->pluck('user_id');
+      $user=User::find($employee);
+      return response()->json([$user], 200);
+
+
+  }
+
     
     }

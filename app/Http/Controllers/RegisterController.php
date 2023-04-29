@@ -66,6 +66,7 @@ class RegisterController extends Controller
             'password' => bcrypt($request->validated()['password']),
             'phone' => $request->validated()['phone'],
             'username' => $request->validated()['username'],
+            'birthdate' => $request->validated()['birthdate'],
            
        
     ]);
@@ -176,6 +177,7 @@ public function RegisterStudent(EmployeeRequest $request)
             'password' => bcrypt($request->validated()['password']),
             'phone' => $request->validated()['phone'],
             'username' => $request->validated()['username'],
+            'birthdate' => $request->validated()['birthdate'],
             
            
         ]);

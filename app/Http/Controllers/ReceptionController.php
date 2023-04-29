@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\AdvertismentRequest;
 use App\Models\Day;
 use App\Models\User;
 use App\Models\Classs;
 use App\Models\Course;
 use App\Models\Student;
 use App\Models\Course_Day;
+use App\Models\Advertisment;
 use Illuminate\Http\Request;
+use App\Models\AdvertismentType;
 use App\Http\Requests\ClassRequest;
 use App\Http\Requests\CourseRequest;
-use App\Models\Advertisment;
-use App\Models\AdvertismentType;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\AdvertismentRequest;
 
 class ReceptionController extends Controller
 {
@@ -190,5 +191,50 @@ class ReceptionController extends Controller
    
 
     return response()->json(['message' => 'Class added successfully'], 200);
+}
+
+public function EditAdvertisment(Request $request){
+    $id=$request['advertisment_id'];
+    $advertisment = Advertisment::findOrFail($id);
+    if (!$advertisment) {
+      // Return a 400 status code with an error message if the course cannot be found
+      return response()->json(['message' => 'Class not found'], 400);
+    }
+    if ($request->has('title')) {
+        $advertisment->title = $request['title'];
+    }
+    if ($request->has('description')) {
+        $advertisment->description = $request['description'];
+    }
+    if ($request->has('tips')) {
+        $advertisment->tips = $request['tips'];
+    }
+    if ($request->has('is_shown')) {
+        $advertisment->is_shown = $request['is_shown'];
+    }
+    if ($request->has('advertisment_type_id')) {
+        $advertisment->advertisment_type_id = $request['advertisment_type_id'];
+    }
+
+    if ($request->hasFile('image')) {
+        $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
+        $advertisment->image = $upload;
+    }
+
+    $advertisment->save();
+
+    return response()->json(['message' => 'Advertisment updated successfully'], 200);
+}
+
+public function DeleteAdvertisment(Request $request){
+  $id=$request[' '];
+  $advertisment = Advertisment::findOrFail($id);
+  if (Storage::exists($advertisment->image)) {
+    Storage::delete($advertisment->image);
+}
+
+$advertisment->delete();
+
+return response()->json(['message' => 'Advertisment deleted successfully'], 200);
 }
 }

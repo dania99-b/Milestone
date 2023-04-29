@@ -21,5 +21,10 @@ class GuestQuestionList extends Model
         {
             return $this->belongsTo(Question_List::class, 'question_list_id');
         }
+
+        public function answer()
+        {
+            return $this->hasOne(Answer::class);
+        }
        
 }

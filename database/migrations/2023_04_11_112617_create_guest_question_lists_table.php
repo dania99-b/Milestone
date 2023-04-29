@@ -27,7 +27,7 @@ return new class extends Migration
             // Define foreign key constraints
             $table->foreign('guest_id')->references('id')->on('guests')->onDelete('cascade');
             $table->foreign('question_list_id')->references('id')->on('question_lists')->onDelete('cascade');
-            $table->string('answer');
+          
         });
     }
 

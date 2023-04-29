@@ -19,4 +19,8 @@ class Answer extends Model
         public function question(){
             $this->belongsTo(Question::class);
         }
+        public function guest_answer()
+        {
+            return $this->hasOne(GuestQuestionList::class);
+        }
 }

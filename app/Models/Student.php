@@ -20,4 +20,7 @@ class Student extends Model
     public function course(){
         return $this->belongsToMany(Course::class,'attendences')->withPivot('student_id','course_id','is_absent','created_at');
     }
+    public function rate(){
+        $this->hasMany(StudentRate::class);
+    }
 }

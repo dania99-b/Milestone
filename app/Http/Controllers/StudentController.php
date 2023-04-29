@@ -9,7 +9,9 @@ use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\AttendenceRequest;
-
+use App\Http\Requests\RateRequest;
+use App\Models\StudentRate;
+use App\Models\User;
 
 class StudentController extends Controller
 {
@@ -35,5 +37,23 @@ class StudentController extends Controller
         return response()->json(['message' => 'Invalid QR code'], 400);
     }
 }
+
+public function rate(RateRequest $request)
+{ 
+    $student = Student::where('user_id',JWTAuth::parseToken()->authenticate()->id)->get()->first()->id;
+
+    $rate = StudentRate::firstOrCreate([
+        'student_id' => $student,
+        'teacher_id' => $request->validated()['teacher_id'],
+        'rate' =>$request->validated()['rate'],
+    ]); 
+    }
+    public function viewProfileStudent(){
+        $student = Student::where('user_id',JWTAuth::parseToken()->authenticate()->id)->get()->first()->user_id;
+        $user=User::find($student);
+        return response()->json([$user], 200);
+
+
     }
 
+}

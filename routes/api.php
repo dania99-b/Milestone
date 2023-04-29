@@ -44,6 +44,9 @@ Route::post('/AddRole',[PermissionController::class,'AddRole']);
 Route::post('/EditTeacherInfo',[AdminController::class,'EditTeacherInfo']);
 Route::post('/EditReceptionInfo',[AdminController::class,'EditReceptionInfo']);
 Route::post('/EditHrnInfo',[AdminController::class,'EditHrInfo']);
+Route::post('/UploadImage',[AdminController::class,'UploadImage']);
+
+
 
 });
 Route::post('/GuestAnswers',[\App\Http\Controllers\GuestController::class,'storeAnswers']);
@@ -51,6 +54,10 @@ Route::post('/CreateGuest',[\App\Http\Controllers\RegisterController::class,'Gue
 Route::post('/verify',[\App\Http\Controllers\RegisterController::class,'verifyEmail']);
 Route::get('/test',[\App\Http\Controllers\RegisterController::class,'test']);
 Route::post('/uploadCv',[\App\Http\Controllers\GuestController::class,'uploadCv']);
+Route::get('/geteacher',[\App\Http\Controllers\GuestController::class,'getTeacher']);
+Route::get('/getImage',[\App\Http\Controllers\GuestController::class,'getImage']);
+
+
 
 
 
@@ -64,6 +71,10 @@ Route::post('/DeleteClass',[\App\Http\Controllers\ReceptionController::class,'De
 Route::post('/EditCourse',[\App\Http\Controllers\ReceptionController::class,'EditCourse']);
 Route::post('/EditStudentInfo',[\App\Http\Controllers\ReceptionController::class,'EditStudentInfo']);
 Route::post('/AddAdvertisment',[\App\Http\Controllers\ReceptionController::class,'AddAdvertisment']);
+Route::post('/EditAdvertisment',[\App\Http\Controllers\ReceptionController::class,'EditAdvertisment']);
+Route::post('/DeleteAdvertisment',[\App\Http\Controllers\ReceptionController::class,'DeleteAdvertisment']);
+
+
 
 
 
@@ -71,6 +82,11 @@ Route::post('/AddAdvertisment',[\App\Http\Controllers\ReceptionController::class
 });
 Route::group(['prefix' => 'student', 'middleware' => ['role:Student']], function() {
 Route::post('/Attendence',[\App\Http\Controllers\StudentController::class,'scan']);
+Route::post('/Rate',[\App\Http\Controllers\StudentController::class,'rate']);
+Route::get('/viewprofile',[\App\Http\Controllers\StudentController::class,'viewProfileStudent']);
+
+
+
 
 });
 Route::group(['prefix' => 'teacher', 'middleware' => ['role:Teacher']], function() {
@@ -80,7 +96,11 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['role:Teacher']], function
     Route::post('/MakeTest',[\App\Http\Controllers\TeacherController::class,'MakeTest']);
     Route::post('/AddQuestionExistTest',[\App\Http\Controllers\TeacherController::class,'AddQuestionExistTest']);
     Route::get('/rand',[\App\Http\Controllers\TeacherController::class,'getrand']);
+    Route::get('/viewprofile',[\App\Http\Controllers\TeacherController::class,'viewProfileTeacher']);
+
+    
 
 });
 
 Route::post('/ResentVerificationCode',[\App\Http\Controllers\RegisterController::class,'resent_code']);
+Route::post('/result',[\App\Http\Controllers\ResultConrtoller::class,'calcResult']);

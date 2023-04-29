@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Teacher;
 use App\Models\Employee;
-use App\Models\Human_Resource;
 use App\Models\Reception;
 use Illuminate\Http\Request;
+use App\Models\Human_Resource;
+use App\Http\Requests\ImageRequest;
+use App\Models\Image;
 
 class AdminController extends Controller
 {
@@ -131,5 +133,15 @@ class AdminController extends Controller
     
       }
 
+      public function UploadImage(ImageRequest $request){
+        $upload = $request->file('file_path')->move('images/', $request->file('file_path')->getClientOriginalName());
+        $mainuser = Image::firstOrCreate([
+                'publish_date' => $request->validated()['publish_date'],
+                'is_appear' =>$request->validated()['is_appear'],
+                'file_path'=>$upload
+               
 
+        ]);
+        return response()->json(["successfully uploaded"], 200);
+}
 }

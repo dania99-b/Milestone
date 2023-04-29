@@ -20,4 +20,7 @@ class Teacher extends Model
     public function employee(){
         $this->belongsTo(Employee::class);
     }
+    public function rate(){
+        $this->hasMany(StudentRate::class);
+    }
 }
