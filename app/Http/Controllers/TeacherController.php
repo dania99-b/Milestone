@@ -95,10 +95,14 @@ class TeacherController extends Controller
       return $questions;
     }
     public function viewProfileTeacher(){
-      $teacher = Teacher::where('user_id',JWTAuth::parseToken()->authenticate()->id)->get()->pluck('employee_id');
-      $employee=Employee::where('id',$teacher)->get()->pluck('user_id');
-      $user=User::find($employee);
-      return response()->json([$user], 200);
+      $user_id=User::where('id',JWTAuth::parseToken()->authenticate()->id)->get()->pluck('id');
+      $employee=Employee::where('user_id',$user_id)->get()->pluck('id');
+if($teacher = Teacher::where('employee_id',$employee)){
+  return response()->json([User::where('id',JWTAuth::parseToken()->authenticate()->id)->get()], 200);
+
+}
+     
+  
 
 
   }
