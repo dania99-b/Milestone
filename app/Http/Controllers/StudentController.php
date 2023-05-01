@@ -51,9 +51,16 @@ class StudentController extends Controller
     }
     public function viewProfileStudent()
     {
-        $student = Student::where('user_id', JWTAuth::parseToken()->authenticate()->id)->get()->first()->user_id;
-        $user = User::find($student);
-        return response()->json([$user], 200);
+        $user = JWTAuth::parseToken()->authenticate();
+    $student = Student::where('user_id', $user->id)->first();
+    if ($student) {
+     
+            $user->student_image = $student->image;
+           
+            return response()->json($user, 200);
+        }
+    
+    return response()->json(['error' => 'Teacher profile not found.'], 404);
     }
     public function viewNotification(){
         $student = Student::where('user_id', JWTAuth::parseToken()->authenticate()->id)->get()->first()->user_id;
