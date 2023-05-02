@@ -39,23 +39,14 @@ class StudentController extends Controller
         }
     }
 
-    public function rate(RateRequest $request)
-    {
-        $student = Student::where('user_id', JWTAuth::parseToken()->authenticate()->id)->get()->first()->id;
-
-        $rate = StudentRate::firstOrCreate([
-            'student_id' => $student,
-            'teacher_id' => $request->validated()['teacher_id'],
-            'rate' => $request->validated()['rate'],
-        ]);
-    }
+   
     public function viewProfileStudent()
     {
         $user = JWTAuth::parseToken()->authenticate();
     $student = Student::where('user_id', $user->id)->first();
     if ($student) {
      
-            $user->student_image = $student->image;
+            $user->image = $student->image;
            
             return response()->json($user, 200);
         }
@@ -78,8 +69,6 @@ class StudentController extends Controller
         
 
     }
-}
-<<<<<<< HEAD
 
 public function rate(RateRequest $request)
 { 
@@ -91,14 +80,6 @@ public function rate(RateRequest $request)
         'rate' =>$request->validated()['rate'],
     ]); 
     }
-    public function viewProfileStudent(){
-        $student = Student::where('user_id',JWTAuth::parseToken()->authenticate()->id)->get()->first()->user_id;
-        $user=User::find($student);
-        return response()->json($user, 200);
-
-
-    }
+   
 
 }
-=======
->>>>>>> b1a75c3606055c39980c1c6bc22da34bb1a79331

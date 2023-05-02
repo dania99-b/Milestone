@@ -15,6 +15,7 @@ class ResultConrtoller extends Controller
    $guest=$request['guest_id'];
    $testreq=$request['test_id'];
    $question_list=Question_List::where('test_id',$testreq)->get();
+   print($question_list);
    $question_list_id=$question_list->pluck('id');
    for($i=0;$i<count($question_list_id);$i++){
    $guest_answer=GuestQuestionList::where('question_list_id',$question_list_id[$i])->get()->pluck('answer_id');

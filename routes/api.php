@@ -98,6 +98,8 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['role:Teacher']], function
     Route::post('/AddQuestionExistTest',[\App\Http\Controllers\TeacherController::class,'AddQuestionExistTest']);
     Route::get('/rand',[\App\Http\Controllers\TeacherController::class,'getrand']);
     Route::get('/viewprofile',[\App\Http\Controllers\TeacherController::class,'viewProfileTeacher']);
+    Route::post('/editprofile',[\App\Http\Controllers\TeacherController::class,'editProfile']);
+    
 
     
 
