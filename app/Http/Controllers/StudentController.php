@@ -51,7 +51,7 @@ public function rate(RateRequest $request)
     public function viewProfileStudent(){
         $student = Student::where('user_id',JWTAuth::parseToken()->authenticate()->id)->get()->first()->user_id;
         $user=User::find($student);
-        return response()->json([$user], 200);
+        return response()->json($user, 200);
 
 
     }
