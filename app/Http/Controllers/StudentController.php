@@ -80,6 +80,44 @@ public function rate(RateRequest $request)
         'rate' =>$request->validated()['rate'],
     ]); 
     }
-   
+    public function editProfile(Request $request){
+        $student_id = Student::where('user_id',JWTAuth::parseToken()->authenticate()->id)->get()->first()->id;
+
+        $student = Student::find($student_id);
+        if (!$student) {
+          // Return a 400 status code with an error message if the course cannot be found
+          return response()->json(['message' => 'Student not found'], 400);
+        }
+        if ($request->has('image')) {
+          $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
+          $student->image = $upload;
+          $student->save();
+      }
+      $user_id=$student->user_id;
+        $user = User::find($user_id);
+        if ($request->has('first_name')){
+            $user->first_name = $request->first_name;
+            $user->save();
+        }
+        if ($request->has('last_name')){
+            $user->last_name = $request->last_name;
+            $user->save();
+        }
+        if ($request->has('birthdate')) {
+            $user->birthdate = $request->birthdate;
+            $user->save();
+          }
+        if ($request->has('email')){
+            $user->email = $request->email;
+            $user->save();
+        }
+        if ($request->has('phone')){
+            $user->phone = $request->phone;
+            $user->save();
+        }
+    
+        return response()->json(['message' => 'Student info updated successfully'], 200);
+    
+      }
 
 }

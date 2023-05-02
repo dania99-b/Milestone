@@ -99,62 +99,65 @@ class TeacherController extends Controller
     return $questions;
   }
   public function viewProfileTeacher()
-{
+  {
     $user = JWTAuth::parseToken()->authenticate();
     $employee = Employee::where('user_id', $user->id)->first();
     if ($employee) {
-        $teacher = Teacher::where('employee_id', $employee->id)->first();
-        if ($teacher) {
-            $user->image = $employee->image;
-           
-            return response()->json($user, 200);
-        }
+      $teacher = Teacher::where('employee_id', $employee->id)->first();
+      if ($teacher) {
+        $user->image = $employee->image;
+
+        return response()->json($user, 200);
+      }
     }
     return response()->json(['error' => 'Teacher profile not found.'], 404);
-}
+  }
 
-public function editProfile(Request $request){
-  $user = JWTAuth::parseToken()->authenticate();
-    $teacher_id=$user->id;
-    $employe=Employee::where('user_id',$teacher_id)->first()->id;
-  
-    $employee=Employee::find($employe);
-  
-    $teacher = Teacher::where('employee_id',$employe);
+  public function editProfile(Request $request)
+  {
+    $user = JWTAuth::parseToken()->authenticate();
+    $teacher_id = $user->id;
+    $employe = Employee::where('user_id', $teacher_id)->first()->id;
+
+    $employee = Employee::find($employe);
+
+    $teacher = Teacher::where('employee_id', $employe);
     if (!$teacher) {
       // Return a 400 status code with an error message if the course cannot be found
       return response()->json(['message' => 'Teacher not found'], 400);
     }
-   
+
     if ($request->has('image')) {
       $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
       $employee->image = $upload;
       $employee->save();
-  }
-  
-   
-    if ($request->has('first_name')){
-        $user->first_name = $request->first_name;
-        $user->save();
     }
-    if ($request->has('last_name')){
-        $user->last_name = $request->last_name;
-        $user->save();
+
+
+    if ($request->has('first_name')) {
+      $user->first_name = $request->first_name;
+      $user->save();
     }
-    if ($request->has('email')){
-        $user->email = $request->email;
-        $user->save();
+    if ($request->has('last_name')) {
+      $user->last_name = $request->last_name;
+      $user->save();
     }
-    if ($request->has('phone')){
-        $user->phone = $request->phone;
-        $user->save();
+    if ($request->has('email')) {
+      $user->email = $request->email;
+      $user->save();
     }
-    if ($request->has('username')){
-        $user->username = $request->username;
-        $user->save();
+    if ($request->has('phone')) {
+      $user->phone = $request->phone;
+      $user->save();
+    }
+    if ($request->has('birthdate')) {
+      $user->birthdate = $request->birthdate;
+      $user->save();
+    }
+    if ($request->has('username')) {
+      $user->username = $request->username;
+      $user->save();
     }
     return response()->json(['message' => 'Teacher info updated successfully'], 200);
-
   }
 }
-

@@ -84,4 +84,9 @@ class GuestController extends Controller
         return response()->json($images, 200);
 
         
-        }}
+        }
+        public function getAddvertisment() {
+    $add=Advertisment::all();
+    return response()->json($add, 200);
+    
+    }}

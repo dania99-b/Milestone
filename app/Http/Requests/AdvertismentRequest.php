@@ -29,7 +29,7 @@ class AdvertismentRequest extends FormRequest
             'advertisment_type_id'=>'required',
             'tips'=>'string',
             'is_shown'=>'required',
-            'description'=>'string|max:255'   
+            'description'=>'max:255'   
         ];
     }
 }

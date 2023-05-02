@@ -56,7 +56,7 @@ Route::get('/test',[\App\Http\Controllers\RegisterController::class,'test']);
 Route::post('/uploadCv',[\App\Http\Controllers\GuestController::class,'uploadCv']);
 Route::get('/geteacher',[\App\Http\Controllers\GuestController::class,'getTeacher']);
 Route::get('/getImage',[\App\Http\Controllers\GuestController::class,'getImage']);
-
+Route::get('/getAdvertisment',[\App\Http\Controllers\GuestController::class,'getAddvertisment']);
 
 
 
@@ -85,6 +85,8 @@ Route::post('/Attendence',[\App\Http\Controllers\StudentController::class,'scan'
 Route::post('/Rate',[\App\Http\Controllers\StudentController::class,'rate']);
 Route::get('/viewprofile',[\App\Http\Controllers\StudentController::class,'viewProfileStudent']);
 Route::get('/viewnotification',[\App\Http\Controllers\StudentController::class,'viewNotification']);
+Route::post('/editprofile',[\App\Http\Controllers\StudentController::class,'editProfile']);
+
 
 
 
