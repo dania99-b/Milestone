@@ -84,6 +84,7 @@ Route::group(['prefix' => 'student', 'middleware' => ['role:Student']], function
 Route::post('/Attendence',[\App\Http\Controllers\StudentController::class,'scan']);
 Route::post('/Rate',[\App\Http\Controllers\StudentController::class,'rate']);
 Route::get('/viewprofile',[\App\Http\Controllers\StudentController::class,'viewProfileStudent']);
+Route::get('/viewnotification',[\App\Http\Controllers\StudentController::class,'viewNotification']);
 
 
 

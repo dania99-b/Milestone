@@ -56,13 +56,12 @@ class AuthController extends Controller
        event(new NotificationRecieved($user));
         return response()->json([
             'token' => $token,
-            'user' => [
                 'id' => $user->id,
                 'first_name' => $user->first_name,
                 'last_name' => $user->last_name,
                 'email' => $user->email,
                 'roles' => $user_roles,
-            ],
+          
         ]);
     }
 

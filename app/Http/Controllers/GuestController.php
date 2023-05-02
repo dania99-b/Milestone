@@ -64,15 +64,20 @@ class GuestController extends Controller
     }
 
     public function getTeacher() {
-        $x=[];
+    $teachers = Teacher::get()->pluck('employee_id');
+    $users = [];
 
-        $teacher = Teacher::get()->pluck('employee_id');
-        foreach($teacher as $t){
-        $employee=Employee::where('id',$t)->get()->pluck('user_id');
-        $user=User::where('id',$employee)->get();
-        array_push($x,$user);
-   }
-    return $x;}
+    foreach ($teachers as $teacher) {
+        $employee = Employee::where('id', $teacher)->get()->pluck('user_id');
+        $user = User::where('id', $employee)->first();
+
+        if ($user) {
+            $users[] = $user;
+        }
+    }
+
+    return response()->json($users);
+}
 
     public function getImage() {
         $images=Image::all();
