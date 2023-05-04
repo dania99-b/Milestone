@@ -15,7 +15,7 @@ class Student extends Model
     public $timestamps = false;
     use HasFactory;
     public function user(){
-        $this->belongsTo(User::class);
+        return $this->belongsTo(User::class);
     }
     public function course(){
         return $this->belongsToMany(Course::class,'attendences')->withPivot('student_id','course_id','is_absent','created_at');

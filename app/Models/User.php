@@ -21,7 +21,7 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var array<int, string>
      */
-    public $timestamps = false;
+    public $timestamps = true;
     protected $fillable = [
         'first_name',
         'last_name',
@@ -63,13 +63,13 @@ class User extends Authenticatable implements JWTSubject
     }
 
     public function employee(){
-        $this->hasOne(Employee::class);
+        return $this->hasOne(Employee::class);
     }
 
     public function admin(){
-        $this->hasOne(Admin::class);
+       return  $this->hasOne(Admin::class);
     }
     public function student(){
-        $this->hasOne(Student::class);
+        return $this->hasOne(Student::class);
     }
 }

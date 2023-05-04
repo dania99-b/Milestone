@@ -8,12 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class StudentRate extends Model
 {
     use HasFactory;
-    public $timestamps = false;
+    public $timestamps = true;
     protected $fillable=[
         'id',
         'student_id',
         'teacher_id',
-        'rate'
+        'rate',
+        'created_at',
+        'updated_at'
         ];
 
         public function student(){

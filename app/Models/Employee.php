@@ -16,16 +16,16 @@ class Employee extends Model
     use HasFactory;
 
     public function user(){
-        $this->belongsTo(User::class);
+        return $this->belongsTo(User::class);
     }
 
     public function teacher(){
-        $this->hasOne(Teacher::class);
+        return $this->hasOne(Teacher::class);
     }
     public function reciption(){
-        $this->hasOne(Reception::class);
+        return $this->hasOne(Reception::class);
     }
     public function human_resource(){
-        $this->hasOne(Human_Resource::class);
+       return $this->hasOne(Human_Resource::class);
     }
 }

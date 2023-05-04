@@ -11,22 +11,29 @@ use Illuminate\Http\Request;
 class ResultConrtoller extends Controller
 {
    public function calcResult(Request $request){
+   $mark=0;
    $l='true';
    $guest=$request['guest_id'];
    $testreq=$request['test_id'];
    $question_list=Question_List::where('test_id',$testreq)->get();
-   print($question_list);
+   
    $question_list_id=$question_list->pluck('id');
+   print('question list');
+   print($question_list_id);
    for($i=0;$i<count($question_list_id);$i++){
-   $guest_answer=GuestQuestionList::where('question_list_id',$question_list_id[$i])->get()->pluck('answer_id');
-   print('guest_answer');
-   print($guest_answer);
-   for($j=0;$j<count($guest_answer);$j++){
-      $original_answer=Answer::where('id',$guest_answer[$j])->get()->pluck('is_true');
-      print($original_answer);
-      if( $original_answer=='true')
-      print('yessssss');
-      else print('nooooo');
+      $question = Question_List::find($question_list_id[$i]);
+      $question_id = $question->question_id;
+      $question_mark = Question::find($question_id)->mark;
+      $answers=Answer::where('question_id',$question_id)->where('is_true','true')->get()->pluck('id');
+      $guest_answer = GuestQuestionList::where('guest_id', $guest)->where('question_list_id', $question_list_id[$i])->get()->pluck('answer_id');
+      if( $answers==$guest_answer)
+      $mark=$mark+$question_mark;
+
+  }
+  print('mark'.$mark);
+ 
+     //if( $original_answer=='true')
+  
    }
    //get the all question of this test 
    /*$guest_question_list=GuestQuestionList::where('guest_id',$guest)->get()->pluck('question_list_id');
@@ -43,7 +50,7 @@ class ResultConrtoller extends Controller
       if($guest_answer[$i]==$questions&&Answer::where('question_id',$questions)->get()->pluck('is_true')=='true')
 print('yesss');*/
      }
-   }
+   
    
    
 //get all answers of all this questions
@@ -51,5 +58,4 @@ print('yesss');*/
  //  }
  //  return $test;
 
-   }
-//}
+   

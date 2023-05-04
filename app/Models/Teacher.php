@@ -14,13 +14,13 @@ class Teacher extends Model
     public $timestamps = false;
     use HasFactory;
     public function user(){
-        $this->belongsTo(User::class);
+       return $this->belongsTo(User::class);
     }
 
     public function employee(){
-        $this->belongsTo(Employee::class);
+        return $this->belongsTo(Employee::class);
     }
     public function rate(){
-        $this->hasMany(StudentRate::class);
+        return $this->hasMany(StudentRate::class);
     }
 }

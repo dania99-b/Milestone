@@ -82,7 +82,7 @@ Route::post('/DeleteAdvertisment',[\App\Http\Controllers\ReceptionController::cl
 });
 Route::group(['prefix' => 'student', 'middleware' => ['role:Student']], function() {
 Route::post('/Attendence',[\App\Http\Controllers\StudentController::class,'scan']);
-Route::post('/Rate',[\App\Http\Controllers\StudentController::class,'rate']);
+Route::post('/rate',[\App\Http\Controllers\StudentController::class,'rate']);
 Route::get('/viewprofile',[\App\Http\Controllers\StudentController::class,'viewProfileStudent']);
 Route::get('/viewnotification',[\App\Http\Controllers\StudentController::class,'viewNotification']);
 Route::post('/editprofile',[\App\Http\Controllers\StudentController::class,'editProfile']);
