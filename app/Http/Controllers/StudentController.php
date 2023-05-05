@@ -84,9 +84,7 @@ class StudentController extends Controller
     }
     public function editProfile(Request $request)
     {
-        //$student_id = Student::where('user_id', JWTAuth::parseToken()->authenticate()->id)->get()->first()->id;
 
-        //$student = Student::find($student_id);
         $user = JWTAuth::parseToken()->authenticate();
         $student = $user->student;
 
@@ -95,7 +93,7 @@ class StudentController extends Controller
         }
 
         if ($request->hasFile('image')) {
-            
+
             $image = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
 
             $student->image = $image;

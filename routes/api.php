@@ -73,6 +73,15 @@ Route::post('/EditStudentInfo',[\App\Http\Controllers\ReceptionController::class
 Route::post('/AddAdvertisment',[\App\Http\Controllers\ReceptionController::class,'AddAdvertisment']);
 Route::post('/EditAdvertisment',[\App\Http\Controllers\ReceptionController::class,'EditAdvertisment']);
 Route::post('/DeleteAdvertisment',[\App\Http\Controllers\ReceptionController::class,'DeleteAdvertisment']);
+Route::post('/ScheduleClass',[\App\Http\Controllers\ReceptionController::class,'ScheduleClass']);
+Route::post('/ScheduleTeacher',[\App\Http\Controllers\ReceptionController::class,'ScheduleTeacher']);
+Route::post('/EditScheduleClass',[\App\Http\Controllers\ReceptionController::class,'EditScheduleClass']);
+Route::post('/EditScheduleTeacher',[\App\Http\Controllers\ReceptionController::class,'EditScheduleTeacher']);
+Route::delete('/DeleteScheduleClass',[\App\Http\Controllers\ReceptionController::class,'DeleteScheduleClass']);
+Route::delete('/DeleteScheduleTeacher',[\App\Http\Controllers\ReceptionController::class,'DeleteScheduleTeacher']);
+
+
+
 
 
 

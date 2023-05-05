@@ -19,4 +19,7 @@ class Classs extends Model
         public function courses(){
 			$this->hasMany(Course::class);
 		}      
+        public function class_schedule(){
+            return $this->hasMany(Class_Schedule::class);
+        }
 }

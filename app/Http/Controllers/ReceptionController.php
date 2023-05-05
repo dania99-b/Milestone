@@ -15,6 +15,11 @@ use App\Http\Requests\ClassRequest;
 use App\Http\Requests\CourseRequest;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\AdvertismentRequest;
+use App\Http\Requests\ClassScheduleRequest;
+use App\Http\Requests\TeacherScheduleRequest;
+use App\Models\Class_Schedule;
+use App\Models\Teacher;
+use App\Models\Teacher_Schedule;
 
 class ReceptionController extends Controller
 {
@@ -141,8 +146,9 @@ class ReceptionController extends Controller
     return response()->json(['message' => 'Class deleted successfully'], 200);
   }
 
-  public function EditStudentInfo(Request $request){
-    $student_id=$request['student_id'];
+  public function EditStudentInfo(Request $request)
+  {
+    $student_id = $request['student_id'];
     $student = Student::find($student_id);
     if (!$student) {
       // Return a 400 status code with an error message if the course cannot be found
@@ -152,33 +158,33 @@ class ReceptionController extends Controller
       $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
       $student->image = $upload;
       $student->save();
-  }
-  $user_id=$student->user_id;
+    }
+    $user_id = $student->user_id;
     $user = User::find($user_id);
-    if ($request->has('first_name')){
-        $user->first_name = $request->first_name;
-        $user->save();
+    if ($request->has('first_name')) {
+      $user->first_name = $request->first_name;
+      $user->save();
     }
-    if ($request->has('last_name')){
-        $user->last_name = $request->last_name;
-        $user->save();
+    if ($request->has('last_name')) {
+      $user->last_name = $request->last_name;
+      $user->save();
     }
-    if ($request->has('email')){
-        $user->email = $request->email;
-        $user->save();
+    if ($request->has('email')) {
+      $user->email = $request->email;
+      $user->save();
     }
-    if ($request->has('phone')){
-        $user->phone = $request->phone;
-        $user->save();
+    if ($request->has('phone')) {
+      $user->phone = $request->phone;
+      $user->save();
     }
 
     return response()->json(['message' => 'Student info updated successfully'], 200);
-
   }
-  public function AddAdvertisment(AdvertismentRequest $request){
+  public function AddAdvertisment(AdvertismentRequest $request)
+  {
     $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
 
-   //$id= $request->validated()['advertisment_type_id'];
+    //$id= $request->validated()['advertisment_type_id'];
     $newadd = Advertisment::firstOrCreate([
       'title' => $request->validated()['title'],
       'image' => $upload,
@@ -188,53 +194,159 @@ class ReceptionController extends Controller
       'advertisment_type_id' => $request->validated()['advertisment_type_id']
 
     ]);
-   
+
 
     return response()->json(['message' => 'Class added successfully'], 200);
-}
+  }
 
-public function EditAdvertisment(Request $request){
-    $id=$request['advertisment_id'];
+  public function EditAdvertisment(Request $request)
+  {
+    $id = $request['advertisment_id'];
     $advertisment = Advertisment::findOrFail($id);
     if (!$advertisment) {
       // Return a 400 status code with an error message if the course cannot be found
       return response()->json(['message' => 'Class not found'], 400);
     }
     if ($request->has('title')) {
-        $advertisment->title = $request['title'];
+      $advertisment->title = $request['title'];
     }
     if ($request->has('description')) {
-        $advertisment->description = $request['description'];
+      $advertisment->description = $request['description'];
     }
     if ($request->has('tips')) {
-        $advertisment->tips = $request['tips'];
+      $advertisment->tips = $request['tips'];
     }
     if ($request->has('is_shown')) {
-        $advertisment->is_shown = $request['is_shown'];
+      $advertisment->is_shown = $request['is_shown'];
     }
     if ($request->has('advertisment_type_id')) {
-        $advertisment->advertisment_type_id = $request['advertisment_type_id'];
+      $advertisment->advertisment_type_id = $request['advertisment_type_id'];
     }
 
     if ($request->hasFile('image')) {
-        $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
-        $advertisment->image = $upload;
+      $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
+      $advertisment->image = $upload;
     }
 
     $advertisment->save();
 
     return response()->json(['message' => 'Advertisment updated successfully'], 200);
-}
+  }
 
-public function DeleteAdvertisment(Request $request){
-  $id=$request[' '];
-  $advertisment = Advertisment::findOrFail($id);
-  if (Storage::exists($advertisment->image)) {
-    Storage::delete($advertisment->image);
-}
+  public function DeleteAdvertisment(Request $request)
+  {
+    $id = $request[' '];
+    $advertisment = Advertisment::findOrFail($id);
+    if (Storage::exists($advertisment->image)) {
+      Storage::delete($advertisment->image);
+    }
 
-$advertisment->delete();
+    $advertisment->delete();
 
-return response()->json(['message' => 'Advertisment deleted successfully'], 200);
-}
+    return response()->json(['message' => 'Advertisment deleted successfully'], 200);
+  }
+
+  public function ScheduleClass(ClassScheduleRequest $request)
+  {
+    $ClassId = $request->validated()['class_id'];
+    $class = Classs::find($ClassId);
+    if ($class) {
+      $newSchedule = Class_Schedule::Create([
+        'class_id' => $ClassId,
+        'day' => $request->validated()['day'],
+        'start_time' => date('H:i:s', strtotime($request->validated()['start_time'])),
+        'end_time' => $request->validated()['end_time'],
+
+      ]);
+      return response()->json(['message' => 'Schedule Created Successfully'], 200);
+    }
+    return response()->json(['message' => 'Schedule Created Error'], 400);
+  }
+
+  public function ScheduleTeacher(TeacherScheduleRequest $request)
+  {
+    $TeacherId = $request->validated()['teacher_id'];
+    $teacher = Teacher::find($TeacherId);
+    if ($teacher) {
+      $newSchedule = Teacher_Schedule::Create([
+        'teacher_id' => $TeacherId,
+        'day' => date('Y-m-d', strtotime($request->validated()['day'])),
+       'start_time' => date('H:i:s', strtotime($request->validated()['start_time'])),
+        'end_time' =>  date($request->validated()['end_time']),
+
+      ]);
+      return response()->json(['message' => 'Schedule Created Successfully'], 200);
+    }
+    return response()->json(['message' => 'Schedule Created Error'], 400);
+  }
+  public function EditScheduleClass(Request $request)
+  {
+    $id = $request['schedule_id'];
+    $schedule = Class_Schedule::find($id);
+   
+
+    if (!$schedule) {
+      return response()->json(['message' => 'Schedule not found'], 400);
+    }
+
+
+    $schedule->fill($request->only(['day', 'start_time', 'end_time']));
+
+    if ($schedule->isDirty()) {
+      $schedule->save();
+    }
+
+
+    return response()->json(['message' => 'Schedule info updated successfully'], 200);
+  }
+
+  public function EditScheduleTeacher(Request $request)
+  {
+    $id = $request['schedule_id'];
+    $schedule = Teacher_Schedule::find($id);
+
+    if (!$schedule) {
+      return response()->json(['message' => 'Schedule not found'], 400);
+    }
+
+
+    $schedule->fill($request->only(['day', 'start_time', 'end_time']));
+
+    if ($schedule->isDirty()) {
+      $schedule->save();
+    }
+
+
+    return response()->json(['message' => 'Schedule info updated successfully'], 200);
+  }
+
+  public function deleteScheduleTeacher(Request $request)
+  {
+    $id = $request['schedule_id'];
+    $schedule = Teacher_Schedule::find($id);
+
+
+    if (!$schedule) {
+      return response()->json(['message' => 'Schedule not found'], 400);
+    }
+
+    $schedule->delete();
+
+    return response()->json(['message' => 'Schedule deleted successfully'], 200);
+  }
+
+  public function deleteScheduleClass(Request $request)
+  {
+
+    $schedule = Class_Schedule::find(2);
+
+
+    if (!$schedule) {
+      return response()->json(['message' => 'Schedule not found'], 400);
+    }
+
+    $schedule->delete();
+
+    return response()->json(['message' => 'Schedule deleted successfully'], 200);
+  }
 }

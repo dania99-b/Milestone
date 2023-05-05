@@ -23,4 +23,7 @@ class Teacher extends Model
     public function rate(){
         return $this->hasMany(StudentRate::class);
     }
+    public function teacher_schedule(){
+        return $this->hasMany(Teacher_Schedule::class);
+    }
 }
