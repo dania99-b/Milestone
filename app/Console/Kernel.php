@@ -17,13 +17,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call(function () {
-            Log::info('Cron job started');                                                                                                                                            
-          //  DB::table('guests')->delete();
-            DB::table('guest_question_lists')->delete();
-            Log::info('Cron job finished');
-        })->everyMinute();
-        
+        // $schedule->call(function () {
+        //     Log::info('Cron job started');                                                                                                                                            
+        //   //  DB::table('guests')->delete();
+        //     DB::table('guest_question_lists')->delete();
+        //     Log::info('Cron job finished');
+        // })->everyMinute();
+        $schedule->command('ad:publish')->everyMinute();
     }
 
     /**

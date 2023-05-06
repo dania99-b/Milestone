@@ -183,7 +183,6 @@ class ReceptionController extends Controller
   public function AddAdvertisment(AdvertismentRequest $request)
   {
     $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
-
     //$id= $request->validated()['advertisment_type_id'];
     $newadd = Advertisment::firstOrCreate([
       'title' => $request->validated()['title'],
@@ -192,10 +191,7 @@ class ReceptionController extends Controller
       'tips' => $request->validated()['tips'],
       'is_shown' => $request->validated()['is_shown'],
       'advertisment_type_id' => $request->validated()['advertisment_type_id']
-
     ]);
-
-
     return response()->json(['message' => 'Class added successfully'], 200);
   }
 

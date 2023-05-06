@@ -22,7 +22,7 @@ class AdminController extends Controller
     if (!$teacher) {
       return response()->json(['message' => 'Teacher not found'], 404);
   }
-
+  
   $employee = $teacher->employee;
   $user = $employee->user;
 
