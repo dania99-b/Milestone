@@ -64,18 +64,19 @@ class GuestController extends Controller
     }
 
     public function getTeacher()
-    {
-        $teachers = Teacher::with('employee.user')->get();
+{
+    $teachers = Teacher::with('employee.user')->get();
 
-        // Extract the users from the loaded data
-        $users = $teachers->pluck('employee.user')->filter();
-    
-        // Return the users as JSON response
-        return response()->json($users);
+    // Extract the users from the loaded data and include the employee image
+    $users = $teachers->pluck('employee.user')->map(function ($user) {
+        $user->employee_image = $user->employee->image;
+        unset($user->employee);
+        return $user;
+    })->filter();
 
-      
-    }
-
+    // Return the users as JSON response
+    return response()->json($users);
+}
     public function getImage()
     {
         $images = Image::all();
