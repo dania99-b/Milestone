@@ -69,7 +69,7 @@ class GuestController extends Controller
 
     // Extract the users from the loaded data and include the employee image
     $users = $teachers->pluck('employee.user')->map(function ($user) {
-        $user->employee_image = $user->employee->image;
+        $user->image = $user->employee->image;
         unset($user->employee);
         return $user;
     })->filter();
