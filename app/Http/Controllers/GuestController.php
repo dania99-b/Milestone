@@ -64,22 +64,19 @@ class GuestController extends Controller
     }
 
     public function getTeacher()
-    {
-        $teachers = Teacher::get()->pluck('employee_id');
-        $users = [];
+{
+    $teachers = Teacher::with('employee.user')->get();
 
-        foreach ($teachers as $teacher) {
-            $employee = Employee::where('id', $teacher)->get()->pluck('user_id');
-            $user = User::where('id', $employee)->first();
+    // Extract the users from the loaded data and include the employee image
+    $users = $teachers->pluck('employee.user')->map(function ($user) {
+        $user->image = $user->employee->image;
+        unset($user->employee);
+        return $user;
+    })->filter();
 
-            if ($user) {
-                $users[] = $user;
-            }
-        }
-
-        return response()->json($users);
-    }
-
+    // Return the users as JSON response
+    return response()->json($users);
+}
     public function getImage()
     {
         $images = Image::all();
@@ -87,7 +84,7 @@ class GuestController extends Controller
     }
     public function getAddvertisment()
     {
-        $add = Advertisment::paginate(3);
+        $add = Advertisment::all();
         return response()->json($add, 200);
     }
 }

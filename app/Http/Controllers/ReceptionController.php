@@ -7,19 +7,22 @@ use App\Models\User;
 use App\Models\Classs;
 use App\Models\Course;
 use App\Models\Student;
+use App\Models\Teacher;
 use App\Models\Course_Day;
+use App\Models\LogActivity;
 use App\Models\Advertisment;
 use Illuminate\Http\Request;
+use App\Models\Class_Schedule;
 use App\Models\AdvertismentType;
+use App\Models\Teacher_Schedule;
 use App\Http\Requests\ClassRequest;
 use App\Http\Requests\CourseRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\AdvertismentRequest;
 use App\Http\Requests\ClassScheduleRequest;
 use App\Http\Requests\TeacherScheduleRequest;
-use App\Models\Class_Schedule;
-use App\Models\Teacher;
-use App\Models\Teacher_Schedule;
+use App\Models\Employee;
 
 class ReceptionController extends Controller
 {
@@ -51,6 +54,12 @@ class ReceptionController extends Controller
       'max_num' => $request->validated()['max_num'],
       'status' => $request->validated()['status'],
     ]);
+    $user=Auth::user();
+    $employee=$user->employee;
+    $log = new LogActivity();
+$log->employee_id= $employee->id;
+$log->action = 'Opened a New Class';
+$log->save();
     return response()->json(['message' => 'Class added successfully'], 200);
   }
   public function EditClass(Request $request)
@@ -75,6 +84,12 @@ class ReceptionController extends Controller
       $class->status = $request->status;
       $class->save();
     }
+    $user=Auth::user();
+    $employee=$user->employee;
+    $log = new LogActivity();
+$log->employee_id= $employee->id;
+$log->action = 'Edit Class';
+$log->save();
     return response()->json(['message' => 'Class updated successfully'], 200);
   }
   public function EditCourse(Request $request)
@@ -121,6 +136,12 @@ class ReceptionController extends Controller
         $course->save();
       }
     }
+    $user=Auth::user();
+    $employee=$user->employee;
+    $log = new LogActivity();
+$log->employee_id= $employee->id;
+$log->action = 'Edit Course';
+$log->save();
     return response()->json(['message' => 'Course updated successfully'], 200);
   }
   public function DeleteCourse(Request $request)
@@ -143,6 +164,12 @@ class ReceptionController extends Controller
       return response()->json(['message' => 'Class not found'], 400);
     }
     $class->delete();
+    $user=Auth::user();
+    $employee=$user->employee;
+    $log = new LogActivity();
+$log->employee_id= $employee->id;
+$log->action = 'Delete Class';
+$log->save();
     return response()->json(['message' => 'Class deleted successfully'], 200);
   }
 
@@ -178,6 +205,12 @@ class ReceptionController extends Controller
       $user->save();
     }
 
+    $user=Auth::user();
+    $employee=$user->employee;
+    $log = new LogActivity();
+$log->employee_id= $employee->id;
+$log->action = 'Edit Student information';
+$log->save();
     return response()->json(['message' => 'Student info updated successfully'], 200);
   }
   public function AddAdvertisment(AdvertismentRequest $request)
@@ -225,7 +258,12 @@ class ReceptionController extends Controller
     }
 
     $advertisment->save();
-
+    $user=Auth::user();
+    $employee=$user->employee;
+    $log = new LogActivity();
+$log->employee_id= $employee->id;
+$log->action = 'Edit Advertisment';
+$log->save();
     return response()->json(['message' => 'Advertisment updated successfully'], 200);
   }
 
@@ -254,6 +292,12 @@ class ReceptionController extends Controller
         'end_time' => $request->validated()['end_time'],
 
       ]);
+      $user=Auth::user();
+    $employee=$user->employee;
+    $log = new LogActivity();
+$log->employee_id= $employee->id;
+$log->action = 'Create Schedule Class';
+$log->save();
       return response()->json(['message' => 'Schedule Created Successfully'], 200);
     }
     return response()->json(['message' => 'Schedule Created Error'], 400);
@@ -271,6 +315,12 @@ class ReceptionController extends Controller
         'end_time' =>  date($request->validated()['end_time']),
 
       ]);
+      $user=Auth::user();
+      $employee=$user->employee;
+      $log = new LogActivity();
+  $log->employee_id= $employee->id;
+  $log->action = 'Create Schedule Teacher';
+  $log->save();
       return response()->json(['message' => 'Schedule Created Successfully'], 200);
     }
     return response()->json(['message' => 'Schedule Created Error'], 400);
@@ -291,7 +341,12 @@ class ReceptionController extends Controller
     if ($schedule->isDirty()) {
       $schedule->save();
     }
-
+    $user=Auth::user();
+    $employee=$user->employee;
+    $log = new LogActivity();
+$log->employee_id= $employee->id;
+$log->action = 'Edit Schedule Class';
+$log->save();
 
     return response()->json(['message' => 'Schedule info updated successfully'], 200);
   }
@@ -312,7 +367,12 @@ class ReceptionController extends Controller
       $schedule->save();
     }
 
-
+    $user=Auth::user();
+    $employee=$user->employee;
+    $log = new LogActivity();
+$log->employee_id= $employee->id;
+$log->action = 'Edit Schedule Teacher';
+$log->save();
     return response()->json(['message' => 'Schedule info updated successfully'], 200);
   }
 
@@ -327,6 +387,12 @@ class ReceptionController extends Controller
     }
 
     $schedule->delete();
+    $user=Auth::user();
+    $employee=$user->employee;
+    $log = new LogActivity();
+$log->employee_id= $employee->id;
+$log->action = 'Delete Schedule Teacher';
+$log->save();
 
     return response()->json(['message' => 'Schedule deleted successfully'], 200);
   }
@@ -334,7 +400,7 @@ class ReceptionController extends Controller
   public function deleteScheduleClass(Request $request)
   {
 
-    $schedule = Class_Schedule::find(2);
+    $schedule = Class_Schedule::find( $request['schedule_id'])->get();
 
 
     if (!$schedule) {
@@ -342,6 +408,12 @@ class ReceptionController extends Controller
     }
 
     $schedule->delete();
+    $user=Auth::user();
+    $employee=$user->employee;
+    $log = new LogActivity();
+$log->employee_id= $employee->id;
+$log->action = 'Delete Schedule Class';
+$log->save();
 
     return response()->json(['message' => 'Schedule deleted successfully'], 200);
   }

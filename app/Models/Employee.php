@@ -28,4 +28,7 @@ class Employee extends Model
     public function human_resource(){
        return $this->hasOne(Human_Resource::class);
     }
+    public function log(){
+        return $this->hasMany(LogActivity::class);
+    }
 }

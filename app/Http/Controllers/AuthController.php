@@ -23,10 +23,10 @@ class AuthController extends Controller
 
     // Trigger the event to notify the user
     $user = User::find(auth()->user()->id);
-    event(new NotificationRecieved($user));
+   // event(new NotificationRecieved($user));
 
     // Trigger the notification
-    Notification::send($user, new WebSocketSuccessNotification());
+   // Notification::send($user, new WebSocketSuccessNotification());
 }
     public function __construct()
     {
@@ -51,9 +51,9 @@ class AuthController extends Controller
          $user = Auth::user();
         $user_roles = $user->roles()->pluck('name');
       //  $user->notify(new WebSocketSuccessNotification('New order placed!'));
-       Notification::send($user, new WebSocketSuccessNotification('you are logged in'));
+    //   Notification::send($user, new WebSocketSuccessNotification('you are logged in'));
     
-       event(new NotificationRecieved($user));
+       //event(new NotificationRecieved($user));
         return response()->json([
             'token' => $token,
                 'id' => $user->id,

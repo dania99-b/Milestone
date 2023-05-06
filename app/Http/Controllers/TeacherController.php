@@ -7,13 +7,15 @@ use App\Models\Type;
 use App\Models\User;
 use App\Models\Answer;
 use App\Models\Teacher;
+use App\Models\Employee;
 use App\Models\Question;
+use App\Models\LogActivity;
 use Illuminate\Http\Request;
 use App\Http\Requests\TestRequest;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\QuestionRequest;
-use App\Models\Employee;
 
 class TeacherController extends Controller
 {
@@ -39,6 +41,12 @@ class TeacherController extends Controller
         'is_true' => $answerData['is_true'],
       ]);
     }
+    $user=Auth::user();
+    $employee=$user->employee;
+    $log = new LogActivity();
+$log->employee_id= $employee->id;
+$log->action = 'Add Question';
+$log->save();
 
     return response()->json(['message' => 'Question Added Successfully'], 200);
   }
@@ -50,6 +58,12 @@ class TeacherController extends Controller
       // Return a 400 status code with an error message if the course cannot be found
       return response()->json(['message' => 'Question not found'], 400);
     }
+    $user=Auth::user();
+    $employee=$user->employee;
+    $log = new LogActivity();
+$log->employee_id= $employee->id;
+$log->action = 'Delete Question';
+$log->save();
 
     $question->delete();
 
@@ -62,6 +76,13 @@ class TeacherController extends Controller
       'name' => $request['name'],
 
     ]);
+    $user=Auth::user();
+    $employee=$user->employee;
+    $log = new LogActivity();
+$log->employee_id= $employee->id;
+$log->action = 'Add Question Type';
+$log->save();
+return response()->json(['message' => 'Question Type Added Successfully'], 200);
   }
   public function MakeTest(TestRequest $request)
   {
@@ -75,6 +96,13 @@ class TeacherController extends Controller
 
       $newTest->questions()->attach($question);
     }
+    $user=Auth::user();
+    $employee=$user->employee;
+    $log = new LogActivity();
+$log->employee_id= $employee->id;
+$log->action = 'Create Test';
+$log->save();
+return response()->json(['message' => 'Test Created Successfully'], 200);
   }
 
   public function AddQuestionExistTest(Request $request)
@@ -89,8 +117,15 @@ class TeacherController extends Controller
     foreach ($questions as $question) {
       $questionModel = Question::where('id', $question)->firstOrFail();
       $test->questions()->attach($questionModel);
-      return response()->json(['message' => 'Question deleted Successfully'], 200);
+     
     }
+    $user=Auth::user();
+    $employee=$user->employee;
+    $log = new LogActivity();
+$log->employee_id= $employee->id;
+$log->action = 'Add Question To Exist Test';
+$log->save();
+return response()->json(['message' => 'Question Added Successfully'], 200);
   }
 
   public function getrand()
@@ -138,7 +173,12 @@ class TeacherController extends Controller
   if ($employee->isDirty()) {
       $employee->save();
   }
-
+  $user=Auth::user();
+  $employee=$user->employee;
+  $log = new LogActivity();
+$log->employee_id= $employee->id;
+$log->action = 'Edit Own Profile';
+$log->save();
   return response()->json(['message' => 'Teacher info updated successfully'], 200);
 }
   }
