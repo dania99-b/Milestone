@@ -84,6 +84,12 @@ $log->save();
       $class->status = $request->status;
       $class->save();
     }
+    $user=Auth::user();
+    $employee=$user->employee;
+    $log = new LogActivity();
+$log->employee_id= $employee->id;
+$log->action = 'Edit Class';
+$log->save();
     return response()->json(['message' => 'Class updated successfully'], 200);
   }
   public function EditCourse(Request $request)
@@ -130,6 +136,12 @@ $log->save();
         $course->save();
       }
     }
+    $user=Auth::user();
+    $employee=$user->employee;
+    $log = new LogActivity();
+$log->employee_id= $employee->id;
+$log->action = 'Edit Course';
+$log->save();
     return response()->json(['message' => 'Course updated successfully'], 200);
   }
   public function DeleteCourse(Request $request)
@@ -152,6 +164,12 @@ $log->save();
       return response()->json(['message' => 'Class not found'], 400);
     }
     $class->delete();
+    $user=Auth::user();
+    $employee=$user->employee;
+    $log = new LogActivity();
+$log->employee_id= $employee->id;
+$log->action = 'Delete Class';
+$log->save();
     return response()->json(['message' => 'Class deleted successfully'], 200);
   }
 
@@ -187,6 +205,12 @@ $log->save();
       $user->save();
     }
 
+    $user=Auth::user();
+    $employee=$user->employee;
+    $log = new LogActivity();
+$log->employee_id= $employee->id;
+$log->action = 'Edit Student information';
+$log->save();
     return response()->json(['message' => 'Student info updated successfully'], 200);
   }
   public function AddAdvertisment(AdvertismentRequest $request)
@@ -238,7 +262,12 @@ $log->save();
     }
 
     $advertisment->save();
-
+    $user=Auth::user();
+    $employee=$user->employee;
+    $log = new LogActivity();
+$log->employee_id= $employee->id;
+$log->action = 'Edit Advertisment';
+$log->save();
     return response()->json(['message' => 'Advertisment updated successfully'], 200);
   }
 
@@ -267,6 +296,12 @@ $log->save();
         'end_time' => $request->validated()['end_time'],
 
       ]);
+      $user=Auth::user();
+    $employee=$user->employee;
+    $log = new LogActivity();
+$log->employee_id= $employee->id;
+$log->action = 'Create Schedule Class';
+$log->save();
       return response()->json(['message' => 'Schedule Created Successfully'], 200);
     }
     return response()->json(['message' => 'Schedule Created Error'], 400);
@@ -284,6 +319,12 @@ $log->save();
         'end_time' =>  date($request->validated()['end_time']),
 
       ]);
+      $user=Auth::user();
+      $employee=$user->employee;
+      $log = new LogActivity();
+  $log->employee_id= $employee->id;
+  $log->action = 'Create Schedule Teacher';
+  $log->save();
       return response()->json(['message' => 'Schedule Created Successfully'], 200);
     }
     return response()->json(['message' => 'Schedule Created Error'], 400);
@@ -304,7 +345,12 @@ $log->save();
     if ($schedule->isDirty()) {
       $schedule->save();
     }
-
+    $user=Auth::user();
+    $employee=$user->employee;
+    $log = new LogActivity();
+$log->employee_id= $employee->id;
+$log->action = 'Edit Schedule Class';
+$log->save();
 
     return response()->json(['message' => 'Schedule info updated successfully'], 200);
   }
@@ -325,7 +371,12 @@ $log->save();
       $schedule->save();
     }
 
-
+    $user=Auth::user();
+    $employee=$user->employee;
+    $log = new LogActivity();
+$log->employee_id= $employee->id;
+$log->action = 'Edit Schedule Teacher';
+$log->save();
     return response()->json(['message' => 'Schedule info updated successfully'], 200);
   }
 
@@ -340,6 +391,12 @@ $log->save();
     }
 
     $schedule->delete();
+    $user=Auth::user();
+    $employee=$user->employee;
+    $log = new LogActivity();
+$log->employee_id= $employee->id;
+$log->action = 'Delete Schedule Teacher';
+$log->save();
 
     return response()->json(['message' => 'Schedule deleted successfully'], 200);
   }
@@ -355,6 +412,12 @@ $log->save();
     }
 
     $schedule->delete();
+    $user=Auth::user();
+    $employee=$user->employee;
+    $log = new LogActivity();
+$log->employee_id= $employee->id;
+$log->action = 'Delete Schedule Class';
+$log->save();
 
     return response()->json(['message' => 'Schedule deleted successfully'], 200);
   }
