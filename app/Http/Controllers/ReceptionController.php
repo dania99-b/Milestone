@@ -7,19 +7,22 @@ use App\Models\User;
 use App\Models\Classs;
 use App\Models\Course;
 use App\Models\Student;
+use App\Models\Teacher;
 use App\Models\Course_Day;
+use App\Models\LogActivity;
 use App\Models\Advertisment;
 use Illuminate\Http\Request;
+use App\Models\Class_Schedule;
 use App\Models\AdvertismentType;
+use App\Models\Teacher_Schedule;
 use App\Http\Requests\ClassRequest;
 use App\Http\Requests\CourseRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\AdvertismentRequest;
 use App\Http\Requests\ClassScheduleRequest;
 use App\Http\Requests\TeacherScheduleRequest;
-use App\Models\Class_Schedule;
-use App\Models\Teacher;
-use App\Models\Teacher_Schedule;
+use App\Models\Employee;
 
 class ReceptionController extends Controller
 {
@@ -51,6 +54,12 @@ class ReceptionController extends Controller
       'max_num' => $request->validated()['max_num'],
       'status' => $request->validated()['status'],
     ]);
+    $user=Auth::user();
+    $employee=$user->employee;
+    $log = new LogActivity();
+$log->employee_id= $employee->id;
+$log->action = 'Opened a New Class';
+$log->save();
     return response()->json(['message' => 'Class added successfully'], 200);
   }
   public function EditClass(Request $request)
@@ -338,7 +347,7 @@ class ReceptionController extends Controller
   public function deleteScheduleClass(Request $request)
   {
 
-    $schedule = Class_Schedule::find(2);
+    $schedule = Class_Schedule::find( $request['schedule_id'])->get();
 
 
     if (!$schedule) {

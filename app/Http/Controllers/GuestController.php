@@ -87,7 +87,7 @@ class GuestController extends Controller
     }
     public function getAddvertisment()
     {
-        $add = Advertisment::paginate(3);
+        $add = Advertisment::all();
         return response()->json($add, 200);
     }
 }
