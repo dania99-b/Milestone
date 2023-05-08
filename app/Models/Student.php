@@ -23,4 +23,7 @@ class Student extends Model
     public function rate(){
         $this->hasMany(StudentRate::class);
     }
+    public function reservation(){
+        return $this->belongsTo(Reservation::class);
+    }
 }

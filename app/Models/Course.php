@@ -35,4 +35,11 @@ class Course extends Model
         public function days(){
             return $this->belongsToMany(Day::class,'course_days')->withPivot('course_id','day_id');
         }
+        public function name(){
+            return $this->hasOne(Course_Name::class);
+        }
+        public function reservation(){
+            return $this->belongsTo(Reservation::class);
+        }
+
 }

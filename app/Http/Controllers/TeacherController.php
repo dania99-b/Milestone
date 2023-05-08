@@ -177,7 +177,7 @@ return response()->json(['message' => 'Question Added Successfully'], 200);
   $employee=$user->employee;
   $log = new LogActivity();
 $log->employee_id= $employee->id;
-$log->action = 'Edit Own Profile';
+$log->action = 'Edi Own Profile';
 $log->save();
   return response()->json(['message' => 'Teacher info updated successfully'], 200);
 }

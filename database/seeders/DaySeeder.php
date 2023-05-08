@@ -51,8 +51,6 @@ class DaySeeder extends Seeder
                 'is_vacation' => 1,
 
             ],
-
-
         ]);
     }
 }
