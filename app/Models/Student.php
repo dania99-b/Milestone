@@ -26,4 +26,9 @@ class Student extends Model
     public function reservation(){
         return $this->belongsTo(Reservation::class);
     }
+    public function questions()
+    {
+		return $this->hasMany(StudentQuestionList::class);
+
+    }
 }

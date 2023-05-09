@@ -6,6 +6,7 @@ use App\Models\Course_Name;
 use App\Models\Course_Result;
 use App\Models\Student;
 use App\Models\Student_Placement;
+use App\Models\StudentQuestionList;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -13,33 +14,62 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class ReservationConrtoller extends Controller
 {
    public function CheckBeforeReservation(){
-    $result="";
-    $courses=['1A','1B','2A','2B','3A','3B','4A','4B'];
+ 
+    
+    $courses=['1A','1B','2A','2B','3A','3B','4A','4B','5A','5B'];
     $student = Student::where('user_id', JWTAuth::parseToken()->authenticate()->id)->get()->first()->id;
     $check=Course_Result::where('student_id',$student)->get()->first();
     if($check){
-    $current_course=$check->course_id;
+        print('if not check');
+    //$current_course=$check->course_id;
     $current_course_name=Course_Name::find($check->id)->get()->pluck('course_name');
     foreach ($courses as $course){
         if ($course==$current_course_name){
-         $result=$course;//+1 the next element in array 
-        
+         $result=next($courses);//+1 the next element in array 
+        if($result==false){
+            print('you are passed the final level ');
+        }
+        else{
+            print('you are moved');
+        }
         }
     
     }
     }
     else if(!$check){
-        $placement=Student_Placement::where('student_id',$student)->get()->first();
-        if($placement->created_at<Carbon::now()){//////////////////////
-        $level=$placement->level;
-        if($level){
-            foreach ($courses as $course){
-                if ($course==$level){
-                    $result=$course; /// thw same element
-        }
+        
+        $placement=StudentQuestionList::where('student_id',$student)->get()->first();
+        $placementDate = Carbon::parse($placement->created_at);
+        $after6=$placementDate->addMonths(6);
+        $currentDate = Carbon::now();
+     
+        if($currentDate<=$after6){
+           
+            $level=$placement->level;
+            if($level){
+               
+                foreach ($courses as $course){
+                    if ($course==$level){
+                       
+                        $result=$course; /// the same element
+            }
+        
     }
-    }
-    else return "you not complete your oral placament test";
-   }
+  print($result);
+}
+    else return false;
+   
+  
 }
    }}
+   public function makeReservation(Request $request){
+$function=$this->CheckBeforeReservation();
+if( $function!=false){
+
+}
+
+
+
+
+
+}}

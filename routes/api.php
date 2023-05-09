@@ -95,6 +95,8 @@ Route::post('/rate',[\App\Http\Controllers\StudentController::class,'rate']);
 Route::get('/viewprofile',[\App\Http\Controllers\StudentController::class,'viewProfileStudent']);
 Route::get('/viewnotification',[\App\Http\Controllers\StudentController::class,'viewNotification']);
 Route::post('/editprofile',[\App\Http\Controllers\StudentController::class,'editProfile']);
+Route::post('/check11',[\App\Http\Controllers\ReservationConrtoller::class,'CheckBeforeReservation']);
+Route::post('/storAnswer',[\App\Http\Controllers\StudentPlacementController::class,'storeStudentAnswers']);
 
 
 
@@ -118,3 +120,6 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['role:Teacher']], function
 
 Route::post('/ResentVerificationCode',[\App\Http\Controllers\RegisterController::class,'resent_code']);
 Route::post('/result',[\App\Http\Controllers\ResultConrtoller::class,'calcResult']);
+
+
+
