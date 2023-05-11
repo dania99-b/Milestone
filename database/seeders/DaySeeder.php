@@ -16,12 +16,9 @@ class DaySeeder extends Seeder
     public function run()
     {
         DB::table('days')->insert([
-
-
             [
                 'name' => 'Saturday',
                 'is_vacation' => 0,
-
             ],
             [
                 'name' => 'Sunday',
