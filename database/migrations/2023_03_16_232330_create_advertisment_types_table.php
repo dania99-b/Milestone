@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('admins', function (Blueprint $table) {
+        Schema::create('advertisment_types', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -27,8 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('admins', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('advertisment_types');
     }
 };

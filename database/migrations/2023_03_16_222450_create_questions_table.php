@@ -14,11 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::create('questions', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->string('text');
-            // we should do table for answers $table->array('answers');
-            $table->string('correct_answer');
             $table->string('level');
+            $table->integer('mark');
+            $table->foreignId('type_id')->constrained('question_types');
+            $table->timestamps();
         });
     }
 

@@ -13,9 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('admins', function (Blueprint $table) {
+        Schema::create('answers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->string('name');
+            $table->boolean('is_true')->default(false);
+            $table->foreignId('question_id')->constrained('questions')->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -27,8 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('admins', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('answers');
     }
 };

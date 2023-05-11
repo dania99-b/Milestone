@@ -14,10 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::create('classes', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->string('name');
-            $table->integer('max_num'); 
-            $table->string('status');
+            $table->integer('max_num');
+            $table->json('schedules');  
+            $table->enum('status',['AVAILABLE','UNAVAILABLE'])->default('AVAILABLE');
+            $table->timestamps();
         });
     }
 

@@ -13,29 +13,28 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('guests', function (Blueprint $table) {
             $table->id();
             $table->string('first_name');
             $table->string('last_name');
+            $table->string('education')->nullable();
             $table->string('email')->unique();
-            $table->string('username')->unique();
-            $table->string('birth')->nullable();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
             $table->string('phone')->unique();
-            $table->enum('gender', ['MALE', 'FEMALE']);
-            $table->rememberToken();
-            $table->timestamps();
+            $table->string('verification_code');
+            $table->timestamp('email_verified_at')->nullable();
+          //  $table->unsignedBigInteger('question_list_id'); 
+          //  $table->foreign('question_list_id')->references('id')->on('question_lists');
         });
     }
 
     /**
      * Reverse the migrations.
+     * 
      *
      * @return void
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('guests');
     }
 };

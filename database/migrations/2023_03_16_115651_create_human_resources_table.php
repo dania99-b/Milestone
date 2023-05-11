@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('admins', function (Blueprint $table) {
+        Schema::create('human_resources', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('employee_id')->constrained('employees')->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -27,8 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('admins', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('h_r_s');
     }
 };

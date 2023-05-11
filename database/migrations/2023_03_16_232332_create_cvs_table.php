@@ -13,9 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('admins', function (Blueprint $table) {
+        Schema::create('cvs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->string('file');
+            $table->foreignId('guest_id')->constrained('guests');
+            $table->foreignId('advertisment_id')->constrained('advertisments');
             $table->timestamps();
         });
     }
@@ -27,8 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('admins', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('cvs');
     }
 };

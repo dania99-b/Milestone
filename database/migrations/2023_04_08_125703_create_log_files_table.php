@@ -15,9 +15,8 @@ return new class extends Migration
     {
         Schema::create('log_files', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id'); 
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->string('activity'); 
+            $table->string('action');
+            $table->foreignId('empoloyee_id')->constrained('employees');
             $table->timestamps();
         });
     }

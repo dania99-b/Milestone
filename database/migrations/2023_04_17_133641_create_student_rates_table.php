@@ -15,11 +15,11 @@ return new class extends Migration
     {
         Schema::create('student_rates', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('student_id'); 
-            $table->foreign('student_id')->references('id')->on('students');
-            $table->unsignedBigInteger('teacher_id'); 
-            $table->foreign('teacher_id')->references('id')->on('teachers');
-            $table->integer('rate');
+            $table->enum('rate',['1','2','3','4','5']);
+            $table->string('note');
+            $table->foreignId('student_id')->constrained('students')->cascadeOnDelete();
+            $table->foreignId('teacher_id')->constrained('teachers')->cascadeOnDelete();
+            $table->timestamps();
         });
     }
 

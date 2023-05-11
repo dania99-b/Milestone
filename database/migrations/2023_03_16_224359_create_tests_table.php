@@ -14,9 +14,11 @@ return new class extends Migration
     public function up()
     {
         Schema::create('tests', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamp('start_date')->nullable();
-            $table->timestamp('end_date')->nullable();
+            $table->id();
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
+            $table->json('questions');
+            $table->timestamps();
         });
     }
 

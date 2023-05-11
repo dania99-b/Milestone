@@ -14,17 +14,16 @@ return new class extends Migration
     public function up()
     {
         Schema::create('courses', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('course_name');
-            $table->unsignedBigInteger('class_id'); 
-            $table->foreign('class_id')->references('id')->on('classes');
+            $table->id();
             $table->timestamp('start_hour')->nullable();
             $table->timestamp('end_hour')->nullable();
             $table->date('start_day')->nullable();
             $table->date('end_day')->nullable();
-            $table->string('status')->nullable();
+            $table->json('days');
             $table->string('qr_code')->nullable();
-            $table->timestamp('created_at')->nullable();
+            $table->foreignId('class_id')->constrained('classes');
+            $table->foreignId('course_name_id')->constrained('course_names');
+            $table->timestamps();
            
         });
     }

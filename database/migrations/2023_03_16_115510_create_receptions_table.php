@@ -14,9 +14,9 @@ return new class extends Migration
     public function up()
     {
         Schema::create('receptions', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('employee_id'); 
-            $table->foreign('employee_id')->references('id')->on('employees');
+            $table->id();
+            $table->foreignId('employee_id')->constrained('employees')->cascadeOnDelete();
+            $table->timestamps();
         });
     }
 

@@ -13,9 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('admins', function (Blueprint $table) {
+        Schema::create('guest_placement_tests', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->integer('mark');
+            $table->string('level')->nullable()->default(null);
+            $table->foreignId('guest_id')->constrained('guests')->cascadeOnDelete();
+            $table->foreignId('test_id')->constrained('tests')->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -27,8 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('admins', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('guest_placement_tests');
     }
 };

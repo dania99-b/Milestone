@@ -14,9 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('days', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->string('name');
-            $table->boolean('is_vacation');
+            $table->boolean('is_vacation')->default(false);
+            $table->timestamps();
         });
     }
 

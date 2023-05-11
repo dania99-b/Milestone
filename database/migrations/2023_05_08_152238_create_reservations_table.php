@@ -15,10 +15,9 @@ return new class extends Migration
     {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('student_id');
-            $table->foreign('student_id')->references('id')->on('students');
-            $table->unsignedBigInteger('course_id');
-            $table->foreign('course_id')->references('id')->on('courses');
+            $table->foreignId('student_id')->constrained('students');
+            $table->foreignId('course_id')->constrained('courses');
+            $table->enum('status',['PENDING','ACCEPTED'])->default('PENDING');
             $table->timestamps();
         });
     }

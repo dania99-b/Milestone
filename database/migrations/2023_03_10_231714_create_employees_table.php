@@ -14,10 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('employees', function (Blueprint $table) {
-            //
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id'); 
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->id();
+            $table->string('image')->nullable();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->timestamps();
         });
     }
 
