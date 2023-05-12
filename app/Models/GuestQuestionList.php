@@ -15,7 +15,6 @@ class GuestQuestionList extends Model
 		'guest_id',
 		'question_list_id',
 		'answer',
-		
         ];
         public function question_list()
         {
@@ -25,6 +24,5 @@ class GuestQuestionList extends Model
         public function answer()
         {
             return $this->hasOne(Answer::class);
-        }
-       
+        }      
 }

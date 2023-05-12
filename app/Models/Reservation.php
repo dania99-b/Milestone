@@ -14,12 +14,13 @@ class Reservation extends Model
         'id',
         'student_id',
         'course_id',
-       
         ];
-        public function course(){
-            return $this->HasOne(Course::class);
-        }
-        public function student(){
-            return $this->HasOne(Student::class);
-        }
+
+    public function course(){
+        return $this->belongsTo(Course::class);
+    }
+
+    public function student(){
+        return $this->belongsTo(Student::class);
+    }
 }

@@ -40,6 +40,6 @@ class Course extends Model
             return $this->hasOne(CourseName::class);
         }
         public function reservation(){
-            return $this->belongsTo(Reservation::class);
+            return $this->hasMany(Reservation::class);
     }
 }
