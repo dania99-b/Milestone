@@ -26,7 +26,8 @@ class TestRequest extends FormRequest
         return [
           
                 'start_date' => 'required|date|max:255',
-                'end_date' => 'required|date|max:255'
+                'end_date' => 'required|date|max:255',
+                'questions.*' => 'required|string'
                 
                 ];
     }

@@ -54,7 +54,7 @@ Route::get('/getAdvertisment',[\App\Http\Controllers\GuestController::class,'get
 
 
 Route::group(['prefix' => 'reception', 'middleware' => ['role:Reception']], function() {
-Route::post('/CreatStudent',[\App\Http\Controllers\RegisterController::class,'RegisterStudent']);
+Route::post('/register/student',[\App\Http\Controllers\RegisterController::class,'student']);
 Route::post('/CreatClass',[\App\Http\Controllers\ReceptionController::class,'OpenClass']);
 Route::post('/CreatCourse',[\App\Http\Controllers\ReceptionController::class,'OpenCourse']);
 Route::post('/EditCourse',[\App\Http\Controllers\ReceptionController::class,'EditClass']);
@@ -87,7 +87,7 @@ Route::post('/rate',[\App\Http\Controllers\StudentController::class,'rate']);
 Route::get('/viewprofile',[\App\Http\Controllers\StudentController::class,'viewProfileStudent']);
 Route::get('/viewnotification',[\App\Http\Controllers\StudentController::class,'viewNotification']);
 Route::post('/editprofile',[\App\Http\Controllers\StudentController::class,'editProfile']);
-Route::post('/check11',[\App\Http\Controllers\ReservationConrtoller::class,'CheckBeforeReservation']);
+Route::get('/check11',[\App\Http\Controllers\ReservationConrtoller::class,'CheckBeforeReservation']);
 Route::post('/storAnswer',[\App\Http\Controllers\StudentPlacementController::class,'storeStudentAnswers']);
 
 

@@ -30,6 +30,7 @@ class RegisterController extends Controller
             'password' => bcrypt($request->validated()['password']),
             'phone' => $request->validated()['phone'],
             'username' => $request->validated()['username'],
+            'birth' => $request->validated()['birth'],
         ]);
         $mainemployee = Admin::firstOrCreate([
             'user_id' => $mainuser->id,
@@ -93,6 +94,7 @@ public function reception(EmployeeRequest $request)
             'password' => bcrypt($request->validated()['password']),
             'phone' => $request->validated()['phone'],
             'username' => $request->validated()['username'],
+            'birth' => $request->validated()['birth'],
             
        
     ]);
@@ -130,14 +132,15 @@ public function HR(EmployeeRequest $request)
             'password' => bcrypt($request->validated()['password']),
             'phone' => $request->validated()['phone'],
             'username' => $request->validated()['username'],
-            'image'=>$upload
+            'image'=>$upload,
+            'birth' => $request->validated()['birth'],
            
         ]);
         $mainemployee = Employee::firstOrCreate([
             'user_id' => $mainuser->id,
             'image'=>$upload
         ]);
-        $mainreception = Human_Resource::firstOrCreate([
+        $mainreception = HumanResource::firstOrCreate([
             'employee_id' => $mainemployee->id,
         ]);
           
@@ -165,13 +168,14 @@ public function student(EmployeeRequest $request)
             'password' => bcrypt($request->validated()['password']),
             'phone' => $request->validated()['phone'],
             'username' => $request->validated()['username'],
-            'birthdate' => $request->validated()['birthdate'],
+            'birth' => $request->validated()['birth'],
             
            
         ]);
-        $student = Student::firstOrCreate([
+        $student = $mainstudent->student()->create([
             'user_id' => $mainstudent->id,
-            'image'=>$upload
+            'image' => $upload,
+            'country_id' => $request->validated()['country_id']
         ]);
        
           

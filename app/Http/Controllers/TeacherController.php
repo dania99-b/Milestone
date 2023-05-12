@@ -16,13 +16,15 @@ use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\QuestionRequest;
+use App\Models\LogFile;
+use App\Models\QuestionType;
 
 class TeacherController extends Controller
 {
   public function AddQuestion(QuestionRequest $request)
   {
     $type_id = $request->validated()['type_id'];
-    $type = Type::find($type_id);
+    $type = QuestionType::find($type_id);
     if (!$type) {
       // Return a 400 status code with an error message if the course cannot be found
       return response()->json(['message' => 'type not found'], 400);
@@ -43,7 +45,7 @@ class TeacherController extends Controller
     }
     $user=Auth::user();
     $employee=$user->employee;
-    $log = new LogActivity();
+    $log = new LogFile();
 $log->employee_id= $employee->id;
 $log->action = 'Add Question';
 $log->save();
@@ -60,7 +62,7 @@ $log->save();
     }
     $user=Auth::user();
     $employee=$user->employee;
-    $log = new LogActivity();
+    $log = new LogFile();
 $log->employee_id= $employee->id;
 $log->action = 'Delete Question';
 $log->save();
@@ -72,13 +74,13 @@ $log->save();
 
   public function AddType(Request $request)
   {
-    $type = Type::firstOrCreate([
+    $type = QuestionType::firstOrCreate([
       'name' => $request['name'],
 
     ]);
     $user=Auth::user();
     $employee=$user->employee;
-    $log = new LogActivity();
+    $log = new LogFile();
 $log->employee_id= $employee->id;
 $log->action = 'Add Question Type';
 $log->save();
@@ -86,23 +88,23 @@ return response()->json(['message' => 'Question Type Added Successfully'], 200);
   }
   public function MakeTest(TestRequest $request)
   {
+    $questions = $questions = Question::with('answers')->orderBy(DB::raw('RAND()'))->take(2)->get();
     $newTest = Test::firstOrCreate([
       'start_date' => $request->validated()['start_date'],
-      'end_date' => $request->validated()['end_date'],
-
+      'end_date' => $request->validated()['end_date'],],
+      [
+        'questions' => json_encode($questions->pluck('id')),
     ]);
-    $questions = $questions = Question::orderBy(DB::raw('RAND()'))->take(7)->get();
-    foreach ($questions as $question) {
 
-      $newTest->questions()->attach($question);
-    }
+
+
     $user=Auth::user();
     $employee=$user->employee;
-    $log = new LogActivity();
+    $log = new LogFile();
 $log->employee_id= $employee->id;
 $log->action = 'Create Test';
 $log->save();
-return response()->json(['message' => 'Test Created Successfully'], 200);
+return response()->json(['message' => 'Test Created Successfully', json_encode($questions->pluck('id'))], 200);
   }
 
   public function AddQuestionExistTest(Request $request)
@@ -121,7 +123,7 @@ return response()->json(['message' => 'Test Created Successfully'], 200);
     }
     $user=Auth::user();
     $employee=$user->employee;
-    $log = new LogActivity();
+    $log = new LogFile();
 $log->employee_id= $employee->id;
 $log->action = 'Add Question To Exist Test';
 $log->save();
@@ -175,7 +177,7 @@ return response()->json(['message' => 'Question Added Successfully'], 200);
   }
   $user=Auth::user();
   $employee=$user->employee;
-  $log = new LogActivity();
+  $log = new LogFile();
 $log->employee_id= $employee->id;
 $log->action = 'Edi Own Profile';
 $log->save();

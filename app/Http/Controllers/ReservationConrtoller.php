@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Course_Name;
-use App\Models\Course_Result;
+use App\Http\Requests\CourseRequest;
+
+use App\Models\CourseName;
+use App\Models\CourseResult;
 use App\Models\Student;
-use App\Models\Student_Placement;
-use App\Models\StudentQuestionList;
+
+
+
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -18,11 +21,11 @@ class ReservationConrtoller extends Controller
     
     $courses=['1A','1B','2A','2B','3A','3B','4A','4B','5A','5B'];
     $student = Student::where('user_id', JWTAuth::parseToken()->authenticate()->id)->get()->first()->id;
-    $check=Course_Result::where('student_id',$student)->get()->first();
+    $check=CourseResult::where('student_id',$student)->get()->first();
     if($check){
-        print('if not check');
+        print('if check');
     //$current_course=$check->course_id;
-    $current_course_name=Course_Name::find($check->id)->get()->pluck('course_name');
+    $current_course_name=CourseName::find($check->id)->get()->pluck('course_name');
     foreach ($courses as $course){
         if ($course==$current_course_name){
          $result=next($courses);//+1 the next element in array 
@@ -38,7 +41,7 @@ class ReservationConrtoller extends Controller
     }
     else if(!$check){
         
-        $placement=StudentQuestionList::where('student_id',$student)->get()->first();
+        $placement=\App\Models\StudentPlacement::where('student_id',$student)->get()->first();
         $placementDate = Carbon::parse($placement->created_at);
         $after6=$placementDate->addMonths(6);
         $currentDate = Carbon::now();

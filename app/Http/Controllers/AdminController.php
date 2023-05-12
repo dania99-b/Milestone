@@ -9,6 +9,7 @@ use App\Models\Reception;
 use Illuminate\Http\Request;
 use App\Models\Human_Resource;
 use App\Http\Requests\ImageRequest;
+use App\Models\HumanResource;
 use App\Models\Image;
 
 class AdminController extends Controller
@@ -76,7 +77,7 @@ class AdminController extends Controller
       public function EditHrInfo(Request $request){
         $hrId = $request->input('hr_id');
 
-    $hr = Human_Resource::with('employee.user')->find($hrId);
+    $hr = HumanResource::with('employee.user')->find($hrId);
     if (!$hr) {
       return response()->json(['message' => 'Teacher not found'], 404);
   }
