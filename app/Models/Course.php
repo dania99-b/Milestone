@@ -23,12 +23,13 @@ class Course extends Model
         'status',
         'qr_code',
         'created_at',
-    
+        'days',
+        'course_name_id',
         ];
+        
         public function class(){
 			$this->belongsTo(Classs::class);
 		}
-
         public function student(){
             return $this->belongsToMany(Student::class,'attendences')->withPivot('student_id','course_id','is_absent','created_at');
         }
@@ -36,10 +37,9 @@ class Course extends Model
             return $this->belongsToMany(Day::class,'course_days')->withPivot('course_id','day_id');
         }
         public function name(){
-            return $this->hasOne(Course_Name::class);
+            return $this->hasOne(CourseName::class);
         }
         public function reservation(){
             return $this->belongsTo(Reservation::class);
-        }
-
+    }
 }

@@ -15,10 +15,8 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 class AuthController extends Controller
 {
-
-
     public function sendWebSocketRequest()
-{
+    {
     // Send the WebSocket request here using Laravel WebSockets
 
     // Trigger the event to notify the user
@@ -27,7 +25,8 @@ class AuthController extends Controller
 
     // Trigger the notification
    // Notification::send($user, new WebSocketSuccessNotification());
-}
+    }
+
     public function __construct()
     {
         $this->middleware('auth:api', ['except' => ['login']]);
@@ -40,32 +39,26 @@ class AuthController extends Controller
      */
     public function login()
     {
-       
         $credentials = request(['email', 'password']);
-
         if (! $token = auth()->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
-        //here to controle who to send the notification 
 
-         $user = Auth::user();
+        $user = Auth::user();
         $user_roles = $user->roles()->pluck('name');
       //  $user->notify(new WebSocketSuccessNotification('New order placed!'));
     //   Notification::send($user, new WebSocketSuccessNotification('you are logged in'));
     
        //event(new NotificationRecieved($user));
         return response()->json([
-            'token' => $token,
+                'token' => $token,
                 'id' => $user->id,
                 'first_name' => $user->first_name,
                 'last_name' => $user->last_name,
                 'email' => $user->email,
                 'roles' => $user_roles,
-          
         ]);
     }
-
-
     /**
      * Get the authenticated User.
      *
@@ -75,7 +68,6 @@ class AuthController extends Controller
     {
         return response()->json(auth()->user());
     }
-
     /**
      * Log the user out (Invalidate the token).
      *
@@ -83,11 +75,10 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        auth()->logout();
+        Auth::logout();
 
         return response()->json(['message' => 'Successfully logged out']);
     }
-
     /**
      * Refresh a token.
      *
@@ -98,7 +89,6 @@ class AuthController extends Controller
         return $this->respondWithToken(auth()->refresh());
 
     }
-
     /**
      * Get the token array structure.
      *
@@ -114,7 +104,4 @@ class AuthController extends Controller
             'expires_in' => auth()->factory()->getTTL() * 60
         ]);
     }
-
-    
-
 }

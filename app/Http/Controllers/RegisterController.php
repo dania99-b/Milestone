@@ -8,11 +8,11 @@ use App\Models\Guest;
 use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\Employee;
-use App\Mail\VerifyEmail;
 use App\Models\Reception;
+use App\Mail\VerifyEmail;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Models\Human_Resource;
+use App\Models\HumanResource;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\EmployeeRequest;
 use Tymon\JWTAuth\Contracts\Providers\Auth;
@@ -21,11 +21,9 @@ use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
 class RegisterController extends Controller
 {
 
-    public function RegisterAdmin(EmployeeRequest $request)
+    public function admin(EmployeeRequest $request)
     {
-       
         $upload = $request->file('images')->move('images/', $request->file('images')->getClientOriginalName());
-
         $mainuser = User::firstOrCreate([
             'first_name' => $request->validated()['first_name'],
             'last_name' => $request->validated()['last_name'],
@@ -33,29 +31,20 @@ class RegisterController extends Controller
             'password' => bcrypt($request->validated()['password']),
             'phone' => $request->validated()['phone'],
             'username' => $request->validated()['username'],
-          
-           
         ]);
         $mainemployee = Admin::firstOrCreate([
             'user_id' => $mainuser->id,
-            
         ]);
-       
-          
-    
         $mainuser->attachRole('Admin');
-    
-    
         return response()->json([
-            'message' => 'user successfully registered',
+            'message' => 'admin successfully registered',
             'user' => $mainuser,
             'token' => $mainuser->createToken('tokens')->plainTextToken
-    
         ], '200');
-}
+    }
 
 
-    public function RegisterTeacher(EmployeeRequest $request)
+    public function teacher(EmployeeRequest $request)
     {
    
         $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
@@ -66,7 +55,7 @@ class RegisterController extends Controller
             'password' => bcrypt($request->validated()['password']),
             'phone' => $request->validated()['phone'],
             'username' => $request->validated()['username'],
-            'birthdate' => $request->validated()['birthdate'],
+            'birth' => $request->validated()['birth'],
            
        
     ]);
@@ -92,7 +81,7 @@ class RegisterController extends Controller
 
 }
 
-public function RegisterReception(EmployeeRequest $request)
+public function reception(EmployeeRequest $request)
     {
 
         
@@ -131,7 +120,7 @@ public function RegisterReception(EmployeeRequest $request)
 }
 
 
-public function RegisterHR(EmployeeRequest $request)
+public function HR(EmployeeRequest $request)
     {
         $upload = $request->file('images')->move('images/', $request->file('images')->getClientOriginalName());
 
@@ -166,7 +155,7 @@ public function RegisterHR(EmployeeRequest $request)
 
 }
 
-public function RegisterStudent(EmployeeRequest $request)
+public function student(EmployeeRequest $request)
     {              
         $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
 

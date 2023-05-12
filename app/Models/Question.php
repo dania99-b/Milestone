@@ -16,15 +16,16 @@ class Question extends Model
         'type_id',
         'mark'
         ];
-   
+
     public function answers(){
         $this->hasMany(Answer::class);
     }
+
     public function type(){
-        $this->belongsTo(Type::class);
+        return $this->belongsTo(QuestionType::class);
     }
-    public function tests()
-    {
+
+    public function tests(){
         return $this->belongsToMany(Test::class,'question_lists');
     }
 }

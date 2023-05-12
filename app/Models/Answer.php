@@ -12,15 +12,15 @@ class Answer extends Model
     protected $fillable=[
         'id',
         'name',
+        'is_true',
         'question_id',
-        'is_true'
         ];
 
         public function question(){
             $this->belongsTo(Question::class);
         }
-        public function guest_answer()
-        {
-            return $this->hasOne(GuestQuestionList::class);
-        }
+        // public function guest_answer()
+        // {
+        //     return $this->hasOne(GuestQuestionList::class);
+        // }
 }

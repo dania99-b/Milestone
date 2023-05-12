@@ -10,10 +10,12 @@ class QuestionType extends Model
     use HasFactory;
     public $timestamps = false;
     protected $fillable = [
+        'id',
         'name'
-   
     ];
-    public function questions(){
-        $this->hasMany(Question::class);
+
+    public function questions()
+    {
+        return $this->hasMany(Question::class);
     }
 }

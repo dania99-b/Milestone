@@ -14,12 +14,11 @@ class Classs extends Model
         'id',
         'name',
         'max_num',
+        'schedules',
         'status',
     ];
-        public function courses(){
-			$this->hasMany(Course::class);
-		}      
-        public function class_schedule(){
-            return $this->hasMany(Class_Schedule::class);
-        }
+    
+    public function courses(){
+        $this->hasMany(Course::class);
+    }
 }

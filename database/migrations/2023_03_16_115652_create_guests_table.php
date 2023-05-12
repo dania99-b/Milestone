@@ -22,8 +22,6 @@ return new class extends Migration
             $table->string('phone')->unique();
             $table->string('verification_code');
             $table->timestamp('email_verified_at')->nullable();
-          //  $table->unsignedBigInteger('question_list_id'); 
-          //  $table->foreign('question_list_id')->references('id')->on('question_lists');
         });
     }
 

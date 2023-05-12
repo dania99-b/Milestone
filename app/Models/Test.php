@@ -13,13 +13,14 @@ class Test extends Model
         'id',
         'start_date',
         'end_date',
-  
+        'questions',
         ];
 
     public function questions()
     {
         return $this->belongsToMany(Question::class,'question_lists');
     }
+
     public function guests()
     {
         return $this->belongsToMany(Guest::class);

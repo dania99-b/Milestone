@@ -7,17 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Admin extends Model
 {
+    use HasFactory;
 
     protected $fillable=[
         'id',
         'user_id'
         ];
-    public $timestamps = false;
-    use HasFactory;
+
+    public $timestamps = true;
 
     public function user(){
         $this->belongsTo(User::class);
     }
 }
-
-

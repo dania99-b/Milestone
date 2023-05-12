@@ -8,9 +8,9 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Guest extends Model implements MustVerifyEmail
-
-
-{
+	{
+    use HasFactory;
+	public $timestamps = false;
     protected $fillable=[
 		'id',
 		'first_name',
@@ -22,23 +22,17 @@ class Guest extends Model implements MustVerifyEmail
         'password',
         'phone',
         'verification_code',
-       
+		'email_verified_at',
         ];
+
 		public function cvs(){
 			$this->hasMany(Cv::class);
 		}
+
 		public function test()
 		{
 			return $this->hasOne(Test::class);
 		}
-		public function questions()
-    {
-		return $this->hasMany(GuestQuestionList::class);
-
-    }
-	
-    public $timestamps = false;
-    use HasFactory;
 	/**
 	 * Determine if the user has verified their email address.
 	 * @return bool

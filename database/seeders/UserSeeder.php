@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
                 'last_name' => 'admin',
                 'username' => 'admin',
                 'email' => 'admin@milestone.com',
-                'password' => 'admin',
+                'password' => bcrypt('admin'),
                 'phone' => '0911111111',
                 'gender' => 'MALE',
             ],

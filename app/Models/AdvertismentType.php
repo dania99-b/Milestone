@@ -11,8 +11,8 @@ class AdvertismentType extends Model
     protected $fillable=[
         'id',
         'name',
-       
         ];
+
     public function advertisment(){
         $this->hasMany(Advertisment::class);
     }

@@ -12,10 +12,9 @@ class Reception extends Model
         'id',
         'employee_id'
         ];
-        public $timestamps = false;
-    public function user(){
-        $this->belongsTo(User::class);
-    }
+
+    public $timestamps = false;
+
     public function employee(){
         $this->belongsTo(Employee::class);
     }

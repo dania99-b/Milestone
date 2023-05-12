@@ -7,23 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class Teacher extends Model
 {
+    use HasFactory;
     protected $fillable=[
         'id',
-        'employee_id'
+        'employee_id',
+        'experince_years',
+        'schedules'
         ];
     public $timestamps = false;
-    use HasFactory;
-    public function user(){
-       return $this->belongsTo(User::class);
-    }
 
     public function employee(){
         return $this->belongsTo(Employee::class);
     }
+
     public function rate(){
         return $this->hasMany(StudentRate::class);
     }
-    public function teacher_schedule(){
-        return $this->hasMany(Teacher_Schedule::class);
-    }
+
 }

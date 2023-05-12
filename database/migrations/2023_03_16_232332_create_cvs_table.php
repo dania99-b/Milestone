@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('file');
             $table->foreignId('guest_id')->constrained('guests');
-            $table->foreignId('advertisment_id')->constrained('advertisments');
+            $table->foreignId('advertisment_id')->constrained('advertisments')->nullable();
             $table->timestamps();
         });
     }

@@ -11,8 +11,9 @@ class Image extends Model
     
     protected $fillable=[
         'id',
-        'file_path',
-        'publish_date',
-        'is_appear'
+        'image',
+        'published_at',
+        'expired_at',
+        'is_show'
         ];
 }

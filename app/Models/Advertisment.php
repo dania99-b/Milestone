@@ -15,12 +15,15 @@ class Advertisment extends Model
         'advertisment_type_id',
         'tips',
         'is_shown',
-        'description'.
-        'publish_data'	
+        'description',
+        'published_at',
+        'expired_at',
         ];
+
         public function advertismentType(){
             $this->belongsTo(AdvertismentType::class);
         }
+        
         public function cvs(){
             $this->hasMany(CV::class);
         }

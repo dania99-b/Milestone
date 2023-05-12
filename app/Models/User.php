@@ -29,10 +29,10 @@ class User extends Authenticatable implements JWTSubject
         'password',
         'phone',
         'username',
-        'birthdate'
+        'birth',
+        'gender',
     ];
 
-    
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -69,7 +69,12 @@ class User extends Authenticatable implements JWTSubject
     public function admin(){
        return  $this->hasOne(Admin::class);
     }
+
     public function student(){
         return $this->hasOne(Student::class);
+    }
+    
+    public function humanResource(){
+        return $this->hasOne(HumanResource::class);
     }
 }

@@ -11,8 +11,7 @@ class Role_User extends Model
     protected $fillable = [
         'role_id',
         'user_id',
-        'user_type',
-       
+        'user_type',     
     ];
     use HasFactory;
 }

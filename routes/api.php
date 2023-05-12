@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PermissionController;
 use Illuminate\Http\Request;
@@ -21,34 +22,25 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group([
-
-    'middleware' => 'api',
-    'prefix' => 'auth'
-
-], function ($router) {
-
+Route::group(['middleware' => 'api', 'prefix' => 'auth'], function ($router) {
     Route::post('login', [AuthController::class,'login']);
-    Route::post('logout', 'AuthController@logout');
-    Route::post('refresh', 'AuthController@refresh');
-    Route::post('me', 'AuthController@me');   
-
+    Route::post('logout', [AuthController::class,'logout']);
+    Route::post('refresh',  [AuthController::class,'refresh']);
+    Route::post('me',  [AuthController::class,'me']);   
 });
+
 Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin']], function() {
-
-Route::post('/CreateTeacher',[\App\Http\Controllers\RegisterController::class,'RegisterTeacher']);
-Route::post('/CreateReception',[\App\Http\Controllers\RegisterController::class,'RegisterReception']);
-Route::post('/CreateHr',[\App\Http\Controllers\RegisterController::class,'RegisterHR']);
-Route::post('/CreateAdmin',[\App\Http\Controllers\RegisterController::class,'RegisterAdmin']);
-Route::post('/AddRole',[PermissionController::class,'AddRole']);
-Route::post('/EditTeacherInfo',[AdminController::class,'EditTeacherInfo']);
-Route::post('/EditReceptionInfo',[AdminController::class,'EditReceptionInfo']);
-Route::post('/EditHrnInfo',[AdminController::class,'EditHrInfo']);
-Route::post('/UploadImage',[AdminController::class,'UploadImage']);
-
-
-
+    Route::post('/register/teacher',[RegisterController::class,'teacher']);
+    Route::post('/register/reception',[RegisterController::class,'reception']);
+    Route::post('/register/hr',[RegisterController::class,'HR']);
+    Route::post('/register/admin',[RegisterController::class,'admin']);
+    Route::post('/AddRole',[PermissionController::class,'AddRole']);
+    Route::post('/EditTeacherInfo',[AdminController::class,'EditTeacherInfo']);
+    Route::post('/EditReceptionInfo',[AdminController::class,'EditReceptionInfo']);
+    Route::post('/EditHrnInfo',[AdminController::class,'EditHrInfo']);
+    Route::post('/UploadImage',[AdminController::class,'UploadImage']);
 });
+
 Route::post('/GuestAnswers',[\App\Http\Controllers\GuestController::class,'storeAnswers']);
 Route::post('/CreateGuest',[\App\Http\Controllers\RegisterController::class,'GuestVertification']);
 Route::post('/verify',[\App\Http\Controllers\RegisterController::class,'verifyEmail']);

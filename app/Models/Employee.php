@@ -7,13 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Employee extends Model
 {
+    use HasFactory;
     protected $fillable=[
         'id',
         'user_id',
-        'image'
+        'image',
         ];
+
     public $timestamps = false;
-    use HasFactory;
 
     public function user(){
         return $this->belongsTo(User::class);
@@ -22,12 +23,15 @@ class Employee extends Model
     public function teacher(){
         return $this->hasOne(Teacher::class);
     }
+
     public function reciption(){
         return $this->hasOne(Reception::class);
     }
+
     public function human_resource(){
-       return $this->hasOne(Human_Resource::class);
+       return $this->hasOne(HumanResource::class);
     }
+
     public function log(){
         return $this->hasMany(LogActivity::class);
     }
