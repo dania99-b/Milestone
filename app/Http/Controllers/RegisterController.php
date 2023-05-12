@@ -20,7 +20,6 @@ use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
 
 class RegisterController extends Controller
 {
-
     public function admin(EmployeeRequest $request)
     {
         $upload = $request->file('images')->move('images/', $request->file('images')->getClientOriginalName());
@@ -48,8 +47,8 @@ class RegisterController extends Controller
     {
    
         $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
-    $mainuser = User::firstOrCreate([
-        'first_name' => $request->validated()['first_name'],
+        $mainuser = User::firstOrCreate([
+            'first_name' => $request->validated()['first_name'],
             'last_name' => $request->validated()['last_name'],
             'email' =>$request->validated()['email'],
             'password' => bcrypt($request->validated()['password']),
