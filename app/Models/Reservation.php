@@ -14,6 +14,7 @@ class Reservation extends Model
         'id',
         'student_id',
         'course_id',
+        'status',
         ];
 
     public function course(){

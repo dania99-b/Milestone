@@ -24,6 +24,10 @@ class Student extends Model
     public function course(){
         return $this->belongsToMany(Course::class,'attendences')->withPivot('student_id','course_id','is_absent','created_at');
     }
+    public function tests()
+    {
+        return $this->belongsToMany(Guest::class,'student_placement_tests')->withPivot('mark', 'level');
+    }
 
     public function rate(){
         $this->hasMany(StudentRate::class);

@@ -29,9 +29,9 @@ class Guest extends Model implements MustVerifyEmail
 			$this->hasMany(Cv::class);
 		}
 
-		public function test()
+		public function tests()
 		{
-			return $this->hasOne(Test::class);
+			return $this->belongsToMany(Guest::class,'guest_placement_tests')->withPivot('mark', 'level');
 		}
 	/**
 	 * Determine if the user has verified their email address.

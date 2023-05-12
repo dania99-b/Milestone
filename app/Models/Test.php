@@ -15,14 +15,12 @@ class Test extends Model
         'end_date',
         'questions',
         ];
-
-    public function questions()
-    {
-        return $this->belongsToMany(Question::class,'question_lists');
-    }
-
     public function guests()
     {
-        return $this->belongsToMany(Guest::class);
+        return $this->belongsToMany(Guest::class,'guest_placement_tests')->withPivot('mark', 'level');
+    }
+    public function students()
+    {
+        return $this->belongsToMany(Guest::class,'student_placement_tests')->withPivot('mark', 'level');
     }
 }
