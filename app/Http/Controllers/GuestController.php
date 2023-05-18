@@ -2,39 +2,50 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CvRequest;
-use App\Models\Advertisment;
 use App\Models\Cv;
-use App\Models\Employee;
 use App\Models\Test;
-use App\Models\Guest;
-use App\Models\GuestQuestionList;
-use App\Models\Image;
-use App\Models\Question_List;
-use App\Models\Teacher;
 use App\Models\User;
+use App\Models\Guest;
+use App\Models\Image;
+use App\Models\Answer;
+use App\Models\Teacher;
+use App\Models\Employee;
+use App\Models\Question;
+use App\Models\Advertisment;
 use Illuminate\Http\Request;
+use App\Models\Question_List;
+use App\Models\GuestPlacement;
+use App\Http\Requests\CvRequest;
+use App\Models\GuestQuestionList;
 
 class GuestController extends Controller
 {
     public function storeAnswers(Request $request){
+        $total_mark = 0;
         $validatedData = $request->validate([
             'guest_id' => 'required|exists:guests,id',
             'test_id' => 'required|exists:tests,id',
             'answers' => 'required|array',
-            'answers.*.question_list_id' => 'required',
-            'answers.*.answer_id' => 'required',
+           
         ]);
-        $guest = Guest::findOrFail($validatedData['guest_id']);
-        $test = Test::findOrFail($validatedData['test_id']);
-        foreach ($validatedData['answers'] as $answerData) {
-            $questionList = Question_List::findOrFail($answerData['question_list_id']);
-            $guestAnswer = new GuestQuestionList();
-            $guestAnswer->answer_id = $answerData['answer_id'];
-            $guestAnswer->question_list()->associate($questionList);
-            $guest->questions()->save($guestAnswer);
+       
+        foreach($validatedData['answers'] as $answer){
+        $answer=Answer::find($answer);
+        if($answer->is_true==1)
+    
+         $total_mark+=Question::find($answer->question_id)->mark;
         }
-        return response()->json(['message' => 'Answers stored successfully'], 200);
+       
+      
+        $store=GuestPlacement::firstOrCreate([
+            'guest_id'=>$validatedData['guest_id'],
+            'test_id'=>$validatedData['test_id'],
+            'mark'=>  $total_mark
+            
+           ]);
+        $store->save();
+     
+        return response()->json(['message' => 'Answer Submited Successfully ', 'data'=> $total_mark],200);
     }
 
     public function uploadCv(CvRequest $request){

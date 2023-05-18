@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Day;
 use App\Models\User;
+use App\Models\Classs;
 use App\Models\Course;
+use App\Models\LogFile;
 use App\Models\Student;
 use App\Models\Teacher;
+use App\Models\Employee;
 use App\Models\Course_Day;
-use App\Models\LogFile;
 use Illuminate\Http\Request;
 use App\Models\Class_Schedule;
 use App\Models\Teacher_Schedule;
@@ -19,7 +21,6 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\AdvertismentRequest;
 use App\Http\Requests\ClassScheduleRequest;
 use App\Http\Requests\TeacherScheduleRequest;
-use App\Models\Employee;
 
 class ReceptionController extends Controller
 {

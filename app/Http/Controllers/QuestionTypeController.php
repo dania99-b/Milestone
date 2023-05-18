@@ -14,7 +14,7 @@ class QuestionTypeController extends Controller
         return response()->json($types, 200);
     }
 
-    public function create(Request $request){
+    public function AddType(Request $request){
         $type = QuestionType::firstOrCreate([
             'name' => $request['name'],
         ]);

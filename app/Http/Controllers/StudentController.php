@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Answer;
 use App\Models\Course;
 use App\Models\Student;
+use App\Models\Question;
 use App\Models\Attendence;
 use App\Models\StudentRate;
 use Illuminate\Http\Request;
+use App\Models\StudentPlacement;
 use App\Http\Requests\RateRequest;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -16,6 +19,40 @@ use App\Http\Requests\AttendenceRequest;
 
 class StudentController extends Controller
 {
+
+
+
+
+    public function storeAnswers(Request $request){
+        $total_mark = 0;
+        $validatedData = $request->validate([
+           
+            'test_id' => 'required|exists:tests,id',
+            'answers' => 'required|array',
+           
+        ]);
+       
+        foreach($validatedData['answers'] as $answer){
+        $answer=Answer::find($answer);
+        if($answer->is_true==1)
+    
+         $total_mark+=Question::find($answer->question_id)->mark;
+        }
+       
+      $user= JWTAuth::parseToken()->authenticate();
+    
+
+        $store=StudentPlacement::firstOrCreate([
+            'student_id'=>  $user->student->id,
+            'test_id'=>$validatedData['test_id'],
+            'mark'=>  $total_mark
+            
+           ]);
+        $store->save();
+     
+        return response()->json(['message' => 'Answer Submited Successfully ', 'data'=> $total_mark],200);
+    }
+
     public function scan(AttendenceRequest $request)
     {
 

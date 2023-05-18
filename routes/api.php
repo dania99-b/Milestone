@@ -15,6 +15,9 @@ use App\Http\Controllers\AdvertismentController;
 use App\Http\Controllers\AdvertismentTypeController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\PlacementController;
+use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\QuestionTypeController;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -86,13 +89,15 @@ Route::group(['prefix' => 'student', 'middleware' => ['role:Student']], function
     Route::post('/editprofile',[StudentController::class,'editProfile']);
     Route::get('/check11',[ReservationConrtoller::class,'CheckBeforeReservation']);
     Route::post('/storAnswer',[StudentPlacementController::class,'storeStudentAnswers']);
+    Route::post('/submit',[StudentController::class,'storeAnswers']);
+   
 });
 
 Route::group(['prefix' => 'teacher', 'middleware' => ['role:Teacher']], function() {
     Route::post('/generate',[PlacementController::class,'generate']);
 
-    Route::post('/AddType',[TeacherController::class,'AddType']);
-    Route::post('/AddQuestion',[TeacherController::class,'AddQuestion']);
+    Route::post('/AddType',[QuestionTypeController::class,'AddType']);
+    Route::post('/AddQuestion',[QuestionController::class,'AddQuestion']);
     Route::post('/DeleteQuestion',[TeacherController::class,'DeleteQuestion']);
     Route::post('/AddQuestionExistTest',[TeacherController::class,'AddQuestionExistTest']);
     Route::get('/rand',[TeacherController::class,'getrand']);
@@ -110,3 +115,4 @@ Route::post('/GuestAnswers',[GuestController::class,'storeAnswers']);
 Route::get('/test',[RegisterController::class,'test']);
 Route::post('/result',[ResultConrtoller::class,'calcResult']);
 Route::post('/uploadCv',[GuestController::class,'uploadCv']);
+Route::post('/submit',[GuestController::class,'storeAnswers']);

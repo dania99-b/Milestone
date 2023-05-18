@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Answer;
+use App\Models\LogFile;
+use App\Models\Question;
+use App\Models\QuestionType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\QuestionRequest;
-use App\Models\LogFile;
-use App\Models\QuestionType;
-use App\Models\Answer;
 
 
 class QuestionController extends Controller
@@ -17,7 +18,7 @@ class QuestionController extends Controller
         return response()->json($questions, 200);
     }
 
-    public function create(QuestionRequest $request){
+    public function AddQuestion(QuestionRequest $request){
       $type_id = $request->validated()['type_id'];
       $type = QuestionType::find($type_id);
       if (!$type) {
@@ -38,6 +39,7 @@ class QuestionController extends Controller
       }
         $user=Auth::user();
         $employee=$user->employee;
+   
         $log = new LogFile();
         $log->employee_id= $employee->id;
         $log->action = 'Add new question';

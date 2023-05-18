@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class GuestPlacement extends Model
 {
     use HasFactory;
+    protected  $table='guest_placement_tests';
     protected $fillable=[
         'id',
 		'guest_id',

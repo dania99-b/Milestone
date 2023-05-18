@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use App\Models\HumanResource;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\EmployeeRequest;
+use App\Http\Requests\StudentRequest;
 use Tymon\JWTAuth\Contracts\Providers\Auth;
 use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
 
@@ -122,7 +123,7 @@ class RegisterController extends Controller
         ], '200');
     }
 
-    public function student(EmployeeRequest $request){              
+    public function student(StudentRequest $request){              
         $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
         $mainstudent = User::firstOrCreate([
             'first_name' => $request->validated()['first_name'],
@@ -132,11 +133,12 @@ class RegisterController extends Controller
             'phone' => $request->validated()['phone'],
             'username' => $request->validated()['username'],
             'birth' => $request->validated()['birth'],
+          
         ]);
         $student = $mainstudent->student()->create([
             'user_id' => $mainstudent->id,
             'image' => $upload,
-            'country_id' => $request->validated()['country_id']
+            'country_id' => $request['country_id']
         ]);
         $mainstudent->attachRole('Student');
         return response()->json([
