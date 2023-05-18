@@ -17,8 +17,7 @@ use Illuminate\Http\Request;
 
 class GuestController extends Controller
 {
-    public function storeAnswers(Request $request)
-    {
+    public function storeAnswers(Request $request){
         $validatedData = $request->validate([
             'guest_id' => 'required|exists:guests,id',
             'test_id' => 'required|exists:tests,id',
@@ -26,65 +25,51 @@ class GuestController extends Controller
             'answers.*.question_list_id' => 'required',
             'answers.*.answer_id' => 'required',
         ]);
-
         $guest = Guest::findOrFail($validatedData['guest_id']);
         $test = Test::findOrFail($validatedData['test_id']);
-
         foreach ($validatedData['answers'] as $answerData) {
             $questionList = Question_List::findOrFail($answerData['question_list_id']);
-
             $guestAnswer = new GuestQuestionList();
             $guestAnswer->answer_id = $answerData['answer_id'];
             $guestAnswer->question_list()->associate($questionList);
             $guest->questions()->save($guestAnswer);
         }
-
-        return response()->json(['message' => 'Answers stored successfully']);
+        return response()->json(['message' => 'Answers stored successfully'], 200);
     }
 
-    public function uploadCv(CvRequest $request)
-    {
+    public function uploadCv(CvRequest $request){
         $file = $request->file('file')->move('pdf/', $request->file('file')->getClientOriginalName());
         $guest = Guest::find($request->validated()['guest_id']);
-
         $cvData = [
             'guest_id' => $request->validated()['guest_id'],
             'file' => $file
         ];
-
         if ($request->has('advertisment_id')) {
             $cvData['advertisment_id'] = $request->validated()['advertisment_id'];
         }
-
         if ($guest) {
             $cv = Cv::firstOrCreate($cvData);
         }
-
         return response()->json(['message' => 'CV uploaded successfully'], 200);
     }
 
-    public function getTeacher()
-{
-    $teachers = Teacher::with('employee.user')->get();
+    public function teachersList(){
+        $teachers = Teacher::with('employee.user')->get();
+        $users = $teachers->pluck('employee.user')->map(function ($user) {
+            $user->image = $user->employee->image;
+            unset($user->employee);
+            return $user;
+        })->filter();
+        return response()->json($users, 200);
+    }
 
-    // Extract the users from the loaded data and include the employee image
-    $users = $teachers->pluck('employee.user')->map(function ($user) {
-        $user->image = $user->employee->image;
-        unset($user->employee);
-        return $user;
-    })->filter();
-
-    // Return the users as JSON response
-    return response()->json($users);
-}
-    public function getImage()
-    {
+    public function imagesList(){
         $images = Image::all();
         return response()->json($images, 200);
     }
-    public function getAddvertisment()
-    {
-        $add = Advertisment::all();
-        return response()->json($add, 200);
+
+    public function advertisementsList(){
+        $ads = Advertisment::all();
+        return response()->json($ads, 200);
     }
 }

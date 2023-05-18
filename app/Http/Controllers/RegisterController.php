@@ -20,8 +20,7 @@ use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
 
 class RegisterController extends Controller
 {
-    public function admin(EmployeeRequest $request)
-    {
+    public function admin(EmployeeRequest $request){
         $upload = $request->file('images')->move('images/', $request->file('images')->getClientOriginalName());
         $mainuser = User::firstOrCreate([
             'first_name' => $request->validated()['first_name'],
@@ -42,11 +41,34 @@ class RegisterController extends Controller
             'token' => $mainuser->createToken('tokens')->plainTextToken
         ], '200');
     }
+    
+    public function teacher(EmployeeRequest $request){
+            $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
+            $mainuser = User::firstOrCreate([
+                'first_name' => $request->validated()['first_name'],
+                'last_name' => $request->validated()['last_name'],
+                'email' =>$request->validated()['email'],
+                'password' => bcrypt($request->validated()['password']),
+                'phone' => $request->validated()['phone'],
+                'username' => $request->validated()['username'],
+                'birth' => $request->validated()['birth'],
+        ]);
+        $mainemployee = Employee::firstOrCreate([
+            'user_id' => $mainuser->id,
+            'image'=>$upload
+        ]);
+        $mainteacher = Teacher::firstOrCreate([
+            'employee_id' => $mainemployee->id,
+        ]);
+        $mainuser->attachRole('Teacher');
+        return response()->json([
+            'message' => 'user successfully registered',
+            'user' => $mainuser,
+            'token' => $mainuser->createToken('tokens')->plainTextToken
+        ], '200');
+    }
 
-
-    public function teacher(EmployeeRequest $request)
-    {
-   
+    public function reception(EmployeeRequest $request){
         $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
         $mainuser = User::firstOrCreate([
             'first_name' => $request->validated()['first_name'],
@@ -55,76 +77,25 @@ class RegisterController extends Controller
             'password' => bcrypt($request->validated()['password']),
             'phone' => $request->validated()['phone'],
             'username' => $request->validated()['username'],
-            'birth' => $request->validated()['birth'],
-           
-       
-    ]);
-    $mainemployee = Employee::firstOrCreate([
-        'user_id' => $mainuser->id,
-        'image'=>$upload
-    ]);
-    $mainteacher = Teacher::firstOrCreate([
-        'employee_id' => $mainemployee->id,
-    ]);
-      
+            'birth' => $request->validated()['birth'], 
+        ]);
+        $mainemployee = Employee::firstOrCreate([
+            'user_id' => $mainuser->id,
+            'image'=>$upload
+        ]);
+        $mainreception = Reception::firstOrCreate([
+            'employee_id' => $mainemployee->id,
+        ]);
+        $mainuser->attachRole('Reception');
+        return response()->json([
+            'message' => 'user successfully registered',
+            'user' => $mainuser,
+            'token' => $mainuser->createToken('tokens')->plainTextToken
+        ], '200');
+    }
 
-    $mainuser->attachRole('Teacher');
-
-
-    return response()->json([
-        'message' => 'user successfully registered',
-        'user' => $mainuser,
-        'token' => $mainuser->createToken('tokens')->plainTextToken
-
-    ], '200');
-
-
-}
-
-public function reception(EmployeeRequest $request)
-    {
-
-        
-        $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
-
-    $mainuser = User::firstOrCreate([
-          'first_name' => $request->validated()['first_name'],
-            'last_name' => $request->validated()['last_name'],
-            'email' =>$request->validated()['email'],
-            'password' => bcrypt($request->validated()['password']),
-            'phone' => $request->validated()['phone'],
-            'username' => $request->validated()['username'],
-            'birth' => $request->validated()['birth'],
-            
-       
-    ]);
-    $mainemployee = Employee::firstOrCreate([
-        'user_id' => $mainuser->id,
-        'image'=>$upload
-    ]);
-    $mainreception = Reception::firstOrCreate([
-        'employee_id' => $mainemployee->id,
-    ]);
-      
-
-    $mainuser->attachRole('Reception');
-
-
-    return response()->json([
-        'message' => 'user successfully registered',
-        'user' => $mainuser,
-        'token' => $mainuser->createToken('tokens')->plainTextToken
-
-    ], '200');
-
-
-}
-
-
-public function HR(EmployeeRequest $request)
-    {
+    public function HR(EmployeeRequest $request){
         $upload = $request->file('images')->move('images/', $request->file('images')->getClientOriginalName());
-
         $mainuser = User::firstOrCreate([
             'first_name' => $request->validated()['first_name'],
             'last_name' => $request->validated()['last_name'],
@@ -133,8 +104,7 @@ public function HR(EmployeeRequest $request)
             'phone' => $request->validated()['phone'],
             'username' => $request->validated()['username'],
             'image'=>$upload,
-            'birth' => $request->validated()['birth'],
-           
+            'birth' => $request->validated()['birth'], 
         ]);
         $mainemployee = Employee::firstOrCreate([
             'user_id' => $mainuser->id,
@@ -143,24 +113,17 @@ public function HR(EmployeeRequest $request)
         $mainreception = HumanResource::firstOrCreate([
             'employee_id' => $mainemployee->id,
         ]);
-          
-    
         $mainuser->attachRole('HR');
-    
-    
         return response()->json([
             'message' => 'user successfully registered',
             'user' => $mainuser,
             'token' => $mainuser->createToken('tokens')->plainTextToken
     
         ], '200');
+    }
 
-}
-
-public function student(EmployeeRequest $request)
-    {              
+    public function student(EmployeeRequest $request){              
         $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
-
         $mainstudent = User::firstOrCreate([
             'first_name' => $request->validated()['first_name'],
             'last_name' => $request->validated()['last_name'],
@@ -169,107 +132,58 @@ public function student(EmployeeRequest $request)
             'phone' => $request->validated()['phone'],
             'username' => $request->validated()['username'],
             'birth' => $request->validated()['birth'],
-            
-           
         ]);
         $student = $mainstudent->student()->create([
             'user_id' => $mainstudent->id,
             'image' => $upload,
             'country_id' => $request->validated()['country_id']
         ]);
-       
-          
-    
         $mainstudent->attachRole('Student');
-    
-    
         return response()->json([
             'message' => 'user successfully registered',
             'user' => $mainstudent,
             'token' => $mainstudent->createToken('tokens')->plainTextToken
-    
-        ], '200');
-
+        ], 200);
     }
 
-    public function GuestVertification(Request $request)
-    {
+    public function guestVertification(Request $request){
         $guest = Guest::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'password' => bcrypt($request->password),
             'education' => $request->education,
-            'city_id' => $request->city_id,
-           // 'question_list_id'=>3,
             'verification_code' => Str::random(4), // Generate a verification code
         ]);
-
-        
-        // Send the verification code to the user's email
-      //  Mail::send('emails.verification_code', ['code' => $guest->verification_code], function ($message) use ($guest) {
-      //      $message->to($guest->email)->subject('Verify Your Email Address');
-       // });
         Mail::to($guest->email)->send(new \App\Mail\VerifyEmail($guest));
-       // Mail::to($guestEmail)->send(new EmailVerificationCode($verificationCode));
-        // Return a success response
         return response()->json(['message' => 'User registered successfully. Please check your email to verify your account.'], 201);
     } 
     
-    public function verifyEmail(Request $request)
-    {
-        // Find the user by email and verification code
+    public function verify(Request $request){
         $guest = Guest::where('email', $request->email)
-                    ->where('verification_code', $request->verification_code)
-                    ->first();
-
-        // If the user exists, mark their email as verified and log them in
+                       ->where('verification_code', $request->verification_code)
+                       ->first();
         if ($guest) {
-           // $guest->markEmailAsVerified();
-          // $guest->verification_code = null;
             $guest->save();
-
-            // Log the user in
-          //  Auth::login($guest);
-
-            // Return a success response
             return response()->json(['message' => 'Email verified successfully.'], 200);
         }
-
-        // Return an error response
         return response()->json(['message' => 'Invalid verification code.'], 400);
     }
-    public function test(Request $request)
-    {
-    $users = User::whereRoleIs('Admin')->get();
-    return $users;
+
+    public function test(Request $request){
+        $users = User::whereRoleIs('Admin')->get();
+        return $users;
     }
 
-
-public function resent_code(Request $request){
-
-
-    $guest = Guest::where('email', $request->email)->first();
-
-    // If the user exists, generate a new verification code and send it to their email
-    if ($guest) {
-        $newVerificationCode = Str::random(4);
-        $guest->verification_code = $newVerificationCode;
-        $guest->save();
-
-        Mail::to($guest->email)->send(new VerifyEmail($guest));
-
-        // Return a success response
-        return response()->json(['message' => 'New verification code sent.'], 200);
+    public function resend(Request $request){
+        $guest = Guest::where('email', $request->email)->first();
+        if ($guest) {
+            $newVerificationCode = Str::random(4);
+            $guest->verification_code = $newVerificationCode;
+            $guest->save();
+            Mail::to($guest->email)->send(new VerifyEmail($guest));
+            return response()->json(['message' => 'New verification code sent.'], 200);
+        }
+        return response()->json(['message' => 'User not found.'], 404);
     }
-
-    // If the user doesn't exist, return an error response
-    return response()->json(['message' => 'User not found.'], 404);
-
-}
-
-    
-
-
 }

@@ -21,7 +21,7 @@ class Question extends Model
         return $this->hasMany(Answer::class);
     }
 
-    public function type(){
+    public function questionType(){
         return $this->belongsTo(QuestionType::class);
     }
 

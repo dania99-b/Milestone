@@ -14,92 +14,56 @@ use App\Models\Image;
 
 class AdminController extends Controller
 {
-
-    public function EditTeacherInfo(Request $request){
-
+    public function updateTeacher(Request $request){
         $teacherId = $request->input('teacher_id');
-
-    $teacher = Teacher::with('employee.user')->find($teacherId);
-    if (!$teacher) {
-      return response()->json(['message' => 'Teacher not found'], 404);
-  }
-  
-  $employee = $teacher->employee;
-  $user = $employee->user;
-
-  if ($request->hasFile('image')) {
-      $image = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
-      $employee->image = $image;
-  }
-
-  $user->fill($request->only(['first_name', 'last_name', 'birthdate', 'email', 'phone', 'username']));
-
-  if ($user->isDirty()) {
-      $user->save();
-  }
-
-  if ($employee->isDirty()) {
-      $employee->save();
-  }
-
-  return response()->json(['message' => 'Teacher info updated successfully'], 200);
-      }
-
-      public function EditReceptionInfo(Request $request){
+        $teacher = Teacher::with('employee.user')->find($teacherId);
+        if (!$teacher) {
+            return response()->json(['message' => 'Teacher not found'], 404);
+        }
+        $employee = $teacher->employee;
+        $user = $employee->user;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
+            $employee->image = $image;
+        }
+        $user->fill($request->only(['first_name', 'last_name', 'birth', 'email', 'phone', 'username']));
+        if ($user->isDirty()) {$user->save();}
+        if ($employee->isDirty()) {$employee->save();}
+        return response()->json(['message' => 'Teacher info updated successfully'], 200);
+    }
+    public function updateReception(Request $request){
         $receptionId = $request->input('reception_id');
-
-    $reception = Reception::with('employee.user')->find($receptionId);
-    if (!$reception) {
-      return response()->json(['message' => 'Teacher not found'], 404);
-  }
-
-  $employee = $reception->employee;
-  $user = $employee->user;
-
-  if ($request->hasFile('image')) {
-      $image = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
-      $employee->image = $image;
-  }
-
-  $user->fill($request->only(['first_name', 'last_name', 'birthdate', 'email', 'phone', 'username']));
-
-  if ($user->isDirty()) {
-      $user->save();
-  }
-
-  if ($employee->isDirty()) {
-      $employee->save();
-  }
-
-  return response()->json(['message' => 'Reception info updated successfully'], 200);
-      }
-
-      public function EditHrInfo(Request $request){
+        $reception = Reception::with('employee.user')->find($receptionId);
+        if (!$reception) {
+            return response()->json(['message' => 'receprion not found'], 404);
+        }
+        $employee = $reception->employee;
+        $user = $employee->user;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
+            $employee->image = $image;
+        }
+        $user->fill($request->only(['first_name', 'last_name', 'birthdate', 'email', 'phone', 'username']));
+        if ($user->isDirty()) {$user->save();}
+        if ($employee->isDirty()) {$employee->save();}
+        return response()->json(['message' => 'Reception info updated successfully'], 200);
+    }
+    public function updateHR(Request $request){
         $hrId = $request->input('hr_id');
+        $hr = HumanResource::with('employee.user')->find($hrId);
+        if (!$hr) {
+            return response()->json(['message' => 'HR not found'], 404);
+        }
+        $employee = $hr->employee;
+        $user = $employee->user;
 
-    $hr = HumanResource::with('employee.user')->find($hrId);
-    if (!$hr) {
-      return response()->json(['message' => 'Teacher not found'], 404);
-  }
-
-  $employee = $hr->employee;
-  $user = $employee->user;
-
-  if ($request->hasFile('image')) {
-      $image = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
-      $employee->image = $image;
-  }
-
-  $user->fill($request->only(['first_name', 'last_name', 'birthdate', 'email', 'phone', 'username']));
-
-  if ($user->isDirty()) {
-      $user->save();
-  }
-
-  if ($employee->isDirty()) {
-      $employee->save();
-  }
-
-  return response()->json(['message' => 'HR info updated successfully'], 200);
-}
+        if ($request->hasFile('image')) {
+            $image = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
+            $employee->image = $image;
+        }
+        $user->fill($request->only(['first_name', 'last_name', 'birthdate', 'email', 'phone', 'username']));
+        if ($user->isDirty()) {$user->save();}
+        if ($employee->isDirty()) {$employee->save();}
+        return response()->json(['message' => 'HR info updated successfully'], 200);
+    }
 }

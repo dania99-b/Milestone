@@ -33,6 +33,6 @@ class Employee extends Model
     }
 
     public function log(){
-        return $this->hasMany(LogActivity::class);
+        return $this->hasMany(LogFile::class);
     }
 }
