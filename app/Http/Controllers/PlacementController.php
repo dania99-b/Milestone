@@ -37,5 +37,20 @@ class PlacementController extends Controller
           $log->save();
           return response()->json(['message' => 'Test Created Successfully', $newTest], 200);
       }
-    
+      public function getTest()
+      {
+          $lastTest = Test::latest()->first();
+      
+          if ($lastTest && isset($lastTest->questions)) {
+              $questionIds = json_decode($lastTest->questions);
+      
+              $questions = Question::with('answers')->whereIn('id', $questionIds)->get();
+      
+              $lastTest->questions = $questions;
+          }
+      
+          return $lastTest;
+      }
+      
+      
 }

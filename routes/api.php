@@ -116,3 +116,4 @@ Route::get('/test',[RegisterController::class,'test']);
 Route::post('/result',[ResultConrtoller::class,'calcResult']);
 Route::post('/uploadCv',[GuestController::class,'uploadCv']);
 Route::post('/submit',[GuestController::class,'storeAnswers']);
+Route::get('/getTest',[PlacementController::class,'getTest']);
