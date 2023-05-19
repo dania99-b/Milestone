@@ -9,6 +9,7 @@ use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\Employee;
 use App\Models\Reception;
+use App\Models\TeacherSchedules;
 use App\Mail\VerifyEmail;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -44,31 +45,48 @@ class RegisterController extends Controller
     }
     
     public function teacher(EmployeeRequest $request){
-            $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
-            $mainuser = User::firstOrCreate([
-                'first_name' => $request->validated()['first_name'],
-                'last_name' => $request->validated()['last_name'],
-                'email' =>$request->validated()['email'],
-                'password' => bcrypt($request->validated()['password']),
-                'phone' => $request->validated()['phone'],
-                'username' => $request->validated()['username'],
-                'birth' => $request->validated()['birth'],
+        $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
+    
+        $validatedData = $request->validated();
+    
+        $mainuser = User::firstOrCreate([
+            'first_name' => $validatedData['first_name'],
+            'last_name' => $validatedData['last_name'],
+            'email' => $validatedData['email'],
+            'password' => bcrypt($validatedData['password']),
+            'phone' => $validatedData['phone'],
+            'username' => $validatedData['username'],
+            'birth' => $validatedData['birth'],
         ]);
+    
         $mainemployee = Employee::firstOrCreate([
             'user_id' => $mainuser->id,
-            'image'=>$upload
+            'image' => $upload
         ]);
-        $mainteacher = Teacher::firstOrCreate([
+    
+        $teacher = Teacher::firstOrCreate([
             'employee_id' => $mainemployee->id,
         ]);
+    
+        if (isset($validatedData['schedules']) && is_array($validatedData['schedules'])) {
+            $teacher->schedules = $validatedData['schedules'];
+            $teacher->save();
+        }
+    
+        $mainteacher = Teacher::updateOrCreate(
+            ['employee_id' => $mainemployee->id],
+            ['experince_years' => $request->experince_years]
+        );
+    
         $mainuser->attachRole('Teacher');
+    
         return response()->json([
-            'message' => 'user successfully registered',
+            'message' => 'User successfully registered',
             'user' => $mainuser,
             'token' => $mainuser->createToken('tokens')->plainTextToken
-        ], '200');
+        ], 200);
     }
-
+    
     public function reception(EmployeeRequest $request){
         $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
         $mainuser = User::firstOrCreate([

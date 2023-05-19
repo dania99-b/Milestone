@@ -20,6 +20,12 @@ class ClassController extends Controller
             'max_num' => $request->validated()['max_num'],
             'status' => $request->validated()['status'],
         ]);
+
+        if (isset($validatedData['schedules']) && is_array($validatedData['schedules'])) {
+            $newClass->schedules = $validatedData['schedules'];
+            $newClass->save();
+        }
+        
         $user=Auth::user();
         $employee=$user->employee;
         $log = new LogFile();

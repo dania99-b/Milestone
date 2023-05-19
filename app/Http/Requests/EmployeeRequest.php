@@ -32,7 +32,7 @@ class EmployeeRequest extends FormRequest
         'username'=> 'required|string|max:255|unique:users',
         'images'=>'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         'birth'=>'date|before:today',
-
+        'schedules' => 'nullable|array',
         ];
     }
 }

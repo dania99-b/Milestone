@@ -23,5 +23,4 @@ class Teacher extends Model
     public function rate(){
         return $this->hasMany(StudentRate::class);
     }
-
 }
