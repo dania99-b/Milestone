@@ -44,7 +44,7 @@ class PlacementController extends Controller
           if ($lastTest && isset($lastTest->questions)) {
               $questionIds = json_decode($lastTest->questions);
       
-              $questions = Question::with('answers')->whereIn('id', $questionIds)->get();
+              $questions = Question::with('answers')->whereIn('id', $questionIds)->paginate(1);
       
               $lastTest->questions = $questions;
           }
