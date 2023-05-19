@@ -6,10 +6,9 @@ use App\Http\Requests\CourseRequest;
 
 use App\Models\CourseName;
 use App\Models\CourseResult;
+use App\Models\Reservation;
 use App\Models\Student;
-
-
-
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -18,8 +17,8 @@ class ReservationConrtoller extends Controller
 {
    public function CheckBeforeReservation(){
  
-    
-    $courses=['1A','1B','2A','2B','3A','3B','4A','4B','5A','5B'];
+   
+    $courses=CourseName::all();
     $student = Student::where('user_id', JWTAuth::parseToken()->authenticate()->id)->get()->first()->id;
     $check=CourseResult::where('student_id',$student)->get()->first();
     if($check){
@@ -41,7 +40,7 @@ class ReservationConrtoller extends Controller
     }
     else if(!$check){
         
-        $placement=\App\Models\StudentPlacement::where('student_id',$student)->get()->first();
+        $placement=\App\Models\StudentPlacement::where('student_id',$student)->latest()->first();
         $placementDate = Carbon::parse($placement->created_at);
         $after6=$placementDate->addMonths(6);
         $currentDate = Carbon::now();
@@ -50,24 +49,34 @@ class ReservationConrtoller extends Controller
            
             $level=$placement->level;
             if($level){
-               
+           
                 foreach ($courses as $course){
-                    if ($course==$level){
-                       
+               
+                    if ($course->name==$level){
+              
                         $result=$course; /// the same element
+                      
             }
-        
     }
-  print($result);
+return $result;
 }
-    else return false;
+    else return null;
    
   
 }
    }}
    public function makeReservation(Request $request){
+    $user=User::find(JWTAuth::parseToken()->authenticate()->id);
+    $student_id=$user->student->id;
 $function=$this->CheckBeforeReservation();
-if( $function!=false){
+if($function!=null){
+$the_course=CourseName::where('name',$function->name)->get()->pluck('id'); /// find course Name id
+$newreservation=Reservation::create([
+'student_id'=>$student_id,
+'course_id'=>$the_course
+
+]);
+
 
 }
 
