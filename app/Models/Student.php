@@ -26,7 +26,7 @@ class Student extends Model
     }
     public function tests()
     {
-        return $this->belongsToMany(Guest::class,'student_placement_tests')->withPivot('mark', 'level');
+        return $this->belongsToMany(Test::class,'student_placement_tests')->withPivot('mark', 'level');
     }
 
     public function rate(){

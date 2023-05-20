@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\GuestPlacement;
 use App\Models\User;
 use App\Models\Admin;
 use App\Models\Guest;
@@ -140,9 +141,17 @@ class RegisterController extends Controller
     
         ], '200');
     }
-
+    public function currentGuest($email){
+        $theGuest = Guest::where('email', $email)->get();
+        dd($theGuest);
+        if($theGuest){
+            return response()->json(['data' => $theGuest], 200);
+        }
+        return response()->json(['message' => 'User not found'], 404);
+    }
     public function student(StudentRequest $request){              
         $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
+        
         $mainstudent = User::firstOrCreate([
             'first_name' => $request->validated()['first_name'],
             'last_name' => $request->validated()['last_name'],
@@ -152,7 +161,7 @@ class RegisterController extends Controller
             'username' => $request->validated()['username'],
             'birth' => $request->validated()['birth'],
         ]);
-
+        
         $student = $mainstudent->student()->create([
             'user_id' => $mainstudent->id,
             'image' => $upload,
@@ -160,7 +169,6 @@ class RegisterController extends Controller
         ]);
 
         $mainstudent->attachRole('Student');
-        
         return response()->json([
             'message' => 'user successfully registered',
             'user' => $mainstudent,

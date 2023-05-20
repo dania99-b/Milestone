@@ -79,7 +79,10 @@ Route::group(['prefix' => 'reception', 'middleware' => ['role:Reception']], func
     Route::post('/ads/types',[AdvertismentTypeController::class,'create']);
     Route::post('/ads/types/update',[AdvertismentTypeController::class,'update']);
     Route::delete('/ads/types',[AdvertismentTypeController::class,'delete']);
+
 });
+
+Route::get('/find/guest/{email}',[RegisterController::class,'currentGuest']);
 
 Route::group(['prefix' => 'student', 'middleware' => ['role:Student']], function() {
     Route::post('/Attendence',[StudentController::class,'scan']);

@@ -15,6 +15,5 @@ class GuestPlacement extends Model
 		'guest_id',
 		'test_id',
 		'mark',
-        'level',
         ];
 }
