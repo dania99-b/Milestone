@@ -66,4 +66,5 @@ class AdminController extends Controller
         if ($employee->isDirty()) {$employee->save();}
         return response()->json(['message' => 'HR info updated successfully'], 200);
     }
+  
 }

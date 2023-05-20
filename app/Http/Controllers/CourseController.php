@@ -1,11 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
+use Carbon\Carbon;
+use App\Models\Day;
+use App\Models\Classs;
 use App\Models\Course;
 use App\Models\LogFile;
+use Illuminate\Http\Request;
+use App\Http\Requests\CourseRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\Request;
 
 class CourseController extends Controller
 {
@@ -14,26 +18,38 @@ class CourseController extends Controller
         return response()->json($courses, 200);
     }
 
-    public function create(CourseRequest $request){
-        $ClassName = $request->validated()['class_name'];
-        $ClassId = Classs::where('name', $ClassName)->first()->id;
-        $newCourse = Course::firstOrCreate([
-        'class_id' => $ClassId,
-        'course_ename' => $request->validated()['course_ename'],
-        'start_hour' => $request->validated()['start_hour'],
-        'end_hour' => $request->validated()['end_hour'],
+    public function create(CourseRequest $request)
+{
+    $days = $request->validated()['days'];
+    $dayIds = [];
+
+    foreach ($days as $day) {
+        $dayModel = Day::where('name', $day)->firstOrFail();
+        $dayIds[] = $dayModel->id;
+    }
+    $startHourTime = Carbon::parse($request->validated()['start_hour'])->setDate(1970, 1, 1);
+    $endHourTime = Carbon::parse($request->validated()['end_hour'])->setDate(1970, 1, 1);
+
+    $newCourse = Course::create([
+        'class_id' => $request->validated()['class_id'],
+        'start_hour' => date('H:i:s', strtotime($request->validated()['start_hour'])),
+        'end_hour' => date('H:i:s', strtotime($request->validated()['end_hour'])),
         'start_day' => $request->validated()['start_day'],
         'end_day' => $request->validated()['end_day'],
-        'status' => $request->validated()['status'],
         'qr_code' => $request->validated()['qr_code'],
-        ]);
-        $days = $request->input('days');
-        foreach ($days as $day) {
-            $dayModel = Day::where('name', $day)->firstOrFail();
-            $newCourse->days()->attach($dayModel);
-        }
-        return response()->json(['message' => 'Course created successfully'], 200);
-    }
+        'course_name_id' => $request->validated()['course_name_id'],
+        'days' => json_encode($dayIds), // Encode the array of day IDs
+    ]);
+
+    // Additional operations if needed
+
+    // Return the new course or perform any necessary further actions
+    return $newCourse;
+}
+
+    
+    
+
   
     public function update(Request $request){
         $course_id = $request['course_id'];

@@ -14,6 +14,7 @@ use App\Http\Controllers\ClassController;
 use App\Http\Controllers\AdvertismentController;
 use App\Http\Controllers\AdvertismentTypeController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\InformationController;
 use App\Http\Controllers\PlacementController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuestionTypeController;
@@ -54,6 +55,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin']], function() {
     Route::post('/update/reception',[AdminController::class,'updateReception']);
     Route::post('/update/hr',[AdminController::class,'updateHR']);
     Route::post('/UploadImage',[AdminController::class,'UploadImage']);
+    Route::post('/EditInfo',[InformationController::class,'editInfo']);
+    Route::post('/Add/information',[InformationController::class,'store']);
+    
+    
 });
 
 Route::group(['prefix' => 'reception', 'middleware' => ['role:Reception']], function() {
@@ -119,4 +124,6 @@ Route::post('/submit',[GuestController::class,'storeAnswers']);
 Route::get('/getTest',[PlacementController::class,'getTest']);
 Route::get('/getTest',[PlacementController::class,'getTest']);
 Route::get('/CheckBeforeReservation',[ReservationConrtoller::class,'CheckBeforeReservation']);
+Route::get('/MakeReservation',[ReservationConrtoller::class,'makeReservation']);
+
 

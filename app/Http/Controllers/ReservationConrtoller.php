@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CourseRequest;
-
+use App\Models\Course;
 use App\Models\CourseName;
 use App\Models\CourseResult;
 use App\Models\Reservation;
@@ -65,19 +65,24 @@ return $result;
   
 }
    }}
-   public function makeReservation(Request $request){
+   public function makeReservation(){
     $user=User::find(JWTAuth::parseToken()->authenticate()->id);
     $student_id=$user->student->id;
 $function=$this->CheckBeforeReservation();
 if($function!=null){
-$the_course=CourseName::where('name',$function->name)->get()->pluck('id'); /// find course Name id
+$the_courseName_id=CourseName::where('name',$function->name)->get()->pluck('id'); /// find course Name id
+$CourseId=Course::where('course_name_id',$the_courseName_id)->latest()->first()->id;
+
+
 $newreservation=Reservation::create([
 'student_id'=>$student_id,
-'course_id'=>$the_course
-
+'course_id'=>$CourseId
 ]);
 
 
+}
+else{
+    return response()->json(['message' => 'sorry cannot make reservation'], 40);
 }
 
 
