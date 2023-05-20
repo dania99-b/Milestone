@@ -24,15 +24,15 @@ class CourseRequest extends FormRequest
     public function rules()
     {
         return [
-            'class_name' => 'required|string|max:255',
-            'course_ename'=>'string|max:255',
-            'start_hour' => 'max:255',
-            'end_hour' => 'max:255',
+            'class_id' => 'required|string|max:255',
+            'start_hour' => 'required|date_format:H:i:s',
+            'end_hour' => 'required|date_format:H:i:s',
             'start_day' => 'required|string|max:255',
             'end_day' => 'required|string|max:20',
-            'status' => 'required|string|max:20',
+
             'qr_code' => 'required|string|max:20',
-            'days'=>'required'
+            'days'=>'required',
+            'course_name_id'=>'required|string|max:20'
         ];
     }
 }

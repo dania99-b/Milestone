@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Http\Requests\ClassRequest;
 use App\Models\Classs;
 use App\Models\LogFile;
 use Illuminate\Support\Facades\Auth;
@@ -19,10 +21,12 @@ class ClassController extends Controller
             'name' => $request->validated()['name'],
             'max_num' => $request->validated()['max_num'],
             'status' => $request->validated()['status'],
+            'schedules' => $request->validated()['schedules'],
         ]);
 
-        if (isset($validatedData['schedules']) && is_array($validatedData['schedules'])) {
-            $newClass->schedules = $validatedData['schedules'];
+        if (isset($newClass['schedules']) && is_array($newClass['schedules'])) {
+            
+            $newClass->schedules = $newClass['schedules'];
             $newClass->save();
         }
         
