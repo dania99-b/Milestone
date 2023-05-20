@@ -8,9 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Attendence extends Model
 {
     use HasFactory;
+    public $timestamps = true;
     protected $table = "attendences";
-    public $timestamps = ["created_at"]; //only want to used created_at column
-    const UPDATED_AT = null;
     protected $fillable=[
         'id',
         'student_id',

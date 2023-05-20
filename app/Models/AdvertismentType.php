@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class AdvertismentType extends Model
 {
     use HasFactory;
+    public $timestamps = true;
     protected $fillable=[
         'id',
         'name',

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Guest extends Model implements MustVerifyEmail
 	{
     use HasFactory;
-	public $timestamps = false;
+	public $timestamps = true;
     protected $fillable=[
 		'id',
 		'first_name',

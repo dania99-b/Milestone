@@ -151,14 +151,16 @@ class RegisterController extends Controller
             'phone' => $request->validated()['phone'],
             'username' => $request->validated()['username'],
             'birth' => $request->validated()['birth'],
-          
         ]);
+
         $student = $mainstudent->student()->create([
             'user_id' => $mainstudent->id,
             'image' => $upload,
             'country_id' => $request['country_id']
         ]);
+
         $mainstudent->attachRole('Student');
+        
         return response()->json([
             'message' => 'user successfully registered',
             'user' => $mainstudent,

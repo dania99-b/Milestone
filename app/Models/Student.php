@@ -15,7 +15,7 @@ class Student extends Model
         'country_id'
         ];
         
-    public $timestamps = false;
+    public $timestamps = true;
 
     public function user(){
         return $this->belongsTo(User::class);

@@ -13,7 +13,7 @@ class Reception extends Model
         'employee_id'
         ];
 
-    public $timestamps = false;
+    public $timestamps = true;
 
     public function employee(){
         $this->belongsTo(Employee::class);

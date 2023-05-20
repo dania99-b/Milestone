@@ -14,7 +14,7 @@ class Cv extends Model
         'guest_id',
         'advertisment_id'
         ];
-    public $timestamps = false;
+    public $timestamps = true;
     
     public function guest(){
         $this->belongsTo(Guest::class);

@@ -13,7 +13,7 @@ class Country extends Model
         'name',
         ];
 
-    public $timestamps = false;
+    public $timestamps = true;
 
     public function students()
     {

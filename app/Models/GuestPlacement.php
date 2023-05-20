@@ -9,6 +9,7 @@ class GuestPlacement extends Model
 {
     use HasFactory;
     protected  $table='guest_placement_tests';
+    public $timestamps = true;
     protected $fillable=[
         'id',
 		'guest_id',

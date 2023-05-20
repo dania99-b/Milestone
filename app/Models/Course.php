@@ -9,9 +9,8 @@ use PHPUnit\Framework\MockObject\Stub;
 class Course extends Model
 {
     use HasFactory;
-    public $timestamps = ["created_at"]; //only want to used created_at column
-    const UPDATED_AT = null;
-   protected $table = "courses";
+    public $timestamps = true;
+    protected $table = "courses";
     protected $fillable=[
         'id',
         'class_id',

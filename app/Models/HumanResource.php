@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class HumanResource extends Model
 {
     use HasFactory;
-    public $timestamps = false;
+    public $timestamps = true;
     protected $fillable=[
         'id',
         'employee_id'

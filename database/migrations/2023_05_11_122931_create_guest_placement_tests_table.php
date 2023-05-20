@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('guest_placement_tests', function (Blueprint $table) {
             $table->id();
             $table->integer('mark');
-            $table->string('level')->nullable()->default(null);
             $table->foreignId('guest_id')->constrained('guests')->cascadeOnDelete();
             $table->foreignId('test_id')->constrained('tests')->cascadeOnDelete();
             $table->timestamps();

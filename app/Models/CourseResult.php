@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class CourseResult extends Model
 {
     use HasFactory;
+    public $timestamps = true;
     protected $fillable=[
         'id',
         'student_id',
@@ -19,7 +20,6 @@ class CourseResult extends Model
         'days_attend',
         'status'
         ];
-    public $timestamps = true;
     public function course(){
         return $this->belongsTo(Course::class);
     }

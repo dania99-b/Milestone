@@ -14,7 +14,7 @@ class Employee extends Model
         'image',
         ];
 
-    public $timestamps = false;
+    public $timestamps = true;
 
     public function user(){
         return $this->belongsTo(User::class);

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class CourseDay extends Model
 {
     use HasFactory;
+    public $timestamps = true;
     protected $fillable=[
         'id',
         'day_id',

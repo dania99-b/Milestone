@@ -24,7 +24,7 @@ class StudentRequest extends FormRequest
     public function rules()
     {
         return [
-                           'first_name' => 'required|string|max:255',
+                'first_name' => 'required|string|max:255',
                 'last_name' => 'required|string|max:255',
                 'email' => 'required|email|unique:users|max:255',
                 'password' => 'required|string|min:6|max:255',
@@ -33,7 +33,6 @@ class StudentRequest extends FormRequest
                 'images'=>'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 'birth'=>'date|before:today',
                 'country_id'=>'int',
-        
                 ];
     
     }

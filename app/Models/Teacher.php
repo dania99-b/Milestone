@@ -14,7 +14,7 @@ class Teacher extends Model
         'experince_years',
         'schedules'
         ];
-    public $timestamps = false;
+    public $timestamps = true;
 
     public function employee(){
         return $this->belongsTo(Employee::class);
