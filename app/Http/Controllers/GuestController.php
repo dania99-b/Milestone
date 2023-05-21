@@ -32,8 +32,9 @@ class GuestController extends Controller
         foreach($validatedData['answers'] as $answer){
         $answer=Answer::find($answer);
         if($answer->is_true==1)
-    
          $total_mark+=Question::find($answer->question_id)->mark;
+          if($answer==-1)
+          $total_mark+=0;
         }
        
       
