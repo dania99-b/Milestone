@@ -128,5 +128,7 @@ Route::get('/getTest',[PlacementController::class,'getTest']);
 Route::get('/getTest',[PlacementController::class,'getTest']);
 Route::get('/CheckBeforeReservation',[ReservationConrtoller::class,'CheckBeforeReservation']);
 Route::get('/MakeReservation',[ReservationConrtoller::class,'makeReservation']);
+Route::get('/get/nformation',[InformationController::class,'getInfo']);
+
 
 

@@ -45,4 +45,9 @@ class InformationController extends Controller
   $log->save();
     return response()->json(['message' => 'info updated successfully'], 200);
   }
-}
+  public function getInfo()
+  {
+
+    $info=Information::find(1);
+    return response()->json(['data' => $info], 200);
+}}
