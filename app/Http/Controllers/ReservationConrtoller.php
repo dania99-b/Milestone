@@ -89,4 +89,17 @@ else{
 
 
 
+}
+
+
+public function approveReservation(Request $request){
+$request_id=$request['request_id'];
+$requestfind=Reservation::find($request_id);
+$requestfind->status="ACCEPTED";
+                                                                                                                                                                                                                                                                                                  
+
+
+
+
+
 }} 

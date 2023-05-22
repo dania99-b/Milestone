@@ -49,5 +49,5 @@ class InformationController extends Controller
   {
 
     $info=Information::find(1);
-    return response()->json(['data' => $info], 200);
+    return response()->json([$info], 200);
 }}
