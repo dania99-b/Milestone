@@ -14,6 +14,7 @@ use App\Http\Controllers\ClassController;
 use App\Http\Controllers\AdvertismentController;
 use App\Http\Controllers\AdvertismentTypeController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\FiltersController;
 use App\Http\Controllers\InformationController;
 use App\Http\Controllers\PlacementController;
 use App\Http\Controllers\QuestionController;
@@ -85,6 +86,16 @@ Route::group(['prefix' => 'reception', 'middleware' => ['role:Reception']], func
     Route::post('/ads/types/update',[AdvertismentTypeController::class,'update']);
     Route::delete('/ads/types',[AdvertismentTypeController::class,'delete']);
     Route::post('/approve/reservation',[ReservationConrtoller::class,'approveReservation']);
+    Route::post('/get/classById',[ClassController::class,'getClassById']);
+    Route::get('/get/allReservation',[ReservationConrtoller::class,'getAllReservation']);
+    Route::get('/get/activeAdvertisments',[AdvertismentController::class,'getActiveAds']);
+    Route::get('/get/teachers',[TeacherController::class,'list']);
+    Route::get('/get/receptions',[ReceptionController::class,'list']);
+   
+    
+    
+    
+    
    
     
 
@@ -98,7 +109,7 @@ Route::group(['prefix' => 'student', 'middleware' => ['role:Student']], function
     Route::get('/viewprofile',[StudentController::class,'viewProfileStudent']);
     Route::get('/viewnotification',[StudentController::class,'viewNotification']);
     Route::post('/editprofile',[StudentController::class,'editProfile']);
-    Route::post('/check11',[ReservationConrtoller::class,'CheckBeforeReservation']);
+    Route::post('/check11',[ReservationConrtoller::class,'makeReservation']);
     Route::post('/storAnswer',[StudentPlacementController::class,'storeStudentAnswers']);
     Route::post('/submit',[StudentController::class,'storeAnswers']);
    
@@ -114,6 +125,10 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['role:Teacher']], function
     Route::get('/rand',[TeacherController::class,'getrand']);
     Route::get('/viewprofile',[TeacherController::class,'viewProfileTeacher']);
     Route::post('/editprofile',[TeacherController::class,'editProfile']);
+    Route::post('/get/questionByType/{type}',[FiltersController::class,'getQuestionByType']);
+    Route::post('/get/questionById',[QuestionController::class,'getQuestionById']);
+    
+    
 });
 
 Route::post('/register/guest',[RegisterController::class,'guestVertification']);

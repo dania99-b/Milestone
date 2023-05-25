@@ -22,6 +22,7 @@ use App\Http\Requests\AdvertismentRequest;
 use App\Http\Requests\ClassScheduleRequest;
 use Illuminate\Console\Scheduling\Schedule;
 use App\Http\Requests\TeacherScheduleRequest;
+use App\Models\Reception;
 
 class ReceptionController extends Controller
 {
@@ -205,5 +206,11 @@ $log->action = 'Delete Schedule Class';
 $log->save();
 
     return response()->json(['message' => 'Schedule deleted successfully'], 200);
+  }
+  public function list(){
+  
+    $receptions = Reception::with('employee.user')->get();
+    
+    return response()->json($receptions, 200);
   }
 }

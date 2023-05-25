@@ -17,19 +17,23 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ReservationConrtoller extends Controller
 {
-    public function CheckBeforeReservation($advertisment_id)
+    public function CheckBeforeReservation( $request)
     {
 
-    
-        $addvertisment = Advertisment::find($advertisment_id);
+       
+        $addvertisment = Advertisment::find($request);
         $addvertisment->course_id;
         $name_id = Course::find($addvertisment->course_id)->course_name_id;
         $name = CourseName::find($name_id);
         $courses = CourseName::all();
         $student = Student::where('user_id', JWTAuth::parseToken()->authenticate()->id)->get()->first()->id;
-        $check = CourseResult::where('student_id', $student)->get()->first();
-        if ($check) {
-
+        $check = CourseResult::where('student_id', $student)->latest()->first();
+       
+        if ($check ) {
+            $after6 = $check->created_at->addMonths(6);
+            $currentDate = Carbon::now();
+            if($currentDate <= $after6){
+            
           
             $current_course = Course::find($check->course_id)->course_name_id;
             $current_course_name = CourseName::find($current_course);
@@ -58,28 +62,28 @@ class ReservationConrtoller extends Controller
                     }
                 }
             }
-        } else if (!$check) {
-
+        }
+        else{ return response()->json(['message' => 'sorry You should Do New Placement Test Youe Reach Expire Date'], 400);} 
+     } else if (!$check) {
+        
             $placement = \App\Models\StudentPlacement::where('student_id', $student)->latest()->first();
             $placementDate = Carbon::parse($placement->created_at);
             $after6 = $placementDate->addMonths(6);
             $currentDate = Carbon::now();
 
             if ($currentDate <= $after6) {
-
+               
                 $level = $placement->level;
+                
                 if ($level) {
-
-                    if ($name == $level) {
-
-                        $result = $name_id; /// the same element
-
-                    }
-                }
-                return $result;
+                 
+                    if ($name->name == $level) {
+                        
+                      
+                        return $name;}
             } else return null;
         }
-    }
+    }}
     public function makeReservation(Request $request )
     {
         $user = User::find(JWTAuth::parseToken()->authenticate()->id);
@@ -92,8 +96,10 @@ class ReservationConrtoller extends Controller
 
             $newreservation = Reservation::create([
                 'student_id' => $student_id,
-                'course_id' => $CourseId
-            ]);
+                'course_id' => $CourseId,
+                
+            ])->load('student.user');
+            return response()->json( $newreservation , 200);
         } else {
             return response()->json(['message' => 'sorry cannot make reservation'], 400);
         }
@@ -118,5 +124,10 @@ class ReservationConrtoller extends Controller
         } else {
             return response()->json(['message' => 'Filed Approve Reservation'], 400);
         }
+    }
+
+    public function getAllReservation(){
+        $reservation=Reservation::all();
+        return response()->json($reservation,200);
     }
 }

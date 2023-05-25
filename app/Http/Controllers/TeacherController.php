@@ -97,4 +97,11 @@ $log->action = 'Edi Own Profile';
 $log->save();
   return response()->json(['message' => 'Teacher info updated successfully'], 200);
 }
+
+public function list(){
+  
+  $teachers = Teacher::with('employee.user')->get();
+  
+  return response()->json($teachers, 200);
+}
 }

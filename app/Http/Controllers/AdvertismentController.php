@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\AdvertismentRequest;
 use App\Models\Course;
 use App\Models\CourseAdvertisment;
+use Carbon\Carbon;
 use Tymon\JWTAuth\Contracts\Providers\Auth;
 
 
@@ -85,4 +86,11 @@ class AdvertismentController extends Controller
         $advertisment->delete();
         return response()->json(['message' => 'Advertisment deleted successfully'], 200);
     }
-   }
+
+    public function getActiveAds()
+    {
+        $now = Carbon::now();
+        $advertisments = Advertisment::where('expired_at', '>', $now)->get();
+        return response()->json($advertisments, 200);
+    }
+}

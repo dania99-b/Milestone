@@ -89,4 +89,8 @@ class QuestionController extends Controller
         }
         return response()->json(['message' => 'Question not found'], 404);
     }
-}
+    public function getQuestionById(Request $request){
+        
+      $question=Question::find($request['question_id']);
+      return response()->json($question, 200);
+}}

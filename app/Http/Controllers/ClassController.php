@@ -12,9 +12,17 @@ use Illuminate\Http\Request;
 class ClassController extends Controller
 {
     public function list(){
-        $classes = Classs::all();
-        return response()->json($classes, 200);
-    }
+   
+            $classes = Classs::all();
+            foreach ($classes as $class) {
+                $class->schedules = json_decode($class->schedules);
+            }
+          
+            return response()->json($classes, 200);
+        }
+      
+       
+    
     
     public function create(ClassRequest $request){
         $newClass = Classs::firstOrCreate([
@@ -81,4 +89,15 @@ class ClassController extends Controller
         $log->save();
         return response()->json(['message' => 'Class deleted successfully'], 200);
     }
+    public function getClassById(Request $request){
+            
+    $class = Classs::find($request['class_id']);
+    
+    if ($class) {
+        $class->schedules = json_decode($class->schedules);
+        return response()->json($class, 200);
+    } else {
+        return response()->json(['error' => 'Class not found'], 404);
+    }
+}
 }

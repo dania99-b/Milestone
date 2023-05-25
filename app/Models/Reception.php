@@ -16,6 +16,6 @@ class Reception extends Model
     public $timestamps = true;
 
     public function employee(){
-        $this->belongsTo(Employee::class);
+       return  $this->belongsTo(Employee::class);
     }
 }
