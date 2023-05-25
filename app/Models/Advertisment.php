@@ -19,13 +19,17 @@ class Advertisment extends Model
         'description',
         'published_at',
         'expired_at',
+        'course_id'
         ];
 
         public function advertismentType(){
-            $this->belongsTo(AdvertismentType::class);
+           return $this->belongsTo(AdvertismentType::class);
         }
         
         public function cvs(){
-            $this->hasMany(CV::class);
+            return $this->hasMany(CV::class);
+        }
+        public function course(){
+            return $this->belongsTo(Course::class);
         }
 }

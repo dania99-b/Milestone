@@ -29,7 +29,8 @@ class AdvertismentRequest extends FormRequest
             'advertisment_type_id'=>'required',
             'tips'=>'string',
             'is_shown'=>'required',
-            'description'=>'max:255'   
+            'description'=>'max:255' ,
+            'course_id'=>'max:255'  
         ];
     }
 }

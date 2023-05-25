@@ -85,8 +85,7 @@ Route::group(['prefix' => 'reception', 'middleware' => ['role:Reception']], func
     Route::post('/ads/types/update',[AdvertismentTypeController::class,'update']);
     Route::delete('/ads/types',[AdvertismentTypeController::class,'delete']);
     Route::post('/approve/reservation',[ReservationConrtoller::class,'approveReservation']);
-    Route::post('/advertisment/course',[AdvertismentController::class,'createCourseAdvertisment']);
-    
+   
     
 
 });
@@ -99,7 +98,7 @@ Route::group(['prefix' => 'student', 'middleware' => ['role:Student']], function
     Route::get('/viewprofile',[StudentController::class,'viewProfileStudent']);
     Route::get('/viewnotification',[StudentController::class,'viewNotification']);
     Route::post('/editprofile',[StudentController::class,'editProfile']);
-    Route::get('/check11',[ReservationConrtoller::class,'CheckBeforeReservation']);
+    Route::post('/check11',[ReservationConrtoller::class,'CheckBeforeReservation']);
     Route::post('/storAnswer',[StudentPlacementController::class,'storeStudentAnswers']);
     Route::post('/submit',[StudentController::class,'storeAnswers']);
    
