@@ -8,6 +8,7 @@ use App\Models\Course;
 use App\Models\LogFile;
 use Illuminate\Http\Request;
 use App\Http\Requests\CourseRequest;
+use App\Models\CourseAdvertisment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -40,7 +41,7 @@ class CourseController extends Controller
         'course_name_id' => $request->validated()['course_name_id'],
         'days' => json_encode($dayIds), // Encode the array of day IDs
     ]);
-
+   
     // Additional operations if needed
 
     // Return the new course or perform any necessary further actions

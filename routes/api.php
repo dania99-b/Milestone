@@ -84,6 +84,10 @@ Route::group(['prefix' => 'reception', 'middleware' => ['role:Reception']], func
     Route::post('/ads/types',[AdvertismentTypeController::class,'create']);
     Route::post('/ads/types/update',[AdvertismentTypeController::class,'update']);
     Route::delete('/ads/types',[AdvertismentTypeController::class,'delete']);
+    Route::post('/approve/reservation',[ReservationConrtoller::class,'approveReservation']);
+    Route::post('/advertisment/course',[AdvertismentController::class,'createCourseAdvertisment']);
+    
+    
 
 });
 

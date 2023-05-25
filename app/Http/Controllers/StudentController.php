@@ -62,8 +62,6 @@ class StudentController extends Controller
         $student = Student::where('user_id', JWTAuth::parseToken()->authenticate()->id)->get()->first()->id;
 
         if ($course->qr_code == $qrCode) {
-            // The QR code is correct, mark the student as present
-            // For example, you can create a new attendance record in the database
             $attendance = new Attendence;
             $attendance->student_id = $student;
             $attendance->course_id = $course->id;

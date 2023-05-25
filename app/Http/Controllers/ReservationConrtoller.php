@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CourseRequest;
 use App\Models\Course;
+use App\Models\CourseAdvertisment;
 use App\Models\CourseName;
 use App\Models\CourseResult;
 use App\Models\Reservation;
@@ -15,9 +16,10 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ReservationConrtoller extends Controller
 {
-   public function CheckBeforeReservation(){
- 
-   
+   public function CheckBeforeReservation(Request $request){
+    $add_id=$request['add_id'];
+    $addvertisment=CourseAdvertisment::find($add_id);
+    $addvertisment->course_id;
     $courses=CourseName::all();
     $student = Student::where('user_id', JWTAuth::parseToken()->authenticate()->id)->get()->first()->id;
     $check=CourseResult::where('student_id',$student)->get()->first();
@@ -82,7 +84,7 @@ $newreservation=Reservation::create([
 
 }
 else{
-    return response()->json(['message' => 'sorry cannot make reservation'], 40);
+    return response()->json(['message' => 'sorry cannot make reservation'], 400);
 }
 
 
@@ -95,11 +97,18 @@ else{
 public function approveReservation(Request $request){
 $request_id=$request['request_id'];
 $requestfind=Reservation::find($request_id);
-$requestfind->status="ACCEPTED";
-                                                                                                                                                                                                                                                                                                  
+if($requestfind){
+$course_id=$requestfind->course_id;
+$requestfind->status="ACCEPTED"; 
 
+$approve=CourseResult::Create([
+'course_id'=>$course_id,
+'student_id'=>$requestfind->student_id
+]
+);
+  return response()->json(['message' => 'Reservation Approved Successfully'], 200);
+} 
+  else {return response()->json(['message' => 'Filed Approve Reservation'], 400);
+} 
 
-
-
-
-}} 
+}}

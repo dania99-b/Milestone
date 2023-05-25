@@ -1,9 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\LogFile;
 use App\Models\Advertisment;
 use Illuminate\Http\Request;
-use App\Models\LogFile;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\AdvertismentRequest;
+use App\Models\Course;
+use App\Models\CourseAdvertisment;
+use Tymon\JWTAuth\Contracts\Providers\Auth;
 
 
 class AdvertismentController extends Controller
@@ -70,4 +75,20 @@ class AdvertismentController extends Controller
         $advertisment->delete();
         return response()->json(['message' => 'Advertisment deleted successfully'], 200);
     }
+    public function createCourseAdvertisment(Request $request){
+        $course_id=$request['course_id'];
+        $course_info=Course::find( $course_id);
+        if($course_info){
+        CourseAdvertisment::Create([
+        'course_id'=>$course_id,
+        'publish_data'=>$request['publish_data'],
+        'is_shown'=>$request['is_shown'],
+        'expired_at'=>$request['expired_at'],
+        ]);
+        
+        return response()->json($course_info, 200);
+  
 }
+return response()->json(['message' => 'Advertisment field crete'], 400);
+
+}}
