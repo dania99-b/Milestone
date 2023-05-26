@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\AttendenceRequest;
+use App\Models\CourseResult;
 
 class StudentController extends Controller
 {
@@ -56,11 +57,13 @@ class StudentController extends Controller
     public function scan(AttendenceRequest $request)
     {
 
-        $courseId = $request->validated()['course_id'];
+        
         $qrCode = $request->validated()['qr_code'];
-        $course = Course::find($courseId)->first();
+       
+      
         $student = Student::where('user_id', JWTAuth::parseToken()->authenticate()->id)->get()->first()->id;
-
+        $courseId =CourseResult::where('student_id',$student)->latest()->first()->pluck('course_id');
+        $course = Course::find($courseId)->first();
         if ($course->qr_code == $qrCode) {
             $attendance = new Attendence;
             $attendance->student_id = $student;
