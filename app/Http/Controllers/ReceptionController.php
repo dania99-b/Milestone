@@ -22,6 +22,8 @@ use App\Http\Requests\AdvertismentRequest;
 use App\Http\Requests\ClassScheduleRequest;
 use Illuminate\Console\Scheduling\Schedule;
 use App\Http\Requests\TeacherScheduleRequest;
+use App\Models\Guest;
+use App\Models\GuestPlacement;
 use App\Models\Reception;
 
 class ReceptionController extends Controller
@@ -93,28 +95,7 @@ $log->save();
     return response()->json(['message' => 'Schedule Created Error'], 400);
   }
 
-  public function ScheduleTeacher(TeacherScheduleRequest $request)
-  {
-    $TeacherId = $request->validated()['teacher_id'];
-    $teacher = Teacher::find($TeacherId);
-    if ($teacher) {
-      $newSchedule = Teacher_Schedule::Create([
-        'teacher_id' => $TeacherId,
-        'day' => date('Y-m-d', strtotime($request->validated()['day'])),
-       'start_time' => date('H:i:s', strtotime($request->validated()['start_time'])),
-        'end_time' =>  date($request->validated()['end_time']),
-
-      ]);
-      $user=Auth::user();
-      $employee=$user->employee;
-      $log = new LogFile();
-  $log->employee_id= $employee->id;
-  $log->action = 'Create Schedule Teacher';
-  $log->save();
-      return response()->json(['message' => 'Schedule Created Successfully'], 200);
-    }
-    return response()->json(['message' => 'Schedule Created Error'], 400);
-  }
+  
   public function EditScheduleClass(Request $request)
   {
     $id = $request['schedule_id'];
@@ -213,4 +194,6 @@ $log->save();
     
     return response()->json($receptions, 200);
   }
+
+  
 }

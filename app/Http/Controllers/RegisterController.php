@@ -18,6 +18,7 @@ use App\Models\HumanResource;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\EmployeeRequest;
 use App\Http\Requests\StudentRequest;
+use App\Models\StudentPlacement;
 use Tymon\JWTAuth\Contracts\Providers\Auth;
 use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
 
@@ -149,15 +150,27 @@ class RegisterController extends Controller
         }
         return response()->json(['message' => 'User not found'], 404);
     }
-    public function student(StudentRequest $request){              
+
+    public function getAllGuest(){ 
+        $guests=Guest::all();
+        return response()->json($guests,200);
+
+    }
+    public function searchGuestByEmail($email){ 
+    $guest=Guest::where('email',$email)->get();
+    return response()->json($guest,200);
+    }
+
+    public function student(StudentRequest $request,$id){    
+        $guest=Guest::find($id);        
         $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
         
         $mainstudent = User::firstOrCreate([
-            'first_name' => $request->validated()['first_name'],
-            'last_name' => $request->validated()['last_name'],
-            'email' =>$request->validated()['email'],
+            'first_name' => $guest->first_name,
+            'last_name' =>$guest->last_name,
+            'email' =>$guest->email,
             'password' => bcrypt($request->validated()['password']),
-            'phone' => $request->validated()['phone'],
+            'phone' => $guest->phone,
             'username' => $request->validated()['username'],
             'birth' => $request->validated()['birth'],
         ]);
@@ -165,15 +178,34 @@ class RegisterController extends Controller
         $student = $mainstudent->student()->create([
             'user_id' => $mainstudent->id,
             'image' => $upload,
-            'country_id' => $request['country_id']
+            'country_id' => $request['country_id'],
+            'education'=>$guest->education
         ]);
 
+      
+        $guest_placement=GuestPlacement::where('guest_id',$id)->latest()->first();
+        StudentPlacement::create([
+            'test_id' => $guest_placement->test_id,
+            'student_id'=>  $student->id,
+            'mark'=>$guest_placement->mark,//request
+            'created_at'=>$guest_placement->created_at,
+            'updated_at'=>$guest_placement->updated_at,
+            'level'=> $request['level'],
+
+
+        ]);
+        $guest_placement->delete();
+        $guest->delete();
         $mainstudent->attachRole('Student');
         return response()->json([
             'message' => 'user successfully registered',
             'user' => $mainstudent,
             'token' => $mainstudent->createToken('tokens')->plainTextToken
         ], 200);
+
+     
+       
+
     }
 
     public function guestVertification(Request $request){

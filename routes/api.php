@@ -63,7 +63,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin']], function() {
 });
 
 Route::group(['prefix' => 'reception', 'middleware' => ['role:Reception']], function() {
-    Route::post('/register/student',[RegisterController::class,'student']);
+    Route::post('/register/student/{id}',[RegisterController::class,'student']);
     Route::post('/EditStudentInfo',[ReceptionController::class,'EditStudentInfo']);
 
     Route::get('/classes',[ClassController::class,'list']);
@@ -91,6 +91,10 @@ Route::group(['prefix' => 'reception', 'middleware' => ['role:Reception']], func
     Route::get('/get/activeAdvertisments',[AdvertismentController::class,'getActiveAds']);
     Route::get('/get/teachers',[TeacherController::class,'list']);
     Route::get('/get/receptions',[ReceptionController::class,'list']);
+    Route::get('/get/allGuests',[RegisterController::class,'getAllGuest']);
+    Route::post('/get/guests/byEmail/{email}',[RegisterController::class,'searchGuestByEmail']);
+    
+    
    
     
     
@@ -112,12 +116,13 @@ Route::group(['prefix' => 'student', 'middleware' => ['role:Student']], function
     Route::post('/check11',[ReservationConrtoller::class,'makeReservation']);
     Route::post('/storAnswer',[StudentPlacementController::class,'storeStudentAnswers']);
     Route::post('/submit',[StudentController::class,'storeAnswers']);
+    Route::post('/get/advertismentById',[AdvertismentController::class,'getAdvertismentById']);
+   
    
 });
 
 Route::group(['prefix' => 'teacher', 'middleware' => ['role:Teacher']], function() {
     Route::post('/generate',[PlacementController::class,'generate']);
-
     Route::post('/AddType',[QuestionTypeController::class,'AddType']);
     Route::post('/AddQuestion',[QuestionController::class,'AddQuestion']);
     Route::post('/DeleteQuestion',[TeacherController::class,'DeleteQuestion']);
@@ -147,6 +152,7 @@ Route::get('/getTest',[PlacementController::class,'getTest']);
 Route::get('/CheckBeforeReservation',[ReservationConrtoller::class,'CheckBeforeReservation']);
 Route::get('/MakeReservation',[ReservationConrtoller::class,'makeReservation']);
 Route::get('/get/nformation',[InformationController::class,'getInfo']);
+Route::post('/test',[ReceptionController::class,'tranferGuestToStudent']);
 
 
 

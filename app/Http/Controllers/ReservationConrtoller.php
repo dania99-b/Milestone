@@ -99,9 +99,9 @@ class ReservationConrtoller extends Controller
                 'course_id' => $CourseId,
                 
             ])->load('student.user');
-            return response()->json( $newreservation , 200);
+            return response()->json(['message' => 'reservation done successfully'] , 200);
         } else {
-            return response()->json(['message' => 'sorry cannot make reservation'], 400);
+            return response()->json(['message' => 'sorry cannot make reservation!!'], 400);
         }
     }
 

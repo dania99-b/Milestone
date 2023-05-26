@@ -24,15 +24,14 @@ class StudentRequest extends FormRequest
     public function rules()
     {
         return [
-                'first_name' => 'required|string|max:255',
-                'last_name' => 'required|string|max:255',
-                'email' => 'required|email|unique:users|max:255',
+                
                 'password' => 'required|string|min:6|max:255',
-                'phone' => 'required|string|max:20|unique:users',
                 'username'=> 'required|string|max:255|unique:users',
                 'images'=>'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 'birth'=>'date|before:today',
                 'country_id'=>'int',
+                'level'=> 'required|string',
+               
                 ];
     
     }

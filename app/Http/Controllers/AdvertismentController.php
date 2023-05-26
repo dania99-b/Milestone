@@ -93,4 +93,10 @@ class AdvertismentController extends Controller
         $advertisments = Advertisment::where('expired_at', '>', $now)->get();
         return response()->json($advertisments, 200);
     }
+    public function getAdvertismentById(Request $request)
+    {
+        $id=$request['advertisment_id'];
+        $advertisment = Advertisment::find($id)->load('course');
+        return response()->json( $advertisment, 200);
+    }
 }

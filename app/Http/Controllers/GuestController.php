@@ -33,7 +33,7 @@ class GuestController extends Controller
         $answer=Answer::find($answer);
         if($answer->is_true==1)
          $total_mark+=Question::find($answer->question_id)->mark;
-          if($answer==-1)
+          if(!$answer)
           $total_mark+=0;
         }
        
