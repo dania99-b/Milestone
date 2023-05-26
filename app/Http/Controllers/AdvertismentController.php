@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\Day;
 use App\Models\Course;
-use App\Models\LogFile;
 
+use App\Models\LogFile;
+use App\Models\CourseName;
 use App\Models\Advertisment;
 use Illuminate\Http\Request;
 use App\Models\CourseAdvertisment;
@@ -13,6 +15,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\AdvertismentRequest;
 
+use function PHPSTORM_META\map;
 
 class AdvertismentController extends Controller
 {
@@ -98,6 +101,15 @@ class AdvertismentController extends Controller
     {
         $id=$request['advertisment_id'];
         $advertisment = Advertisment::find($id)->load('course');
+
+        // Decode the "days" field in the Course model
+        $advertisment->course->days = collect(json_decode($advertisment->course->days))->map(function ($dayId) {
+            return Day::find($dayId);
+        });
+       
+    
+        $courseName = CourseName::find($advertisment->course->course_name_id)->latest()->value('name');
+        $advertisment->course->course_name = $courseName;
         return response()->json( $advertisment, 200);
     }
 }
