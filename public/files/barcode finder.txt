@@ -1,0 +1,252 @@
+import frappe
+from frappe.model.document import Document
+import datetime
+
+
+class Card(Document):
+    pass
+
+
+@frappe.whitelist()
+def scan_barcode(barcode):
+    cards = frappe.get_all('Card', fields=[
+                           'name', 'prefix', 'suffix', 'card_title', 'priority'], filters={'active': 1})
+    sorted_cards = sorted(cards, key=lambda card: card.priority)
+
+    try:
+        barcode = barcode.encode('ISO-8859-1').decode('windows-1256')
+
+    except Exception as e:
+        print(f"Error in trying to decode the barcode: {e}")
+        
+    #for test
+    chopped_barcode = barcode.split('#')
+    barcode_length = len(barcode)
+    
+
+    for card in sorted_cards:
+        print(card.card_title)
+        if bool(card.prefix) and bool(card.suffix):
+            prefix_length = len(card.prefix)
+            suffix_length = len(card.suffix)
+            if prefix_length <= barcode_length:
+                prefix_substr = barcode[:prefix_length]
+                print(prefix_substr)
+            if suffix_length <= barcode_length:
+                suffix_substr = barcode[-suffix_length:]
+                print(prefix_substr)
+                print(suffix_substr)
+                if prefix_substr != card.prefix and suffix_substr != card.suffix:
+
+                    continue
+
+                else:
+                    fields = frappe.get_all('Field', filters={'parent': card.name, 'display': 1},
+                                            fields=['name', 'server_title', 'display_title', 'order', 'display', 'cast_datatype'])
+                    for field in fields:
+
+                        field_value = chopped_barcode[field.order - 1]
+
+                        if field_value and field_value.strip() and field.cast_datatype:
+                            casted_value = None
+
+                            if field.cast_datatype == "java.lang.Integer":
+                                try:
+                                    casted_value = int(field_value)
+                                    print(casted_value)
+                                    print("is integer")
+                                except ValueError:
+                                    is_castable = False
+                                    print("errorrr")
+                            elif field.cast_datatype == "java.lang.Long":
+                                try:
+                                    casted_value = int(field_value)
+                                except ValueError:
+                                    is_castable = False
+                            elif field.cast_datatype == "java.util.Date":
+                                try:
+                                    formatter = datetime.datetime.strptime(
+                                        field_value, "%d/%m/%Y")
+                                    casted_value = formatter.date()
+                                except ValueError:
+                                    is_castable = False
+                    if is_castable == True and len(chopped_barcode) == len(fields):
+                        print("the card is " +
+                              card.card_title + " card for nowww")
+
+                    else:
+                        continue
+                break
+        elif bool(card.prefix) and not bool(card.suffix):
+            prefix_length = len(card.prefix)
+
+            if prefix_length <= barcode_length:
+                prefix_substr = barcode[:prefix_length]
+
+                if prefix_substr != card.prefix:
+
+                    continue
+
+                else:
+                    is_castable = True
+                    fields = frappe.get_all('Field', filters={'parent': card.name, 'display': 1},
+                                            fields=['name', 'server_title', 'display_title', 'order', 'display', 'cast_datatype'])
+                    for field in fields:
+
+                        field_value = chopped_barcode[field.order - 1]
+                        if field.order == 1:
+                            field_value = field_value.strip()[prefix_length:]
+
+                        if field_value and field_value.strip() and field.cast_datatype:
+                            casted_value = None
+                            if field.cast_datatype == "java.lang.String":
+                                try:
+                                    casted_value = field_value
+                                    print(casted_value + " is String")
+                                except ValueError:
+                                    is_castable = False
+                            elif field.cast_datatype == "java.lang.Integer":
+                                try:
+                                    casted_value = int(field_value)
+                                    print(casted_value)
+                                    print("is integer")
+                                except ValueError:
+                                    is_castable = False
+                                    print("errorrr")
+                            elif field.cast_datatype == "java.lang.Long":
+                                try:
+                                    casted_value = int(field_value)
+                                except ValueError:
+                                    is_castable = False
+                            elif field.cast_datatype == "java.util.Date":
+                                try:
+                                    formatter = datetime.datetime.strptime(
+                                        field_value, "%d/%m/%Y")
+                                    casted_value = formatter.date()
+                                except ValueError:
+                                    is_castable = False
+
+                    if is_castable == True and len(chopped_barcode) == len(fields):
+                        print("the card is " +
+                              card.card_title + " card for nowww")
+
+                    else:
+                        continue
+
+                break
+
+        elif not bool(card.prefix) and not bool(card.suffix):
+
+            prefix_length = len(card.prefix)
+            if prefix_length <= barcode_length:
+                prefix_substr = barcode[:prefix_length]
+            if prefix_substr != card.prefix:
+                continue
+
+            else:
+
+                fields = frappe.get_all('Field', filters={'parent': card.name, 'display': 1},
+                                        fields=['name', 'server_title', 'display_title', 'order', 'display', 'cast_datatype'])
+
+                is_castable = True
+
+                for field in fields:
+
+                    field_value = chopped_barcode[field.order - 1]
+                    if field_value and field_value.strip() and field.cast_datatype:
+                        casted_value = None
+                        if field.cast_datatype == "java.lang.String":
+                            try:
+                                casted_value = field_value
+                                print(casted_value + " is String")
+                            except ValueError:
+                                is_castable = False
+                        elif field.cast_datatype == "java.lang.Integer":
+                            try:
+                                casted_value = int(field_value)
+                                print(casted_value)
+                                print("is integer")
+                            except ValueError:
+                                is_castable = False
+                                print("errorrr1")
+                        elif field.cast_datatype == "java.lang.Long":
+                            try:
+                                casted_value = int(field_value)
+                            except ValueError:
+                                is_castable = False
+                                print("errorrr2")
+                        elif field.cast_datatype == "java.util.Date":
+                            try:
+                                formatter = datetime.datetime.strptime(
+                                    field_value, "%d/%m/%Y")
+                                casted_value = formatter.date()
+                                print(casted_value)
+                                print("is date")
+                            except ValueError:
+                                is_castable = False
+                                print("errorrr3")
+                print(is_castable)
+                if is_castable == True and len(chopped_barcode) == len(fields):
+                    print("the card is " +
+                          card.card_title + " card for nowww")
+
+                else:
+                    continue
+            break
+        elif not bool(card.prefix) and bool(card.suffix):
+            prefix_length = len(card.prefix)
+            suffix_length = len(card.suffix)
+            if prefix_length <= barcode_length:
+                prefix_substr = barcode[:prefix_length]
+                print(prefix_substr)
+            if suffix_length <= barcode_length:
+                suffix_substr = barcode[-suffix_length:]
+                print(prefix_substr)
+                print(suffix_substr)
+                if prefix_substr != card.prefix and suffix_substr != card.suffix:
+
+                    continue
+
+                else:
+                    fields = frappe.get_all('Field', filters={'parent': card.name, 'display': 1},
+                                            fields=['name', 'server_title', 'display_title', 'order', 'display', 'cast_datatype'])
+                    for field in fields:
+                    
+                   
+                        field_value = chopped_barcode[field.order - 1]
+                        if field.order == 1:
+                            field_value = field_value.strip()[prefix_length:]
+
+                        if field_value and field_value.strip() and field.cast_datatype:
+                            casted_value = None
+
+                            if field.cast_datatype == "java.lang.Integer":
+                                try:
+                                    casted_value = int(field_value)
+                                    print(casted_value)
+                                    print("is integer")
+                                except ValueError:
+                                    is_castable = False
+                                    print("errorrr")
+                            elif field.cast_datatype == "java.lang.Long":
+                                try:
+                                    casted_value = int(field_value)
+                                except ValueError:
+                                    is_castable = False
+                            elif field.cast_datatype == "java.util.Date":
+                                try:
+                                    formatter = datetime.datetime.strptime(
+                                        field_value, "%d/%m/%Y")
+                                    casted_value = formatter.date()
+                                except ValueError:
+                                    is_castable = False
+
+                    if is_castable == True and len(chopped_barcode) == len(fields):
+                        print(len(chopped_barcode))
+                        print("the card is " +
+                              card.card_title + " card for nowww")
+
+                    else:
+                        continue
+
+                break

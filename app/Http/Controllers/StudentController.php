@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\AttendenceRequest;
+use App\Models\Homework;
 
 class StudentController extends Controller
 {
@@ -164,4 +165,15 @@ class StudentController extends Controller
         });
             
     return response()->json($course_info,200);}
-}
+
+
+public function getHomeworkCurrCourse(){
+    $user = JWTAuth::parseToken()->authenticate();
+    $student = $user->student;
+    $curr_course_id=CourseResult::where('student_id',$student->id)->latest()->value('course_id');
+    $course_info=Homework::where('course_id',$curr_course_id)->get();
+
+
+return response()->json($course_info,200);
+
+}}

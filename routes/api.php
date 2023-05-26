@@ -15,11 +15,12 @@ use App\Http\Controllers\AdvertismentController;
 use App\Http\Controllers\AdvertismentTypeController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\FiltersController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InformationController;
 use App\Http\Controllers\PlacementController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuestionTypeController;
-
+use App\Http\Requests\HomeworkRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -68,18 +69,18 @@ Route::group(['prefix' => 'reception', 'middleware' => ['role:Reception']], func
 
     Route::get('/classes',[ClassController::class,'list']);
     Route::post('/classes',[ClassController::class,'create']);
-    Route::delete('/classes',[ClassController::class,'delete']);
-    Route::post('/classes/update',[ClassController::class,'update']);
+    Route::delete('/classes/{id}',[ClassController::class,'delete']);
+    Route::post('/classes/update/{id}',[ClassController::class,'update']);
 
     Route::get('/courses',[CourseController::class,'list']);
     Route::post('/courses',[CourseController::class,'create']);
-    Route::delete('/courses',[CourseController::class,'delete']);
-    Route::post('/courses/update',[CourseController::class,'update']);
+    Route::delete('/courses/{id}',[CourseController::class,'delete']);
+    Route::post('/courses/update/{id}',[CourseController::class,'update']);
     
     Route::get('/advertisments',[AdvertismentController::class,'list']);
     Route::post('/advertisments',[AdvertismentController::class,'create']);
-    Route::post('/advertisments/update',[AdvertismentController::class,'update']);
-    Route::delete('/advertisements',[AdvertismentController::class,'delete']);
+    Route::post('/advertisments/update/{id}',[AdvertismentController::class,'update']);
+    Route::delete('/advertisements/{id}',[AdvertismentController::class,'delete']);
 
     Route::get('/ads/types',[AdvertismentTypeController::class,'list']);
     Route::post('/ads/types',[AdvertismentTypeController::class,'create']);
@@ -118,6 +119,8 @@ Route::group(['prefix' => 'student', 'middleware' => ['role:Student']], function
     Route::post('/submit',[StudentController::class,'storeAnswers']);
     Route::post('/get/advertismentById',[AdvertismentController::class,'getAdvertismentById']);
     Route::get('/get/attendenceDays',[StudentController::class,'getAttendenceDays']);
+    Route::get('/get/courseHomework',[StudentController::class,'getHomeworkCurrCourse']);
+    
     
    
    
@@ -134,6 +137,8 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['role:Teacher']], function
     Route::post('/editprofile',[TeacherController::class,'editProfile']);
     Route::post('/get/questionByType/{type}',[FiltersController::class,'getQuestionByType']);
     Route::post('/get/questionById',[QuestionController::class,'getQuestionById']);
+    Route::post('/upload/Homework',[TeacherController::class,'uploadHomework']);
+    
     
     
 });

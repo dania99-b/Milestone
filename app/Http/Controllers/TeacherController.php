@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\HomeworkRequest;
 use App\Models\Test;
 use App\Models\Type;
 use App\Models\User;
@@ -16,6 +17,8 @@ use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\QuestionRequest;
+use App\Models\Course;
+use App\Models\Homework;
 use App\Models\QuestionType;
 
 class TeacherController extends Controller
@@ -103,5 +106,15 @@ public function list(){
   $teachers = Teacher::with('employee.user')->get();
   
   return response()->json($teachers, 200);
+}
+
+public function uploadHomework(HomeworkRequest $request){
+  $file = $request->file('file')->move('files/', $request->file('file')->getClientOriginalName());
+  $homework=Homework::firstOrCreate([
+    'course_id'=>$request->validated()['course_id'],
+         'text'=>$request->validated()['text'],
+         'file'=>$file
+  ]);
+return response()->json(['message'=>'Homework Uploaded Successfully'],200);
 }
 }

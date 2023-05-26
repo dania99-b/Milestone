@@ -47,9 +47,9 @@ class ClassController extends Controller
         return response()->json(['message' => 'Class added successfully'], 200);
     }
 
-    public function update(Request $request){
-        $class_id = $request['class_id'];
-        $class = Classs::find($class_id);
+    public function update(Request $request,$id){
+       
+        $class = Classs::find($id);
         if (!$class) {
             return response()->json(['message' => 'Course not found'], 400);
         }
@@ -74,8 +74,8 @@ class ClassController extends Controller
         return response()->json(['message' => 'Class updated successfully'], 200);
     }
 
-    public function delete(Request $request){
-        $id = $request['class_id'];
+    public function delete($id){
+       
         $class = Classs::find($id);
         if (!$class) {
             return response()->json(['message' => 'Class not found'], 400);

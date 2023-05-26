@@ -17,6 +17,11 @@ class CourseController extends Controller
 {
     public function list(){
         $courses = Course::all();
+        foreach($courses as $course){}
+        $course->days = collect(json_decode($course->days))->map(function ($dayId) {
+            return Day::find($dayId);
+        });
+            
         return response()->json($courses, 200);
     }
 
@@ -53,9 +58,9 @@ class CourseController extends Controller
     
 
   
-    public function update(Request $request){
-        $course_id = $request['course_id'];
-        $course = Course::find($course_id);
+    public function update(Request $request,$id){
+       
+        $course = Course::find($id);
         if (!$course) {
         return response()->json(['message' => 'Course not found'], 400);
         }
@@ -104,8 +109,8 @@ class CourseController extends Controller
         return response()->json(['message' => 'Course updated successfully'], 200);
     }
 
-    public function delete(Request $request){
-        $id = $request['course_id'];
+    public function delete($id){
+       
         $course = Course::find($id);
         if ($course) {
             $course->delete();

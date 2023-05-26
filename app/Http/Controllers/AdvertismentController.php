@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use App\Models\Course;
 use App\Models\LogFile;
+
 use App\Models\Advertisment;
 use Illuminate\Http\Request;
+use App\Models\CourseAdvertisment;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\AdvertismentRequest;
-use App\Models\Course;
-use App\Models\CourseAdvertisment;
-use Carbon\Carbon;
-use Tymon\JWTAuth\Contracts\Providers\Auth;
 
 
 class AdvertismentController extends Controller
@@ -40,9 +41,9 @@ class AdvertismentController extends Controller
         } else   return response()->json(['message' => 'Advertisment added successfully'], 200);
     }
 
-    public function update(Request $request)
+    public function update(Request $request,$id)
     {
-        $id = $request['advertisment_id'];
+       
         $advertisment = Advertisment::findOrFail($id);
         if (!$advertisment) {
             return response()->json(['message' => 'Class not found'], 400);
@@ -67,7 +68,7 @@ class AdvertismentController extends Controller
             $advertisment->image = $upload;
         }
         $advertisment->save();
-        $user = Auth::user();
+        $user = JWTAuth::parseToken()->authenticate();
         $employee = $user->employee;
         $log = new LogFile();
         $log->employee_id = $employee->id;
@@ -76,9 +77,9 @@ class AdvertismentController extends Controller
         return response()->json(['message' => 'Advertisment updated successfully'], 200);
     }
 
-    public function delete(Request $request)
+    public function delete($id)
     {
-        $id = $request[' '];
+       
         $advertisment = Advertisment::findOrFail($id);
         if (Storage::exists($advertisment->image)) {
             Storage::delete($advertisment->image);
