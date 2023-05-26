@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Day;
 use App\Models\User;
 use App\Models\Answer;
 use App\Models\Course;
@@ -9,6 +10,7 @@ use App\Models\Student;
 use App\Models\Question;
 use App\Models\Attendence;
 use App\Models\StudentRate;
+use App\Models\CourseResult;
 use Illuminate\Http\Request;
 use App\Models\StudentPlacement;
 use App\Http\Requests\RateRequest;
@@ -16,7 +18,6 @@ use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\AttendenceRequest;
-use App\Models\CourseResult;
 
 class StudentController extends Controller
 {
@@ -158,7 +159,9 @@ class StudentController extends Controller
         $course_info=Course::find($curr_course_id);
    
         if ($course_info) 
-            $course_info->days = json_decode($course_info->days);
+        $course_info->days = collect(json_decode($course_info->days))->map(function ($dayId) {
+            return Day::find($dayId);
+        });
             
     return response()->json($course_info,200);}
 }
