@@ -117,6 +117,8 @@ Route::group(['prefix' => 'student', 'middleware' => ['role:Student']], function
     Route::post('/storAnswer',[StudentPlacementController::class,'storeStudentAnswers']);
     Route::post('/submit',[StudentController::class,'storeAnswers']);
     Route::post('/get/advertismentById',[AdvertismentController::class,'getAdvertismentById']);
+    Route::get('/get/attendenceDays',[StudentController::class,'getAttendenceDays']);
+    
    
    
 });
@@ -153,6 +155,8 @@ Route::get('/CheckBeforeReservation',[ReservationConrtoller::class,'CheckBeforeR
 Route::get('/MakeReservation',[ReservationConrtoller::class,'makeReservation']);
 Route::get('/get/nformation',[InformationController::class,'getInfo']);
 Route::post('/test',[ReceptionController::class,'tranferGuestToStudent']);
+Route::get('/get/CoursesName',[CourseController::class,'getAllCourseName']);
+
 
 
 

@@ -32,9 +32,7 @@ class Course extends Model
         public function student(){
             return $this->belongsToMany(Student::class,'attendences')->withPivot('student_id','course_id','is_absent','created_at');
         }
-        public function days(){
-            return $this->belongsToMany(Day::class,'course_days')->withPivot('course_id','day_id');
-        }
+      
         public function name(){
             return $this->hasOne(CourseName::class);
         }

@@ -9,6 +9,7 @@ use App\Models\LogFile;
 use Illuminate\Http\Request;
 use App\Http\Requests\CourseRequest;
 use App\Models\CourseAdvertisment;
+use App\Models\CourseName;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -112,4 +113,8 @@ class CourseController extends Controller
         }
         return response()->json(['message' => 'Course not found'], 400);
     }
+    public function getAllCourseName(){
+        $course_name=CourseName::all();
+        return response()->json($course_name,200);
+}
 }

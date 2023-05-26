@@ -150,4 +150,15 @@ class StudentController extends Controller
 
         return response()->json(['message' => 'Student info updated successfully'], 200);
     }
+
+    public function getAttendenceDays(){
+        $user = JWTAuth::parseToken()->authenticate();
+        $student = $user->student;
+        $curr_course_id=CourseResult::where('student_id',$student->id)->latest()->value('course_id');
+        $course_info=Course::find($curr_course_id);
+   
+        if ($course_info) 
+            $course_info->days = json_decode($course_info->days);
+            
+    return response()->json($course_info,200);}
 }
