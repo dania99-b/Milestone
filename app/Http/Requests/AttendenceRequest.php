@@ -24,7 +24,7 @@ class AttendenceRequest extends FormRequest
     public function rules()
     {
         return [
-        'course_id'=>'required',
+       
         'qr_code'=>'string'
         ];
     }
