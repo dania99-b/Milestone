@@ -30,7 +30,7 @@ class EmployeeRequest extends FormRequest
         'password' => 'required|string|min:6|max:255',
         'phone' => 'required|string|max:20|unique:users',
         'username'=> 'required|string|max:255|unique:users',
-        'images'=>'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        'image'=>'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         'birth'=>'date|before:today',
         'schedules' => 'nullable|array',
         ];

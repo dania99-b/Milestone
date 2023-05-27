@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EducationFileRequest;
 use App\Http\Requests\HomeworkRequest;
+use App\Http\Requests\LeaveOrResignationRequest;
 use App\Models\Test;
 use App\Models\Type;
 use App\Models\User;
@@ -18,7 +20,9 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\QuestionRequest;
 use App\Models\Course;
+use App\Models\EducationFile;
 use App\Models\Homework;
+use App\Models\LeaveAndResignation;
 use App\Models\QuestionType;
 
 class TeacherController extends Controller
@@ -116,5 +120,39 @@ public function uploadHomework(HomeworkRequest $request){
          'file'=>$file
   ]);
 return response()->json(['message'=>'Homework Uploaded Successfully'],200);
+}
+
+public function uploadLeaveOrResignation(LeaveOrResignationRequest $request){
+  $file = $request->file('file')->move('files/', $request->file('file')->getClientOriginalName());
+  $user = JWTAuth::parseToken()->authenticate();
+  $employee = $user->employee;
+  LeaveAndResignation::FirstOrCreate([
+            'employee_id'=>$employee->id,
+            'reason'=>$request->validated()['reason'],
+            'file'=>$file,
+            'from'=>$request->validated()['from'],
+            'to'=>$request->validated()['to'],
+            'type'=>$request->validated()['type']
+
+  ]);}
+
+  public function deleteLeave($id){
+       
+    $leave = LeaveAndResignation::find($id);
+    if (!$leave) {
+        return response()->json(['message' => 'Class not found'], 400);
+    }
+    $leave->delete();
+    $user=Auth::user();
+    $employee=$user->employee;
+    $log = new LogFile();
+    $log->employee_id= $employee->id;
+    $log->action = 'Delete Leave Or Resignation';
+    $log->save();
+    return response()->json(['message' => 'Leave Or Resignation deleted successfully'], 200);
+}
+public function getAllLeave(){
+  $leaves=LeaveAndResignation::all();
+  return response()->json($leaves,200);
 }
 }

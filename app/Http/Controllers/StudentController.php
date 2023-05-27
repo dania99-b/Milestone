@@ -176,4 +176,13 @@ public function getHomeworkCurrCourse(){
 
 return response()->json($course_info,200);
 
+}
+
+public function getAllMarks(){
+    $user = JWTAuth::parseToken()->authenticate();
+    $student = $user->student;
+    $curr_course_id=CourseResult::where('student_id',$student->id)->get()->pluck("marks");
+    return response()->json($curr_course_id,200);
+
+
 }}

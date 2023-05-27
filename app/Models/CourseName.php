@@ -17,5 +17,8 @@ class CourseName extends Model
     public function course(){
         return $this->belongsTo(Course::class);
     }
+    public function education_files(){
+        return  $this->hasMany(EducationFile::class);
+      }
 
 }

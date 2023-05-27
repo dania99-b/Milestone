@@ -11,8 +11,15 @@ class EducationFile extends Model
     public $timestamps = true;
     protected $fillable=[
         'id',
+        'course_id',
+        'file_types_id',
+        'file'
         ];
         public function types(){
-            $this->belongsTo(FileTypes::class);
+           return $this->belongsTo(FileTypes::class);
+        }
+
+        public function course(){
+          return  $this->belongsTo(CourseName::class);
         }
 }
