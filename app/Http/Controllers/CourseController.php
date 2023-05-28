@@ -122,4 +122,8 @@ class CourseController extends Controller
         $course_name=CourseName::all();
         return response()->json($course_name,200);
 }
-}
+public function getCourseseRequest(Request $request)
+{
+    $coursesName=CourseName::all();
+    return response()->json($coursesName,200);
+}}

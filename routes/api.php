@@ -129,6 +129,8 @@ Route::group(['prefix' => 'student', 'middleware' => ['role:Student']], function
     Route::get('/get/courseHomework',[StudentController::class,'getHomeworkCurrCourse']);
     Route::get('/get/allMarks',[StudentController::class,'getAllMarks']);
     Route::post('/get/educationFile',[EducationFileController::class,'getEducationFile']);
+    Route::get('/get/courseName',[CourseController::class,'getCourseseRequest']);
+    
     
    
     
