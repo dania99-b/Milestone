@@ -27,6 +27,7 @@ class RateRequest extends FormRequest
      
         'teacher_id' => 'required',
         'rate' => 'required|max:255',
+        'note' => 'required|max:255',
         ];
     }
 }

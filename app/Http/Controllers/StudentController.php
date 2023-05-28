@@ -119,6 +119,7 @@ class StudentController extends Controller
             'student_id' => $student,
             'teacher_id' => $request->validated()['teacher_id'],
             'rate' => $request->validated()['rate'],
+            'note' => $request->validated()['note'],
         ]);
         return response()->json(['message' => 'Rate is successfully sent'], 200);
     }
