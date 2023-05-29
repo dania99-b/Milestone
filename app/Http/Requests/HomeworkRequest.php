@@ -24,8 +24,8 @@ class HomeworkRequest extends FormRequest
     public function rules()
     {
         return [
-           'text'=>'max:255|nullable',
-           'file' => 'max:2550|nullable',
+            'text' => 'max:255|nullable',
+            'file' => 'max:2550|nullable',
            'course_id'=>'required'
         ];
     }

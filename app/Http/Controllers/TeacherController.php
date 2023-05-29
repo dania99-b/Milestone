@@ -113,11 +113,17 @@ public function list(){
 }
 
 public function uploadHomework(HomeworkRequest $request){
-  $file = $request->file('file')->move('files/', $request->file('file')->getClientOriginalName());
+  if ($request->hasFile('file')) {
+    $file = $request->file('file');
+    $filename = $file->getClientOriginalName();
+    $file->move('files/', $filename);
+} else {
+    $filename = null;
+}
   $homework=Homework::firstOrCreate([
     'course_id'=>$request->validated()['course_id'],
          'text'=>$request->validated()['text'],
-         'file'=>$file
+         'file'=>$filename
   ]);
 return response()->json(['message'=>'Homework Uploaded Successfully'],200);
 }
