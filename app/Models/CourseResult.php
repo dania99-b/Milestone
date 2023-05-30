@@ -23,4 +23,8 @@ class CourseResult extends Model
     public function course(){
         return $this->belongsTo(Course::class);
     }
+    public function mark()
+    {
+        return $this->hasOne(Mark::class);
+    }
 }
