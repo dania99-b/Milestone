@@ -151,6 +151,8 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['role:Teacher']], function
     Route::post('/get/questionByType/{type}',[FiltersController::class,'getQuestionByType']);
     Route::post('/get/questionById',[QuestionController::class,'getQuestionById']);
     Route::post('/upload/Homework',[TeacherController::class,'uploadHomework']);
+    Route::post('/upload/LeaveOrResignation',[TeacherController::class,'uploadLeaveOrResignation']);
+    Route::post('/delete/LeaveOrResignation/{id}',[TeacherController::class,'deleteLeave']);
     
     
     

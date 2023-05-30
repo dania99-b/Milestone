@@ -28,7 +28,7 @@ class LeaveOrResignationRequest extends FormRequest
             'reason'=>'max:300',
             'file'=>'max:300',
             'from' => 'required|date',
-            'to'=>'required|date',
+            'to'=>'nullable|date',
             'type'=>'max:300'
         ];
     }
