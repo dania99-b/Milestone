@@ -32,7 +32,8 @@ class CourseRequest extends FormRequest
 
             'qr_code' => 'required|string|max:20',
             'days'=>'required',
-            'course_name_id'=>'required|string|max:20'
+            'course_name_id'=>'required|string|max:20',
+            'teacher_id'=>'required|string|max:20'
         ];
     }
 }

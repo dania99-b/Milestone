@@ -26,10 +26,11 @@ class LeaveOrResignationRequest extends FormRequest
         return [
            
             'reason'=>'max:300',
-            'file'=>'max:300',
-            'from' => 'required|date',
+            'file'=>'max:300|nullable',
+            'from' => 'date',
             'to'=>'nullable|date',
-            'type'=>'max:300'
+            'type'=>'max:300',
+            'comment'=>'max:300'
         ];
     }
 }

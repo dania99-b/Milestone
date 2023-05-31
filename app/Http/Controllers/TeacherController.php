@@ -24,6 +24,7 @@ use App\Models\EducationFile;
 use App\Models\Homework;
 use App\Models\LeaveAndResignation;
 use App\Models\QuestionType;
+use Carbon\Carbon;
 
 class TeacherController extends Controller
 {
@@ -128,19 +129,34 @@ public function uploadHomework(HomeworkRequest $request){
 return response()->json(['message'=>'Homework Uploaded Successfully'],200);
 }
 
-public function uploadLeaveOrResignation(LeaveOrResignationRequest $request){
-  $file = $request->file('file')->move('files/', $request->file('file')->getClientOriginalName());
+public function uploadLeave(LeaveOrResignationRequest $request){
+ 
   $user = JWTAuth::parseToken()->authenticate();
   $employee = $user->employee;
   LeaveAndResignation::FirstOrCreate([
+           
             'employee_id'=>$employee->id,
-            'reason'=>$request->validated()['reason'],
-            'file'=>$file,
-            'from'=>$request->validated()['from'],
-            'to'=>$request->validated()['to'],
-            'type'=>$request->validated()['type']
+              'reason'=>$request->validated()['reason'],
+              'from'=>Carbon::now(),
+              'type'=>"Leave"
 
   ]);}
+
+  public function uploadResignation(LeaveOrResignationRequest $request){
+    $file = $request->file('file')->move('files/', $request->file('file')->getClientOriginalName());
+    $user = JWTAuth::parseToken()->authenticate();
+    $employee = $user->employee;
+    LeaveAndResignation::FirstOrCreate([
+      'employee_id'=>$employee->id,
+      'reason'=>$request->validated()['reason'],
+      'file'=>$file,
+      'from'=>$request->validated()['from'],
+      'to'=>$request->validated()['to'],
+      'type'=>"Resignation",
+      'comment'=>$request->validated()['comment']
+    ]);
+            }
+
 
   public function deleteLeave($id){
        
@@ -161,4 +177,10 @@ public function getAllLeave(){
   $leaves=LeaveAndResignation::all();
   return response()->json($leaves,200);
 }
-}
+
+public function getRequest(){
+  $user = JWTAuth::parseToken()->authenticate();
+  $employee = $user->employee;
+  $requests=LeaveAndResignation::where('employee_id',$employee->id)->get();
+  return response()->json($requests,200);
+}}
