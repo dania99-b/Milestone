@@ -33,9 +33,11 @@ class Course extends Model
             return $this->belongsToMany(Student::class,'attendences')->withPivot('student_id','course_id','is_absent','created_at');
         }
       
-        public function name(){
-            return $this->hasOne(CourseName::class);
+        public function courseName()
+        {
+            return $this->belongsTo(CourseName::class);
         }
+
         public function reservation(){
             return $this->hasMany(Reservation::class);
     }

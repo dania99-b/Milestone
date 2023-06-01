@@ -27,7 +27,7 @@ class ClassRequest extends FormRequest
             'name' => 'required|string|max:255',
             'max_num' => 'required|int',
             'status'=>'required|string|max:255',
-            'schedules' => 'required|array', 
+            'schedules' => 'required', 
         ];
     }
 }

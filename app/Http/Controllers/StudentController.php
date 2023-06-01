@@ -6,6 +6,7 @@ use App\Models\Day;
 use App\Models\User;
 use App\Models\Answer;
 use App\Models\Course;
+use App\Models\Country;
 use App\Models\Student;
 use App\Models\Question;
 use App\Models\Attendence;
@@ -151,6 +152,11 @@ class StudentController extends Controller
         }
 
         return response()->json(['message' => 'Student info updated successfully'], 200);
+    }
+
+    public function countries(){
+        $countries = Country::all();
+        return response()->json($countries, 200);
     }
 
     public function getAttendenceDays(){

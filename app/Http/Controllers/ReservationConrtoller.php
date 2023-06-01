@@ -106,10 +106,10 @@ class ReservationConrtoller extends Controller
     }
 
 
-    public function approveReservation(Request $request)
+    public function approveReservation($id)
     {
-        $request_id = $request['request_id'];
-        $requestfind = Reservation::find($request_id);
+        // $request_id = $request['request_id'];
+        $requestfind = Reservation::find($id);
         if ($requestfind) {
             $course_id = $requestfind->course_id;
             $requestfind->status = "ACCEPTED";
@@ -127,7 +127,7 @@ class ReservationConrtoller extends Controller
     }
 
     public function getAllReservation(){
-        $reservation=Reservation::all();
+        $reservation=Reservation::with('student.user')->with('course.courseName')->get();
         return response()->json($reservation,200);
     }
 }

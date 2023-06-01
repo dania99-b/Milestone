@@ -16,12 +16,11 @@ use Illuminate\Support\Facades\Storage;
 class CourseController extends Controller
 {
     public function list(){
-        $courses = Course::all();
+        $courses = Course::with('courseName')->get();
         foreach($courses as $course){}
         $course->days = collect(json_decode($course->days))->map(function ($dayId) {
             return Day::find($dayId);
         });
-            
         return response()->json($courses, 200);
     }
 

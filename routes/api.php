@@ -86,7 +86,7 @@ Route::group(['prefix' => 'reception', 'middleware' => ['role:Reception']], func
     Route::post('/ads/types',[AdvertismentTypeController::class,'create']);
     Route::post('/ads/types/update',[AdvertismentTypeController::class,'update']);
     Route::delete('/ads/types',[AdvertismentTypeController::class,'delete']);
-    Route::post('/approve/reservation',[ReservationConrtoller::class,'approveReservation']);
+    Route::post('/approve/reservation/{id}',[ReservationConrtoller::class,'approveReservation']);
     Route::post('/get/classById',[ClassController::class,'getClassById']);
     Route::get('/get/allReservation',[ReservationConrtoller::class,'getAllReservation']);
     Route::get('/get/activeAdvertisments',[AdvertismentController::class,'getActiveAds']);
@@ -161,6 +161,8 @@ Route::get('/MakeReservation',[ReservationConrtoller::class,'makeReservation']);
 Route::get('/get/nformation',[InformationController::class,'getInfo']);
 Route::post('/test',[ReceptionController::class,'tranferGuestToStudent']);
 Route::get('/get/CoursesName',[CourseController::class,'getAllCourseName']);
+Route::get('/countries',[StudentController::class,'countries']);
+
 
 
 
