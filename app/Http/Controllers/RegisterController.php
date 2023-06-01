@@ -2,25 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\GuestPlacement;
 use App\Models\User;
 use App\Models\Admin;
 use App\Models\Guest;
 use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\Employee;
-use App\Models\Reception;
-use App\Models\TeacherSchedules;
 use App\Mail\VerifyEmail;
+use App\Models\Reception;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\HumanResource;
-use Illuminate\Support\Facades\Mail;
-use App\Http\Requests\EmployeeRequest;
-use App\Http\Requests\StudentRequest;
+use App\Models\GuestPlacement;
 use App\Models\StudentPlacement;
+use App\Models\TeacherSchedules;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Mail;
+use App\Http\Requests\StudentRequest;
+use App\Http\Requests\EmployeeRequest;
+use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Contracts\Providers\Auth;
 use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
+
+
 
 class RegisterController extends Controller
 {
@@ -227,15 +231,64 @@ class RegisterController extends Controller
                        ->first();
         if ($guest) {
             $guest->save();
-            return response()->json(['message' => 'Email verified successfully.'], 200);
+            try {
+                // Generate the token
+                $token = JWTAuth::fromUser($guest);
+               
+                if ($token) {
+                    // Verify the token
+                    $k=JWTAuth::setToken($token);
+                   
+                    $authenticatedGuest = JWTAuth::authenticate();
+                    dd($authenticatedGuest );
+                    if ($authenticatedGuest) {
+                        // Token is valid, return the response
+                        return response()->json(['message' => 'Email verified successfully.', 'token' => $token], 200);
+                    } else {
+                        // Token authentication failed
+                        return response()->json(['message' => 'Failed to authenticate token.'], 401);
+                    }
+                } else {
+                    // Failed to generate token
+                    return response()->json(['message' => 'Failed to generate token.'], 500);
+                }
+            } catch (JWTException $e) {
+                // Exception occurred while generating or verifying the token
+                return response()->json(['message' => 'Failed to generate or verify token.'], 500);
+            }
+          
         }
         return response()->json(['message' => 'Invalid verification code.'], 400);
     }
 
-    public function test(Request $request){
-        $users = User::whereRoleIs('Admin')->get();
-        return $users;
+ 
+   
+    
+    public function test(Request $request)
+{
+    try {
+        $token = $request->header('Authorization');
+        
+        if (!$token) {
+            return response()->json(['message' => 'Token not provided.'], 400);
+        }
+        
+        $guest = JWTAuth::setToken($token)->authenticate();
+        
+        if ($guest) {
+            // Guest model found based on the token
+            return response()->json(['guest' => $guest], 200);
+        }
+        
+        // Guest model not found
+        return response()->json(['message' => 'Guest not found.'], 404);
+        
+    } catch (JWTException $e) {
+        return response()->json(['message' => 'Failed to authenticate token.'], 500);
     }
+}
+    
+
 
     public function resend(Request $request){
         $guest = Guest::where('email', $request->email)->first();

@@ -46,4 +46,7 @@ class Student extends Model
     {
         return $this->belongsTo(Country::class);
     }
+    public function course_result(){
+        return $this->hasMany(CourseResult::class);
+    }
 }

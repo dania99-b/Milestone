@@ -24,6 +24,7 @@ use App\Models\EducationFile;
 use App\Models\Homework;
 use App\Models\LeaveAndResignation;
 use App\Models\QuestionType;
+use App\Models\Student;
 use Carbon\Carbon;
 
 class TeacherController extends Controller
@@ -183,4 +184,22 @@ public function getRequest(){
   $employee = $user->employee;
   $requests=LeaveAndResignation::where('employee_id',$employee->id)->get();
   return response()->json($requests,200);
-}}
+}
+public function getRequestById($id){
+  $requests=LeaveAndResignation::find($id);
+  return response()->json($requests,200);
+}
+
+public function getCourseStudent($course_id)
+{
+
+    $course = Course::find($course_id);
+
+    if ($course) {
+        $students = $course->course_result()->with('student.user')->get()->pluck('student');
+        return response()->json($students, 200);
+    }
+
+    return response()->json(['message' => 'Course not found.'], 404);
+}
+}

@@ -17,6 +17,7 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EducationFileController;
 use App\Http\Controllers\FiltersController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\HrController;
 use App\Http\Controllers\InformationController;
 use App\Http\Controllers\PlacementController;
 use App\Http\Controllers\QuestionController;
@@ -156,23 +157,20 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['role:Teacher']], function
     Route::post('/upload/StudentResult',[ResultController::class,'uploadStudentResult']);
     Route::post('/upload/Resignation',[TeacherController::class,'uploadResignation']);
     Route::get('/get/Requests',[TeacherController::class,'getRequest']);
+    Route::post('/get/courseStudent/{course_id}',[TeacherController::class,'getCourseStudent']);
     
     
-    
-    
-    
-    
+  
 });
 
 
 Route::group(['prefix' => 'hr', 'middleware' => ['role:HR']], function() {
     Route::get('/get/AllLeaves',[TeacherController::class,'getAllLeave']);
+    Route::get('/get/RequestById/{id}',[HrController::class,'getRequestById']);
+   
     
 
 });
-
-
-
 
 Route::post('/register/guest',[RegisterController::class,'guestVertification']);
 Route::post('/verify/email',[RegisterController::class,'verify']);

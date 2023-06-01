@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Guest extends Model implements MustVerifyEmail
+class Guest extends Model implements MustVerifyEmail, JWTSubject
 	{
     use HasFactory;
 	public $timestamps = true;
@@ -65,4 +66,13 @@ class Guest extends Model implements MustVerifyEmail
 	 */
 	public function getEmailForVerification() {
 	}
+	public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 }
