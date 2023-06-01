@@ -14,6 +14,7 @@ use App\Http\Controllers\ClassController;
 use App\Http\Controllers\AdvertismentController;
 use App\Http\Controllers\AdvertismentTypeController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\EducationFileController;
 use App\Http\Controllers\FiltersController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InformationController;
@@ -94,6 +95,12 @@ Route::group(['prefix' => 'reception', 'middleware' => ['role:Reception']], func
     Route::get('/get/receptions',[ReceptionController::class,'list']);
     Route::get('/get/allGuests',[RegisterController::class,'getAllGuest']);
     Route::post('/get/guests/byEmail/{email}',[RegisterController::class,'searchGuestByEmail']);
+    Route::post('/upload/LeaveOrResignation',[TeacherController::class,'uploadLeaveOrResignation']);
+    Route::post('/add/fileType',[EducationFileController::class,'createFileTypes']);
+    Route::post('/upload/educationFile',[EducationFileController::class,'uploadEducationFile']);
+    Route::post('/delete/LeaveOrResignation/{id}',[TeacherController::class,'deleteLeave']);
+    
+    
     
     
    
@@ -120,6 +127,12 @@ Route::group(['prefix' => 'student', 'middleware' => ['role:Student']], function
     Route::post('/get/advertismentById',[AdvertismentController::class,'getAdvertismentById']);
     Route::get('/get/attendenceDays',[StudentController::class,'getAttendenceDays']);
     Route::get('/get/courseHomework',[StudentController::class,'getHomeworkCurrCourse']);
+    Route::get('/get/allMarks',[StudentController::class,'getAllMarks']);
+    Route::post('/get/educationFile',[EducationFileController::class,'getEducationFile']);
+    Route::get('/get/courseName',[CourseController::class,'getCourseseRequest']);
+    
+    
+   
     
     
    
@@ -138,10 +151,28 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['role:Teacher']], function
     Route::post('/get/questionByType/{type}',[FiltersController::class,'getQuestionByType']);
     Route::post('/get/questionById',[QuestionController::class,'getQuestionById']);
     Route::post('/upload/Homework',[TeacherController::class,'uploadHomework']);
+    Route::post('/upload/Leave',[TeacherController::class,'uploadLeave']);
+    Route::post('/delete/LeaveOrResignation/{id}',[TeacherController::class,'deleteLeave']);
+    Route::post('/upload/StudentResult',[ResultController::class,'uploadStudentResult']);
+    Route::post('/upload/Resignation',[TeacherController::class,'uploadResignation']);
+    Route::get('/get/Requests',[TeacherController::class,'getRequest']);
+    
+    
+    
     
     
     
 });
+
+
+Route::group(['prefix' => 'hr', 'middleware' => ['role:HR']], function() {
+    Route::get('/get/AllLeaves',[TeacherController::class,'getAllLeave']);
+    
+
+});
+
+
+
 
 Route::post('/register/guest',[RegisterController::class,'guestVertification']);
 Route::post('/verify/email',[RegisterController::class,'verify']);

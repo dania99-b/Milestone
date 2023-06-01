@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class RateRequest extends FormRequest
+class EducationFileRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +24,10 @@ class RateRequest extends FormRequest
     public function rules()
     {
         return [
-     
-        'teacher_id' => 'required',
-        'rate' => 'required|max:255',
-        'note' => 'required|max:255',
+        'course_id' => 'required|string|max:255',
+        'file_types_id' => 'required|string|max:255',
+        'file' => 'required|mimes:mp3|max:10240',
+        
         ];
     }
 }

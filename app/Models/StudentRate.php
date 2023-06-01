@@ -15,7 +15,8 @@ class StudentRate extends Model
         'teacher_id',
         'rate',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'note'
         ];
 
         public function student(){

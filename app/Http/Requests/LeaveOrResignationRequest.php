@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class RateRequest extends FormRequest
+class LeaveOrResignationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +24,13 @@ class RateRequest extends FormRequest
     public function rules()
     {
         return [
-     
-        'teacher_id' => 'required',
-        'rate' => 'required|max:255',
-        'note' => 'required|max:255',
+           
+            'reason'=>'max:300',
+            'file'=>'max:300|nullable',
+            'from' => 'date',
+            'to'=>'nullable|date',
+            'type'=>'max:300',
+            'comment'=>'max:300'
         ];
     }
 }

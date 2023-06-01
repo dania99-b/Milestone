@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EducationFileRequest;
 use App\Http\Requests\HomeworkRequest;
+use App\Http\Requests\LeaveOrResignationRequest;
 use App\Models\Test;
 use App\Models\Type;
 use App\Models\User;
@@ -18,8 +20,11 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\QuestionRequest;
 use App\Models\Course;
+use App\Models\EducationFile;
 use App\Models\Homework;
+use App\Models\LeaveAndResignation;
 use App\Models\QuestionType;
+use Carbon\Carbon;
 
 class TeacherController extends Controller
 {
@@ -109,12 +114,73 @@ public function list(){
 }
 
 public function uploadHomework(HomeworkRequest $request){
-  $file = $request->file('file')->move('files/', $request->file('file')->getClientOriginalName());
+  if ($request->hasFile('file')) {
+    $file = $request->file('file');
+    $filename = $file->getClientOriginalName();
+    $file->move('files/', $filename);
+} else {
+    $filename = null;
+}
   $homework=Homework::firstOrCreate([
     'course_id'=>$request->validated()['course_id'],
          'text'=>$request->validated()['text'],
-         'file'=>$file
+         'file'=>$filename
   ]);
 return response()->json(['message'=>'Homework Uploaded Successfully'],200);
 }
+
+public function uploadLeave(LeaveOrResignationRequest $request){
+ 
+  $user = JWTAuth::parseToken()->authenticate();
+  $employee = $user->employee;
+  LeaveAndResignation::FirstOrCreate([
+           
+            'employee_id'=>$employee->id,
+              'reason'=>$request->validated()['reason'],
+              'from'=>Carbon::now(),
+              'type'=>"Leave"
+
+  ]);}
+
+  public function uploadResignation(LeaveOrResignationRequest $request){
+    $file = $request->file('file')->move('files/', $request->file('file')->getClientOriginalName());
+    $user = JWTAuth::parseToken()->authenticate();
+    $employee = $user->employee;
+    LeaveAndResignation::FirstOrCreate([
+      'employee_id'=>$employee->id,
+      'reason'=>$request->validated()['reason'],
+      'file'=>$file,
+      'from'=>$request->validated()['from'],
+      'to'=>$request->validated()['to'],
+      'type'=>"Resignation",
+      'comment'=>$request->validated()['comment']
+    ]);
+            }
+
+
+  public function deleteLeave($id){
+       
+    $leave = LeaveAndResignation::find($id);
+    if (!$leave) {
+        return response()->json(['message' => 'Class not found'], 400);
+    }
+    $leave->delete();
+    $user=Auth::user();
+    $employee=$user->employee;
+    $log = new LogFile();
+    $log->employee_id= $employee->id;
+    $log->action = 'Delete Leave Or Resignation';
+    $log->save();
+    return response()->json(['message' => 'Leave Or Resignation deleted successfully'], 200);
 }
+public function getAllLeave(){
+  $leaves=LeaveAndResignation::all();
+  return response()->json($leaves,200);
+}
+
+public function getRequest(){
+  $user = JWTAuth::parseToken()->authenticate();
+  $employee = $user->employee;
+  $requests=LeaveAndResignation::where('employee_id',$employee->id)->get();
+  return response()->json($requests,200);
+}}

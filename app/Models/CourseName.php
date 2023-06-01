@@ -14,9 +14,8 @@ class CourseName extends Model
         'name'
         ];
 
-        public function courses()
-        {
-            return $this->hasMany(Course::class);
-        }
+    public function course(){
+        return $this->belongsTo(Course::class);
+    }
 
 }

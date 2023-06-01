@@ -65,9 +65,15 @@ class StudentController extends Controller
        
       
         $student = Student::where('user_id', JWTAuth::parseToken()->authenticate()->id)->get()->first()->id;
-        $courseId =CourseResult::where('student_id',$student)->latest()->first()->pluck('course_id');
+    
+        $courseId =CourseResult::where('student_id',$student)->latest()->value('course_id');
+       
+        if($courseId){
         $course = Course::find($courseId)->first();
+        
+    
         if ($course->qr_code == $qrCode) {
+           
             $attendance = new Attendence;
             $attendance->student_id = $student;
             $attendance->course_id = $course->id;
@@ -77,7 +83,8 @@ class StudentController extends Controller
         } else {
             // The QR code is incorrect
             return response()->json(['message' => 'Invalid QR code'], 400);
-        }
+        }}
+        else   return response()->json(['message' => 'Student Not In This Course'], 400);
     }
 
 
@@ -120,6 +127,7 @@ class StudentController extends Controller
             'student_id' => $student,
             'teacher_id' => $request->validated()['teacher_id'],
             'rate' => $request->validated()['rate'],
+            'note' => $request->validated()['note'],
         ]);
         return response()->json(['message' => 'Rate is successfully sent'], 200);
     }
@@ -181,5 +189,14 @@ public function getHomeworkCurrCourse(){
 
 
 return response()->json($course_info,200);
+
+}
+
+public function getAllMarks(){
+    $user = JWTAuth::parseToken()->authenticate();
+    $student = $user->student;
+    $curr_course_id=CourseResult::where('student_id',$student->id)->get()->pluck("marks");
+    return response()->json($curr_course_id,200);
+
 
 }}

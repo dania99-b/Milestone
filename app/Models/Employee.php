@@ -35,4 +35,7 @@ class Employee extends Model
     public function log(){
         return $this->hasMany(LogFile::class);
     }
+    public function leave(){
+        return $this->hasMany(LeaveAndResignation::class);
+    }
 }

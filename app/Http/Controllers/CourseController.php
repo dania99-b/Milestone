@@ -57,56 +57,45 @@ class CourseController extends Controller
     
 
   
-    public function update(Request $request,$id){
-       
-        $course = Course::find($id);
-        if (!$course) {
-        return response()->json(['message' => 'Course not found'], 400);
-        }
-        if ($request->has('name')) {
-        $course->course_ename = $request->name;
-        $course->save();
-        }
-        if ($request->has('start_hour')) {
-        $course->start_hour = $request->start_hour;
-        $course->save();
-        }
-        if ($request->has('end_hour')) {
-        $course->end_hour = $request->end_hour;
-        $course->save();
-        }
-        if ($request->has('start_day')) {
-        $course->start_day = $request->start_day;
-        $course->save();
-        }
-        if ($request->has('end_day')) {
-        $course->end_day = $request->end_day;
-        $course->save();
-        }
-        if ($request->has('status')) {
-        $course->status = $request->status;
-        $course->save();
-        }
-        if ($request->has('qr_code')) {
-        $course->qr_code = $request->qr_code;
-        $course->save();
-        }
-        if ($request->input('days')) {
-        $course->days()->detach();
-        foreach ($request->input('days') as $day) {
-            $dayModel = Day::where('name', $day)->firstOrFail();
-            $course->days()->attach($dayModel);
-            $course->save();
-        }
-        }
-        $user=Auth::user();
-        $employee=$user->employee;
-        $log = new LogFile();
-        $log->employee_id= $employee->id;
-        $log->action = 'Edit Course';
-        $log->save();
-        return response()->json(['message' => 'Course updated successfully'], 200);
+public function update(Request $request, $id)
+{
+    $course = Course::find($id);
+    
+    if (!$course) {
+        return response()->json(['message' => 'Course not found'], 404);
     }
+    
+    $updateData = $request->only(['name', 'start_hour', 'end_hour', 'start_day', 'course_name_id','end_day', 'status', 'qr_code','teacher_id']);
+    
+    if (!empty($updateData)) {
+        $course->fill($updateData);
+        $course->save();
+    }
+    
+    if ($request->has('days')) {
+        $days = $request->input('days');
+        $dayIds = [];
+
+        foreach ($days as $day) {
+            $dayModel = Day::where('name', $day)->firstOrFail();
+            $dayIds[] = $dayModel->id;
+        }
+
+        $course->days = json_encode($dayIds);
+        $course->save();
+    }
+    
+    $user = Auth::user();
+    $employee = $user->employee;
+    
+    $log = new LogFile();
+    $log->employee_id = $employee->id;
+    $log->action = 'Edit Course';
+    $log->save();
+    
+    return response()->json(['message' => 'Course updated successfully'], 200);
+}
+
 
     public function delete($id){
        
@@ -121,4 +110,8 @@ class CourseController extends Controller
         $course_name=CourseName::all();
         return response()->json($course_name,200);
 }
-}
+public function getCourseseRequest(Request $request)
+{
+    $coursesName=CourseName::all();
+    return response()->json($coursesName,200);
+}}

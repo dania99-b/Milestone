@@ -116,7 +116,7 @@ class RegisterController extends Controller
     }
 
     public function HR(EmployeeRequest $request){
-        $upload = $request->file('images')->move('images/', $request->file('images')->getClientOriginalName());
+        $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
         $mainuser = User::firstOrCreate([
             'first_name' => $request->validated()['first_name'],
             'last_name' => $request->validated()['last_name'],
@@ -124,7 +124,7 @@ class RegisterController extends Controller
             'password' => bcrypt($request->validated()['password']),
             'phone' => $request->validated()['phone'],
             'username' => $request->validated()['username'],
-            'image'=>$upload,
+          
             'birth' => $request->validated()['birth'], 
         ]);
         $mainemployee = Employee::firstOrCreate([

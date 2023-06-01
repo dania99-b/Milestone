@@ -1,0 +1,143 @@
+import frappe 
+from frappe.model.document import Document
+
+
+
+
+
+
+class Card(Document):
+    pass
+
+@frappe.whitelist()
+def execute_code(doc):
+    child_records = frappe.get_all("Field", filters={"parent": doc}, fields=[ "cod"])  # Replace 'Field' with the actual child table doctype
+    for child in child_records:
+        code_to_execute = child.cod
+        try:
+            exec(code_to_execute)
+           
+        except Exception as e:
+            frappe.msgprint(f"Error executing code for Child record {0}: {str(e)}".format(child.name))
+            frappe.log_error("Error executing code", "Execute Code")
+
+# Register the execute_code function with the appropriate event
+doc_events = {
+    "Card": {
+    
+    }
+}
+
+
+
+
+
+@frappe.whitelist()
+def scan_barcode(barcode):
+    result1=""
+    cards = frappe.get_all('Card', fields=['name', 'prefix', 'suffix', 'card_title', 'priority', 'delimeter'],
+    filters={'active': 1}, order_by='priority')
+    name = ""
+
+    for card in cards:
+    
+        print(card.card_title)
+        chopped_barcode = barcode.split(str(card.delimeter))
+        prefix_length = len(card.prefix)
+        suffix_length = len(card.suffix)
+       
+        prefix_substr = barcode[:prefix_length]
+        print(prefix_substr)
+        
+        suffix_substr = barcode[:-suffix_length]
+        print(prefix_substr)
+        print(suffix_substr)
+        if prefix_substr != card.prefix or suffix_substr != card.suffix:
+            print('continue')
+            continue
+        else:
+            name = card.name
+    
+        
+        is_castable = True
+        fields = frappe.get_all('Field', fields=['name', 'server_title', 'display_title', '`order`', 'display','cod'],
+                            filters={'parent': name, 'display': 1}, order_by='`idx`')
+        for field in fields:
+            print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+            print(field.order)
+            if field.order > len(chopped_barcode):
+                
+            # Skip this card if the order value is out of range
+                is_castable = False
+                break
+
+            field_value = chopped_barcode[field.order - 1]
+
+            if field.order == 1:
+            
+               
+                field_value = field_value.strip()[prefix_length:]
+
+            if field_value and field_value.strip() :
+                doc = locals().get('doc')
+                casted_value = None
+                
+               
+        
+                print('the field')
+                print(field_value)
+                print('the field name//////////////////')
+                print(field.server_title)
+                try:
+                   
+                  
+                    import_statement = 'import frappe'
+                    import_statement2 = 'from datetime import datetime'
+                    additional_code = field.cod
+                    is_castable = True
+                    if bool(field.cod):
+    # Add import statement and additional code with indentation and semicolons
+                        cod_with_import = import_statement + ';' + import_statement2 + ';\n' + additional_code  # Execute the modified cod with the imported statement and additional code
+                        global_vars = {'field': field, 'field_value': field_value, 'doc': doc}
+                        local_vars = {}
+                        exec(cod_with_import, global_vars, local_vars)
+
+        # Retrieve the result from local_vars
+                        result = local_vars.get('result', None)
+                        print(result)
+                   
+                        print(cod_with_import)
+                      
+                        if result==True:
+                           
+                            is_castable = True
+                    
+                        else:  is_castable = False
+                        print("its false broo")
+                except ValueError:
+                    is_castable = False
+                    
+        if is_castable==True:
+            
+        # ...
+            result1 = "the card is " + card.card_title + " card for noww"
+            break
+        else:
+            print(is_castable)
+            print("continue")
+            print(result1)
+            
+        # if this one is not castable
+            continue
+
+    if not result1:
+        result1 = "Invalid card"
+        
+    return result1
+  
+
+
+
+    
+# @frappe.whitelist()
+# def return_field(card_name):
