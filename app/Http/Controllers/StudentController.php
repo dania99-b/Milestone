@@ -195,7 +195,16 @@ return response()->json($course_info,200);
 public function getAllMarks(){
     $user = JWTAuth::parseToken()->authenticate();
     $student = $user->student;
-    $curr_course_id=CourseResult::where('student_id',$student->id)->get()->pluck("marks");
+    $curr_course_id=$curr_course_id =CourseResult::where('student_id', $student->id)
+    ->with(['course.courseName:id,name','mark'])
+    ->select('id', 'total', 'status', 'course_id', 'student_id', 'created_at', 'updated_at')
+    ->get();
+
+$curr_course_id->transform(function ($item) {
+    $item->course_name = $item->course->courseName;
+    unset($item->course);
+    return $item;
+});
     return response()->json($curr_course_id,200);
 
 
