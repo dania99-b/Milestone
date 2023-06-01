@@ -120,7 +120,9 @@ class ReservationConrtoller extends Controller
                     'student_id' => $requestfind->student_id
                 ]
             );
+            $requestfind->delete();
             return response()->json(['message' => 'Reservation Approved Successfully'], 200);
+          
         } else {
             return response()->json(['message' => 'Filed Approve Reservation'], 400);
         }
