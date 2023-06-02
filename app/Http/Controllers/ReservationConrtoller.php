@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CourseRequest;
-use App\Models\Advertisment;
-use App\Models\Course;
-use App\Models\CourseAdvertisment;
-use App\Models\CourseName;
-use App\Models\CourseResult;
-use App\Models\Reservation;
-use App\Models\Student;
-use App\Models\User;
 use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Course;
+use App\Models\Student;
+use App\Models\CourseName;
+use App\Models\Reservation;
+use App\Models\Advertisment;
+use App\Models\CourseResult;
 use Illuminate\Http\Request;
+use App\Models\CourseAdvertisment;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Events\NotificationRecieved;
+use App\Http\Requests\CourseRequest;
+use App\Notifications\WebSocketSuccessNotification;
 
 class ReservationConrtoller extends Controller
 {
@@ -120,6 +122,14 @@ class ReservationConrtoller extends Controller
                     'student_id' => $requestfind->student_id
                 ]
             );
+            $student=Student::find($requestfind->student_id)->user_id;
+            $user=User::find( $student);
+            print($user);
+           
+                // Send notification to each user with the "student" role
+             
+                    $user->notify(new WebSocketSuccessNotification('Your Reservation Approved'));
+                    event(new NotificationRecieved($user));
             $requestfind->delete();
             return response()->json(['message' => 'Reservation Approved Successfully'], 200);
           

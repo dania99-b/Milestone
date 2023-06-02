@@ -2,17 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ResultRequest;
-use App\Models\CourseResult;
 use App\Models\Mark;
+use App\Models\User;
+use App\Models\Student;
+use App\Models\CourseResult;
 use Illuminate\Http\Request;
+use App\Events\NotificationRecieved;
+use App\Http\Requests\ResultRequest;
+use App\Notifications\WebSocketSuccessNotification;
 
 class ResultController extends Controller
 {
     public function uploadStudentResult(ResultRequest $request)
     {
+
+        
         $validatedData = $request->validated();
         $studentId = $validatedData['student_id'];
+        $student=Student::find($studentId)->user_id;
+        $user=User::find( $student);
+        print($user);
+       
+            // Send notification to each user with the "student" role
+         
+                $user->notify(new WebSocketSuccessNotification('New Marks Uploaded'));
+                event(new NotificationRecieved($user));
+            
         
         $courseResult=CourseResult::where('student_id', $studentId)
         ->latest('id')
