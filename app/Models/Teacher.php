@@ -19,6 +19,9 @@ class Teacher extends Model
     public function employee(){
         return $this->belongsTo(Employee::class);
     }
+    public function course(){
+        return $this->hasMany(Course::class);
+    }
 
     public function rate(){
         return $this->hasMany(StudentRate::class);
