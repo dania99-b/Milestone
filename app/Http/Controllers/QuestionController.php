@@ -17,7 +17,6 @@ class QuestionController extends Controller
         $questions = Question::all();
         return response()->json($questions, 200);
     }
-
     public function AddQuestion(QuestionRequest $request){
       $type_id = $request->validated()['type_id'];
       $type = QuestionType::find($type_id);
@@ -46,7 +45,6 @@ class QuestionController extends Controller
         $log->save();
       return response()->json(['message' => 'Question Added Successfully'], 200);
     }
-
     public function update(Request $request){
         $question_id = $request['question_id'];
         $question = Question::find($question_id)->first();
@@ -73,9 +71,8 @@ class QuestionController extends Controller
         $log->save();
         return response()->json(['message' => 'Question updated successfully'], 200);
     }
-
-    public function delete(Request $request){
-      $question_id = $request->validated()['question_id'];
+    public function delete($question_id){
+      // $question_id = $request->validated()['question_id'];
       $question = Question::find($question_id)->first();
       if ($question) {
             $question->delete();
@@ -93,4 +90,5 @@ class QuestionController extends Controller
         
       $question=Question::find($request['question_id']);
       return response()->json($question, 200);
-}}
+    }
+}

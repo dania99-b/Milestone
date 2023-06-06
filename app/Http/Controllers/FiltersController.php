@@ -9,9 +9,8 @@ use Illuminate\Http\Request;
 
 class FiltersController extends Controller
 {
-   public function getQuestionByType($type){
-   $type=QuestionType::where('name',$type)->pluck('id')->first();
-   $questions=Question::where('type_id',$type)->get();
+   public function getQuestionByType($typeID){
+   $questions=Question::where('type_id',$typeID)->get();
    return response()->json($questions,200);
 
    }

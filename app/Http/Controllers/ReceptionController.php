@@ -194,6 +194,12 @@ $log->save();
     
     return response()->json($receptions, 200);
   }
+  public function days(){
+  
+    $days = Day::all();
+    
+    return response()->json($days, 200);
+  }
 
   
 }

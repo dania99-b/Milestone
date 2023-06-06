@@ -25,12 +25,12 @@ class CourseRequest extends FormRequest
     {
         return [
             'class_id' => 'required|string|max:255',
-            'start_hour' => 'required|date_format:H:i:s',
-            'end_hour' => 'required|date_format:H:i:s',
+            'start_hour' => 'required',
+            'end_hour' => 'required',
             'start_day' => 'required|string|max:255',
             'end_day' => 'required|string|max:20',
 
-            'qr_code' => 'required|string|max:20',
+            'qr_code' => 'required|string',
             'days'=>'required',
             'course_name_id'=>'required|string|max:20',
             'teacher_id'=>'required|string|max:20'

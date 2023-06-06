@@ -66,5 +66,19 @@ class AdminController extends Controller
         if ($employee->isDirty()) {$employee->save();}
         return response()->json(['message' => 'HR info updated successfully'], 200);
     }
-  
+    public function allHR(){
+   
+        $HR = HumanResource::with('employee.user')->get();
+        return response()->json($HR, 200);
+    }
+    public function allTeachers(){
+   
+        $teachers = Teacher::with('employee.user')->get();
+        return response()->json($teachers, 200);
+    }
+    public function allReceptions(){
+   
+        $receptions = Reception::with('employee.user')->get();
+        return response()->json($receptions, 200);
+    }
 }

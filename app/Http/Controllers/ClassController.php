@@ -20,10 +20,7 @@ class ClassController extends Controller
           
             return response()->json($classes, 200);
         }
-      
-       
-    
-    
+        
     public function create(ClassRequest $request){
         $newClass = Classs::firstOrCreate([
             'name' => $request->validated()['name'],

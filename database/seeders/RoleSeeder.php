@@ -36,6 +36,11 @@ class RoleSeeder extends Seeder
                 'display_name' => 'student',
                 'description' => 'Student\'s of the Milestone institute',
             ],
+            [
+                'name' => 'HR',
+                'display_name' => 'HR',
+                'description' => 'HR\'s employee of the Milestone institute',
+            ],
         ]);
     }
 }

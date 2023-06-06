@@ -61,6 +61,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin']], function() {
     Route::post('/UploadImage',[AdminController::class,'UploadImage']);
     Route::post('/EditInfo',[InformationController::class,'editInfo']);
     Route::post('/Add/information',[InformationController::class,'store']);
+    Route::get('/HR',[AdminController::class,'allHR']);
+    Route::get('/teachers',[AdminController::class,'allTeachers']);
+    Route::get('/receptions',[AdminController::class,'allReceptions']);
     
     
 });
@@ -143,13 +146,14 @@ Route::group(['prefix' => 'student', 'middleware' => ['role:Student']], function
 Route::group(['prefix' => 'teacher', 'middleware' => ['role:Teacher']], function() {
     Route::post('/generate',[PlacementController::class,'generate']);
     Route::post('/AddType',[QuestionTypeController::class,'AddType']);
+    Route::get('/typesQuestion',[QuestionTypeController::class,'list']);
     Route::post('/AddQuestion',[QuestionController::class,'AddQuestion']);
-    Route::post('/DeleteQuestion',[TeacherController::class,'DeleteQuestion']);
+    Route::delete('/DeleteQuestion/{question_id}',[QuestionController::class,'delete']);
     Route::post('/AddQuestionExistTest',[TeacherController::class,'AddQuestionExistTest']);
     Route::get('/rand',[TeacherController::class,'getrand']);
     Route::get('/viewprofile',[TeacherController::class,'viewProfileTeacher']);
     Route::post('/editprofile',[TeacherController::class,'editProfile']);
-    Route::post('/get/questionByType/{type}',[FiltersController::class,'getQuestionByType']);
+    Route::post('/get/questionByType/{typeID}',[FiltersController::class,'getQuestionByType']);
     Route::post('/get/questionById',[QuestionController::class,'getQuestionById']);
     Route::post('/upload/Homework',[TeacherController::class,'uploadHomework']);
     Route::post('/upload/Leave',[TeacherController::class,'uploadLeave']);
@@ -191,8 +195,5 @@ Route::get('/get/nformation',[InformationController::class,'getInfo']);
 Route::post('/test',[ReceptionController::class,'tranferGuestToStudent']);
 Route::get('/get/CoursesName',[CourseController::class,'getAllCourseName']);
 Route::get('/countries',[StudentController::class,'countries']);
-
-
-
-
+Route::get('/days',[ReceptionController::class,'days']);
 

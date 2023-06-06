@@ -59,6 +59,21 @@ class UserSeeder extends Seeder
                 'role_id' => 1,
                 'user_type' => 'App\Models\User',
             ],
+            [
+                'user_id' => 1,
+                'role_id' => 2,
+                'user_type' => 'App\Models\User',
+            ],
+            [
+                'user_id' => 1,
+                'role_id' => 3,
+                'user_type' => 'App\Models\User',
+            ],
+            [
+                'user_id' => 1,
+                'role_id' => 5,
+                'user_type' => 'App\Models\User',
+            ],
         ]);
     }
 }
