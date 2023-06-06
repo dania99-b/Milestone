@@ -20,10 +20,10 @@ class CourseController extends Controller
 {
     public function list(){
         $courses = Course::with('courseName')->with('class')->with('teacher.employee.user')->get();
-        foreach($courses as $course){}
+        foreach($courses as $course){
         $course->days = collect(json_decode($course->days))->map(function ($dayId) {
             return Day::find($dayId);
-        });
+        });}
         return response()->json($courses, 200);
     }
     public function create(CourseRequest $request)
