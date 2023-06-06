@@ -211,4 +211,9 @@ public function getTeacheCourse(){
     return response()->json($course,200);
 
 }
-}
+public function getActiveCourse(){
+$now=Carbon::now();
+$courses=Course::where('end_day','>',$now)->get();
+return $courses;
+
+}}

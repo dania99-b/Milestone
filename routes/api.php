@@ -163,8 +163,9 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['role:Teacher']], function
     Route::get('/get/Requests',[TeacherController::class,'getRequest']);
     Route::post('/get/courseStudent/{course_id}',[TeacherController::class,'getCourseStudent']);
     Route::get('/get/courseTeacher',[TeacherController::class,'getTeacheCourse']);
-   
+    Route::get('/get/activeCourses',[TeacherController::class,'getActiveCourse']);
     
+   
   
 });
 
@@ -172,6 +173,9 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['role:Teacher']], function
 Route::group(['prefix' => 'hr', 'middleware' => ['role:HR']], function() {
     Route::get('/get/AllLeaves',[TeacherController::class,'getAllLeave']);
     Route::get('/get/RequestById/{id}',[HrController::class,'getRequestById']);
+    Route::get('/accept/Request/{id}',[HrController::class,'approveRequest']);
+    Route::post('/refuse/Request/{id}',[HrController::class,'refuseRequest']);
+   
    
     
 
