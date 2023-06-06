@@ -17,7 +17,9 @@ class LeaveAndResignation extends Model
         'from',
         'to',
         'type',
-        'comment'
+        'comment',
+        'status',
+        'refuse_reason'
         ];
         public function employee(){
             return $this->belongsTo(Employee::class);
