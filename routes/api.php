@@ -158,7 +158,8 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['role:Teacher']], function
     Route::post('/upload/Resignation',[TeacherController::class,'uploadResignation']);
     Route::get('/get/Requests',[TeacherController::class,'getRequest']);
     Route::post('/get/courseStudent/{course_id}',[TeacherController::class,'getCourseStudent']);
-    
+    Route::get('/get/courseTeacher',[TeacherController::class,'getTeacheCourse']);
+   
     
   
 });

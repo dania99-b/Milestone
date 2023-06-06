@@ -202,4 +202,13 @@ public function getCourseStudent($course_id)
 
     return response()->json(['message' => 'Course not found.'], 404);
 }
+
+public function getTeacheCourse(){
+  $user = JWTAuth::parseToken()->authenticate();
+    $employee = $user->employee;
+    $teacher=$employee->teacher;
+    $course=Course::where('teacher_id',$teacher->id)->get();
+    return response()->json($course,200);
+
+}
 }

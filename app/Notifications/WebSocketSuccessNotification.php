@@ -59,7 +59,8 @@ class WebSocketSuccessNotification extends Notification
     {
 
             return [
-                'message' => $this->message
+                'message' => $this->message,
+                'channel' => 'notification'
             ];
             
         

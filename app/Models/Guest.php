@@ -73,6 +73,6 @@ class Guest extends Model implements MustVerifyEmail, JWTSubject
 
     public function getJWTCustomClaims()
     {
-        return [];
+        return [ 'model' => 'Guest'];
     }
 }

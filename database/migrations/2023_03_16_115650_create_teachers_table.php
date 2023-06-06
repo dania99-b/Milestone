@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('teachers', function (Blueprint $table) {
             $table->id();
             $table->integer('experince_years')->nullable();
-            $table->json('schedules')->default('[]');
+            $table->json('schedules')->default('[]');   
             $table->foreignId('employee_id')->constrained('employees')->cascadeOnDelete();
             $table->timestamps();
         });
