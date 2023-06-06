@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\CourseRequest;
 use App\Models\CourseAdvertisment;
 use App\Models\CourseName;
+use App\Models\Teacher;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -33,24 +34,79 @@ class CourseController extends Controller
         $dayModel = Day::where('name', $day)->firstOrFail();
         $dayIds[] = $dayModel->id;
     }
-    $startHourTime = Carbon::parse($request->validated()['start_hour'])->setDate(1970, 1, 1);
-    $endHourTime = Carbon::parse($request->validated()['end_hour'])->setDate(1970, 1, 1);
+    
+    $class_id = $request->validated()['class_id'];
+    $start_hour = date('H:i', strtotime($request->validated()['start_hour']));
+    $end_hour = date('H:i', strtotime($request->validated()['end_hour']));
+    $start_day = $request->validated()['start_day'];
+    $end_day = $request->validated()['end_day'];
+    $teacher_id = $request->validated()['teacher_id'];
 
-    $newCourse = Course::create([
-        'class_id' => $request->validated()['class_id'],
-        'start_hour' => date('H:i:s', strtotime($request->validated()['start_hour'])),
-        'end_hour' => date('H:i:s', strtotime($request->validated()['end_hour'])),
-        'start_day' => $request->validated()['start_day'],
-        'end_day' => $request->validated()['end_day'],
-        'qr_code' => $request->validated()['qr_code'],
-        'course_name_id' => $request->validated()['course_name_id'],
-        'days' => json_encode($dayIds), // Encode the array of day IDs
-    ]);
+    $class = Classs::find($class_id);
+    $teacher = Teacher::find($teacher_id);
+
+    $isAvailable = false;
+    $isAvailable2 = false;
+
+    // Get the class's schedules
+    $classSchedules = json_decode($class->schedules, true);
    
-    // Additional operations if needed
+    $teacherSchedules = json_decode($teacher->schedules, true);
 
-    // Return the new course or perform any necessary further actions
-    return $newCourse;
+    foreach ($classSchedules as $schedule) {
+        if ($schedule['date'] === $start_day) {
+            
+            $classStartHour = $schedule['start_hour'];
+            $classEndHour = $schedule['end_hour'];
+
+            // Compare the hours
+           
+         
+            if ($start_hour >= $classStartHour && $end_hour <= $classEndHour) {
+              
+                $isAvailable = true;
+                break;
+            }
+        }
+    }
+
+    if ($isAvailable) {
+        foreach ($teacherSchedules as $Tschedule) {
+          
+            if ($Tschedule['date'] === $start_day) {
+              
+                $teacherStartHour = $Tschedule['start_hour'];
+                $teacherEndHour = $Tschedule['end_hour'];
+               
+                // Compare the hours
+                if ($start_hour >= $teacherStartHour && $end_hour <= $teacherEndHour) {
+                   
+                    $isAvailable2 = true;
+                    break;
+                }
+            }
+        }
+
+        if ($isAvailable2) {
+            
+            $newCourse = Course::create([
+                'class_id' => $class_id,
+                'start_hour' => $start_hour,
+                'end_hour' => $end_hour,
+                'start_day' => $start_day,
+                'end_day' => $end_day,
+                'qr_code' => $request->validated()['qr_code'],
+                'course_name_id' => $request->validated()['course_name_id'],
+                'days' => json_encode($dayIds), // Encode the array of day IDs
+                'teacher_id' => $teacher_id,
+            ]);
+
+            // Additional operations if needed
+
+            // Return the new course or perform any necessary further actions
+            return $newCourse;
+        }
+    }
 }
 
     
