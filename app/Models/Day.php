@@ -18,4 +18,7 @@ class Day extends Model
         public function courses(){
             return $this->belongsToMany(Course::class,'course_days')->withPivot('course_id','day_id');
         }
+        public function solution(){
+            return $this->hasMany(Solution::class);
+        }
 }

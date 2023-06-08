@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Admin;
 use App\Models\Guest;
+use App\Models\Period;
 use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\Employee;
@@ -20,6 +21,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\StudentRequest;
 use App\Http\Requests\EmployeeRequest;
+use App\Models\TeacherPeriod;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Contracts\Providers\Auth;
 use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
@@ -53,6 +55,14 @@ class RegisterController extends Controller
 
     public function teacher(EmployeeRequest $request)
     {
+        $periods = $request->validated()['period_id'];
+        $periodIds = [];
+        
+
+        foreach ($periods as $period) {
+            $periodModel = Period::find($period);
+            $periodIds[] = $periodModel->id;
+        }
         $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
 
         $validatedData = $request->validated();
@@ -71,18 +81,21 @@ class RegisterController extends Controller
             'user_id' => $mainuser->id,
             'image' => $upload
         ]);
-        $validatedData = $request->validated();
-        $schedules = $validatedData['schedules'];
+      
         
-        $teacher = Teacher::firstOrCreate([
+        $teacher = Teacher::Create([
             'employee_id' => $mainemployee->id,
-            'schedules' => $schedules,
+           
         ]);
 
-        if (isset($teacher['schedules']) && is_array($teacher['schedules'])) {
-            
-            $teacher->schedules = $teacher['schedules'];
-            $teacher->save();
+        foreach ($periodIds as $period) {
+      
+            $newperiod_class=TeacherPeriod::Create([
+                'teacher_id' => $teacher->id,
+                'period_id' => $period,
+                'is_occupied'=>0
+            ]);
+            $newperiod_class->save();
         }
 
         $mainteacher = Teacher::updateOrCreate(

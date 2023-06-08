@@ -12,7 +12,7 @@ class Teacher extends Model
         'id',
         'employee_id',
         'experince_years',
-        'schedules'
+        'period_id'
         ];
     public $timestamps = true;
 
@@ -25,5 +25,11 @@ class Teacher extends Model
 
     public function rate(){
         return $this->hasMany(StudentRate::class);
+    }
+    public function periods(){
+        return $this->belongsToMany(Period::class,'teacher_periods')->withPivot('teacher_id','period_id','is_occupied');
+    }
+    public function solution(){
+        return $this->hasMany(Solution::class);
     }
 }

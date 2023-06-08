@@ -30,6 +30,7 @@ class CourseController extends Controller
     {
         $days = $request->validated()['days'];
         $dayIds = [];
+        
 
         foreach ($days as $day) {
             $dayModel = Day::where('name', $day)->firstOrFail();
@@ -38,7 +39,7 @@ class CourseController extends Controller
 
         $class_id = $request->validated()['class_id'];
         $start_hour = date('H:i', strtotime($request->validated()['start_hour']));
-        $end_hour = date('H:i', strtotime($request->validated()['end_hour']));
+        $period_id =  $request->validated()['period_id'];
         $start_day = $request->validated()['start_day'];
         $end_day = $request->validated()['end_day'];
         $teacher_id = $request->validated()['teacher_id'];
@@ -60,7 +61,7 @@ class CourseController extends Controller
                 if ($schedule['date'] === $start_day) {
                     $classStartHour = $schedule['start_hour'];
                     $classEndHour = $schedule['end_hour'];
-
+/////////////////////////////////////////////////////////////
                     // Compare the hours
                     if ($start_hour >= $classStartHour && $end_hour <= $classEndHour) {
 
@@ -103,8 +104,7 @@ class CourseController extends Controller
             if ($isAvailable && $isAvailable2) {
                 $newCourse = Course::create([
                     'class_id' => $class_id,
-                    'start_hour' => $start_hour,
-                    'end_hour' => $end_hour,
+                    'period_id' => $period_id,
                     'start_day' => $start_day,
                     'end_day' => $end_day,
                     'qr_code' => $request->validated()['qr_code'],

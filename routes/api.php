@@ -13,6 +13,7 @@ use App\Http\Controllers\ReservationConrtoller;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\AdvertismentController;
 use App\Http\Controllers\AdvertismentTypeController;
+use App\Http\Controllers\AstartSolutionController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EducationFileController;
 use App\Http\Controllers\FiltersController;
@@ -201,4 +202,9 @@ Route::post('/test',[ReceptionController::class,'tranferGuestToStudent']);
 Route::get('/get/CoursesName',[CourseController::class,'getAllCourseName']);
 Route::get('/countries',[StudentController::class,'countries']);
 Route::get('/days',[ReceptionController::class,'days']);
+
+
+Route::get('/valid/{course}/{class}/{day}/{period}/{teacher}', [AstartSolutionController::class,'validSolution']);
+Route::get('/count/{id}', [AstartSolutionController::class,'calcStudentNumbers']);
+Route::get('/ddd', [AstartSolutionController::class,'getPossibleSolution']);
 

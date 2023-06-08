@@ -27,13 +27,11 @@ class CourseRequest extends FormRequest
             'class_id' => 'required|string|max:255',
             'start_hour' => 'required|date_format:H:i',
             'end_hour' => 'required|date_format:H:i',
-            'start_day' => 'required|string|max:255',
-            'end_day' => 'required|string|max:20',
-
             'qr_code' => 'required|string',
             'days'=>'required',
             'course_name_id'=>'required|string|max:20',
-            'teacher_id'=>'required|string|max:20'
+            'teacher_id'=>'required|string|max:20',
+            'period_id' => 'required|string|max:255',
         ];
     }
 }

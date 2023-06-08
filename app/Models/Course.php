@@ -51,4 +51,8 @@ class Course extends Model
     public function course_result(){
         return $this->hasMany(CourseResult::class);
     }
+    public function period(){
+        return $this->belongsTo(Period::class);
+    }
+    
 }

@@ -14,11 +14,18 @@ class Classs extends Model
         'id',
         'name',
         'max_num',
-        'schedules',
+        'period_id',
         'status',
+
     ];
     
     public function courses(){
-        $this->hasMany(Course::class);
+       return  $this->hasMany(Course::class);
+    }
+    public function periods(){
+        return $this->belongsToMany(Period::class,'class_periods', 'class_id', 'period_id')->withPivot('class_id','period_id','is_occupied');
+    }
+    public function solution(){
+        return $this->hasMany(Solution::class);
     }
 }

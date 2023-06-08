@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ClassRequest;
+use App\Models\ClassPeriod;
 use App\Models\Classs;
 use App\Models\LogFile;
+use App\Models\Period;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
@@ -22,18 +24,33 @@ class ClassController extends Controller
         }
         
     public function create(ClassRequest $request){
-        $newClass = Classs::firstOrCreate([
+
+        $periods = $request->validated()['period_id'];
+        $periodIds = [];
+        
+
+        foreach ($periods as $period) {
+            $periodModel = Period::find($period);
+         
+            $periodIds[] = $periodModel->id;
+        }
+       
+        $newClass = Classs::Create([
             'name' => $request->validated()['name'],
             'max_num' => $request->validated()['max_num'],
             'status' => $request->validated()['status'],
-            'schedules' => $request->validated()['schedules'],
         ]);
-
-        if (isset($newClass['schedules']) && is_array($newClass['schedules'])) {
-            
-            $newClass->schedules = $newClass['schedules'];
-            $newClass->save();
-        }
+        
+        $newClass->save();
+        foreach ($periodIds as $period) {
+      
+        $newperiod_class=ClassPeriod::Create([
+            'class_id' => $newClass->id,
+            'period_id' => $period,
+            'is_occupied'=>0
+        ]);
+        $newperiod_class->save();
+    }
         
         $user=Auth::user();
         $employee=$user->employee;
@@ -43,7 +60,7 @@ class ClassController extends Controller
         $log->save();
         return response()->json(['message' => 'Class added successfully'], 200);
     }
-
+    
     public function update(Request $request,$id){
        
         $class = Classs::find($id);
