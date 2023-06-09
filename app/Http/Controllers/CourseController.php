@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\CourseRequest;
 use App\Models\CourseAdvertisment;
 use App\Models\CourseName;
+use App\Models\Period;
 use App\Models\Teacher;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -38,68 +39,64 @@ class CourseController extends Controller
         }
 
         $class_id = $request->validated()['class_id'];
-        $start_hour = date('H:i', strtotime($request->validated()['start_hour']));
         $period_id =  $request->validated()['period_id'];
         $start_day = $request->validated()['start_day'];
         $end_day = $request->validated()['end_day'];
         $teacher_id = $request->validated()['teacher_id'];
 
-        $class = Classs::find($class_id);
-        $teacher = Teacher::find($teacher_id);
+        $class = Classs::with('periods')->find($class_id);
+        $teacher = Teacher::with('periods')->find($teacher_id);
 
         $isAvailable = false;
         $isAvailable2 = false;
 
         
-        $classSchedules = json_decode($class->schedules, true);
-        $teacherSchedules = json_decode($teacher->schedules, true);
+        $classPeriod = $class['periods'];
+    
 
+        
+        $teachePeriod = $teacher['periods'];
+    
+        $periodobject=Period::find($period_id);
         DB::beginTransaction();
-
+       
         try {
-            foreach ($classSchedules as $key => $schedule) {
-                if ($schedule['date'] === $start_day) {
-                    $classStartHour = $schedule['start_hour'];
-                    $classEndHour = $schedule['end_hour'];
-/////////////////////////////////////////////////////////////
-                    // Compare the hours
-                    if ($start_hour >= $classStartHour && $end_hour <= $classEndHour) {
-
-
+           
+            foreach ($classPeriod as $one_class_period) {
+               
+                if ($one_class_period->pivot->period_id== $period_id && $one_class_period->pivot->is_occupied==0) {
+                
                         $isAvailable = true;
 
-                        unset($classSchedules[$key]);
-                        $classSchedulesJson = json_encode(array_values($classSchedules));
+                        $one_class_period->pivot->is_occupied=true;
+
+                       
 
                         // Update the "schedule" column in the database with the updated JSON string
-                        $class->schedules = $classSchedulesJson;
+                        $one_class_period->pivot->save();
                         $class->save();
                         break;
                     }
+                    $one_class_period->save();
+
                 }
-            }
+            
 
             if ($isAvailable) {
-                foreach ($teacherSchedules as $key => $Tschedule) {
-                    if ($Tschedule['date'] === $start_day) {
-                        $teacherStartHour = $Tschedule['start_hour'];
-                        $teacherEndHour = $Tschedule['end_hour'];
-
-
-                        if ($start_hour >= $teacherStartHour && $end_hour <= $teacherEndHour) {
-
+                foreach ($teachePeriod as $one_teacher_period) {
+                    if ($one_teacher_period->pivot->period_id==$period_id &&$one_teacher_period->pivot->is_occupied==0) {
+                 
                             $isAvailable2 = true;
-                            unset($teacherSchedules[$key]);
-                            $teacherSchedulesJson = json_encode(array_values($classSchedules));
-
-
-                            $teacher->schedules = $teacherSchedulesJson;
+                            $one_teacher_period->pivot->is_occupied=1;
+                         
+                            $one_teacher_period->pivot->save();
                             $teacher->save();
                             break;
                         }
+                        $one_teacher_period->save();
                     }
                 }
-            }
+            
 
             if ($isAvailable && $isAvailable2) {
                 $newCourse = Course::create([
@@ -137,7 +134,7 @@ class CourseController extends Controller
             return response()->json(['message' => 'Course not found'], 404);
         }
 
-        $updateData = $request->only(['name', 'start_hour', 'end_hour', 'start_day', 'course_name_id', 'end_day', 'status', 'qr_code', 'teacher_id']);
+        $updateData = $request->only(['name', 'period_id', 'start_day', 'course_name_id', 'end_day', 'status', 'qr_code', 'teacher_id']);
 
         if (!empty($updateData)) {
             $course->fill($updateData);

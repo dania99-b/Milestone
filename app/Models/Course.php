@@ -24,7 +24,8 @@ class Course extends Model
         'created_at',
         'days',
         'course_name_id',
-        'teacher_id'
+        'teacher_id',
+        'period_id'
         ];
         
         public function class(){

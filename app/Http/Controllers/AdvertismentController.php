@@ -3,22 +3,23 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use Pusher\Pusher;
 use App\Models\Day;
-use App\Models\Course;
 
+use App\Models\Role;
+use App\Models\Course;
 use App\Models\LogFile;
 use App\Models\CourseName;
 use App\Models\Advertisment;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use function PHPSTORM_META\map;
+
 use App\Models\CourseAdvertisment;
 use Tymon\JWTAuth\Facades\JWTAuth;
-
 use App\Events\NotificationRecieved;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\AdvertismentRequest;
-use App\Models\Role;
 use App\Notifications\WebSocketSuccessNotification;
 
 class AdvertismentController extends Controller
@@ -49,6 +50,14 @@ class AdvertismentController extends Controller
             'advertisment_type_id' => $request->validated()['advertisment_type_id'],
             'course_id' => $request['course_id'],
         ]);
+
+          // Trigger a Pusher event
+    $pusher = new Pusher(env('PUSHER_APP_KEY'), env('PUSHER_APP_SECRET'), env('PUSHER_APP_ID'), [
+        'cluster' => env('PUSHER_APP_CLUSTER'),
+        'useTLS' => true,
+    ]);
+
+    $pusher->trigger('notification', 'new-advertisement', $upload);
 
         if ($request['course_id']) {
             $course_info = Course::find($request['course_id']);
