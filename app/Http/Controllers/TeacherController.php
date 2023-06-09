@@ -216,4 +216,7 @@ $now=Carbon::now();
 $courses=Course::where('end_day','>',$now)->get();
 return $courses;
 
-}}
+}
+
+
+}

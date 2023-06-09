@@ -16,7 +16,7 @@ class EducationFile extends Model
         'file'
         ];
         public function types(){
-           return $this->belongsTo(FileTypes::class);
+           return $this->belongsTo(FileTypes::class,'id');
         }
 
         public function course(){

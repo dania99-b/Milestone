@@ -10,7 +10,8 @@ class FileTypes extends Model
     use HasFactory;
     public $timestamps = true;
     protected $fillable = [
-        'name'
+        'name',
+        'id'
     ];
     public function files(){
         $this->hasMany(EducationFile::class);

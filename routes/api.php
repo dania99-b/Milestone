@@ -23,6 +23,7 @@ use App\Http\Controllers\InformationController;
 use App\Http\Controllers\PlacementController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuestionTypeController;
+use App\Http\Controllers\SearchController;
 use App\Http\Requests\HomeworkRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -165,6 +166,9 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['role:Teacher']], function
     Route::post('/get/courseStudent/{course_id}',[TeacherController::class,'getCourseStudent']);
     Route::get('/get/courseTeacher',[TeacherController::class,'getTeacheCourse']);
     Route::get('/get/activeCourses',[TeacherController::class,'getActiveCourse']);
+    Route::get('/get/StudentResult/{student_id}',[ResultController::class,'getStudentResultById']);
+    Route::get('/get/EducationFile/CoursenameById/{courseName_id}',[CourseController::class,'getCourseNameEducationFile']);
+
     
    
   
@@ -207,4 +211,5 @@ Route::get('/days',[ReceptionController::class,'days']);
 Route::get('/valid/{course}/{class}/{day}/{period}/{teacher}', [AstartSolutionController::class,'validSolution']);
 Route::get('/count/{id}', [AstartSolutionController::class,'calcStudentNumbers']);
 Route::get('/ddd', [AstartSolutionController::class,'getPossibleSolution']);
-
+Route::get('/search', [SearchController::class,'search']);
+Route::get('/getPeriod', [CourseController::class,'getperiod']);

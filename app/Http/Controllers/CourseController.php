@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\CourseRequest;
 use App\Models\CourseAdvertisment;
 use App\Models\CourseName;
+use App\Models\EducationFile;
 use App\Models\Period;
 use App\Models\Teacher;
 use Illuminate\Support\Facades\Auth;
@@ -186,4 +187,23 @@ class CourseController extends Controller
         $coursesName = CourseName::all();
         return response()->json($coursesName, 200);
     }
+
+    public function getCourseNameEducationFile($courseName_id)
+    {
+        $coursesName = CourseName::find($courseName_id);
+        $education_files=EducationFile::with('types')->where('course_id',$coursesName->id)->get();
+        return response()->json($education_files,200);
+    }
+    public function getperiod(){
+
+$period=Period::all();
+return response()->json($period,200);
+
+
+    }
 }
+
+
+
+
+

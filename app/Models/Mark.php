@@ -15,7 +15,7 @@ class Mark extends Model
           'oral',
           'final',
           'homework',
-        'course_result_id'];
+          'course_result_id'];
           public function courseResult()
           {
               return $this->belongsTo(CourseResult::class);

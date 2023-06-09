@@ -68,4 +68,12 @@ class ResultController extends Controller
             ], 404);
         }
     
+}
+public function getStudentResultById($student_id)
+{
+$student=Student::find($student_id);
+$course_result=CourseResult::where('student_id',$student->id)->get()->pluck('id')->first();
+$marks=Mark::where('course_result_id',$course_result)->get();
+return response()->json($marks,200);
+
 }}
