@@ -50,9 +50,6 @@ $result[$array[$j]] = $counter;
 return response()->json($result, 200);
 }
 
-public function get
-
-
 
 
 

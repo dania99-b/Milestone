@@ -72,7 +72,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin']], function() {
     Route::get('/get/teacherNumber',[StatisticController::class,'getTeacherNumber']);
     Route::get('/get/EmployeeNumber',[StatisticController::class,'getEmployeeNumber']);
     Route::get('/get/rateRequest/InEachCourse',[StatisticController::class,'getRateRequestInEachCourse']);
+    Route::delete('/delete/teacher/{id}',[RegisterController::class,'deleteTeacher']);
+    Route::delete('/delete/reception/{id}',[RegisterController::class,'deleteReception']);
+    Route::delete('/delete/Hr/{id}',[RegisterController::class,'deleteReception']);
     
+
     
     
     
@@ -167,6 +171,10 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['role:Teacher']], function
     Route::get('/get/StudentResult/{student_id}',[ResultController::class,'getStudentResultById']);
     Route::get('/get/EducationFile/CoursenameById/{courseName_id}',[CourseController::class,'getCourseNameEducationFile']);
     Route::post('/get/Attendence',[CourseController::class,'get_attendence']);
+    Route::post('/send/ZoomNotification',[TeacherController::class,'sendZoomNotification']);
+    Route::post('/get/FileById',[EducationFileController::class,'getEducationFileById']);
+    
+    
 
 });
 

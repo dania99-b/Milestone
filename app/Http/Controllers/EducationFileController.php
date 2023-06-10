@@ -56,4 +56,12 @@ public function test1(Request $request){
   $education_files=FileTypes::with('files')->get();
   return $education_files;
 }
-}
+public function getEducationFileById(Request $request){
+$file_id=$request['file_id'];
+$file=EducationFile::find($file_id);
+if(!$file)
+return response()->json(["message"=>"file does not exist"],400);
+else 
+return response()->json($file,200);
+
+}}

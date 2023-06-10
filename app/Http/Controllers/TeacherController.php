@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use Pusher\Pusher;
 use App\Models\Test;
 use App\Models\Type;
 use App\Models\User;
@@ -14,6 +15,7 @@ use App\Models\Teacher;
 use App\Models\Employee;
 use App\Models\Homework;
 use App\Models\Question;
+use App\Models\CourseResult;
 use App\Models\QuestionType;
 use Illuminate\Http\Request;
 use App\Models\EducationFile;
@@ -27,7 +29,6 @@ use App\Http\Requests\HomeworkRequest;
 use App\Http\Requests\QuestionRequest;
 use App\Http\Requests\EducationFileRequest;
 use App\Http\Requests\LeaveOrResignationRequest;
-use App\Models\CourseResult;
 use App\Notifications\WebSocketSuccessNotification;
 
 class TeacherController extends Controller
@@ -221,30 +222,34 @@ return $courses;
 
 }
 
-public function sendZoomNotification(Request $request){
-  $course_id=$request['course_id'];
-  $zoom_url=$request['zoom_url'];
-  $student_in_this_course=CourseResult::
-  
-  $students = \App\Models\Role::where('name', 'student')->first()->users;
-       
-            // Send notification to each user with the "student" role
-            foreach ($students as $student) {
-                $student->notify(new WebSocketSuccessNotification('New Advertisment!'));
-                event(new NotificationRecieved($student));
-            }
-       
+public function sendZoomNotification(Request $request)
+{
+    $course_id = $request['course_id'];
+    $zoom_url = $request['zoom_url'];
+ 
+    $student_in_this_course = CourseResult::where('course_id', $course_id)->get();
+    $array_of_userid = [];
 
-          // Trigger a Pusher event
-    $pusher = new Pusher(env('PUSHER_APP_KEY'), env('PUSHER_APP_SECRET'), env('PUSHER_APP_ID'), [
-        'cluster' => env('PUSHER_APP_CLUSTER'),
-        'useTLS' => true,
-    ]);
+    for ($i = 0; $i < count($student_in_this_course); $i++) {
+        $student_id = $student_in_this_course[$i]->student_id;
+        $user = Student::find($student_id)->user_id;
+        $array_of_userid[$i] = $user;
+    }
 
-    $pusher->trigger('notification', 'new-advertisement', $upload);
 
-  
-  }
+    // Handle the response
+
+    // Send notification to each user with the "student" role
+    foreach ($array_of_userid as $item) {
+        $curr_user = User::find($item);
+        $curr_user->notify(new WebSocketSuccessNotification($zoom_url));
+        event(new NotificationRecieved($curr_user));
+    }
+
+
+ 
+}
+
 
 
 }

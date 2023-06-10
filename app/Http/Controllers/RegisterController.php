@@ -25,8 +25,7 @@ use App\Models\TeacherPeriod;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Contracts\Providers\Auth;
 use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
-
-
+use Termwind\Components\Hr;
 
 class RegisterController extends Controller
 {
@@ -112,6 +111,23 @@ class RegisterController extends Controller
         ], 200);
     }
 
+
+public function deleteTeacher($id)
+{
+    $teacher = Teacher::find($id);
+
+    if (!$teacher) {
+        return response()->json(['message' => 'Teacher not found'], 404);
+    }
+    $teacher->delete();
+    $teacher->employee->delete();
+    $teacher->employee->user->delete();
+   
+
+    return response()->json(['message' => 'Teacher deleted successfully'], 200);
+}
+
+
     public function reception(EmployeeRequest $request)
     {
         $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
@@ -139,6 +155,22 @@ class RegisterController extends Controller
         ], '200');
     }
 
+    public function deleteReception($id)
+{
+    $reception = Reception::find($id);
+
+    if (!$reception) {
+        return response()->json(['message' => 'Teacher not found'], 404);
+    }
+
+    $reception->delete();
+    $reception->employee->delete();
+    $reception->employee->user->delete();
+   
+
+    return response()->json(['message' => 'Teacher deleted successfully'], 200);
+}
+
     public function HR(EmployeeRequest $request)
     {
         $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
@@ -149,7 +181,6 @@ class RegisterController extends Controller
             'password' => bcrypt($request->validated()['password']),
             'phone' => $request->validated()['phone'],
             'username' => $request->validated()['username'],
-
             'birth' => $request->validated()['birth'],
         ]);
         $mainemployee = Employee::firstOrCreate([
@@ -167,6 +198,20 @@ class RegisterController extends Controller
 
         ], '200');
     }
+    public function deleteHr($id)
+{
+    $hr = HumanResource::find($id);
+
+    if (!$hr) {
+        return response()->json(['message' => 'Teacher not found'], 404);
+    }
+    $hr->delete();
+    $hr->employee->delete();
+    $hr->employee->user->delete();
+  
+
+    return response()->json(['message' => 'Teacher deleted successfully'], 200);
+}
     public function currentGuest($email)
     {
         $theGuest = Guest::where('email', $email)->get();
