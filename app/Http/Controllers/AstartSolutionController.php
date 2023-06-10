@@ -13,6 +13,7 @@ use App\Models\Solution;
 use Illuminate\Http\Request;
 use PhpParser\Node\Expr\List_;
 use Ramsey\Uuid\Type\Integer;
+use SebastianBergmann\CodeCoverage\Report\Xml\Source;
 
 class AstartSolutionController extends Controller
 {
@@ -102,17 +103,15 @@ class AstartSolutionController extends Controller
         $days = Day::all();
         $periods = Period::all();
         for ($i = 0; $i < count($days); $i++) {
-            for ($j = 0; $j < count($classes); $j++) {
-                for ($y = 0; $y < count($teachers); $y++) {
-                    for ($z = 0; $z < count($periods); $z++) {
+            for ($z = 0; $z < count($periods); $z++) {
+                for ($j = 0; $j < count($classes); $j++) {
+                    for ($y = 0; $y < count($teachers); $y++) {
                         for ($x = 0; $x < count($course_names); $x++) {
-
+                          
                             $is_valid = $this->validSolution($course_names[$x], $classes[$j]->id, $teachers[$y]->id, $days[$i]->id, $periods[$z]->id);
-                            $check_period_for_day=Solution::where('period_id',$periods[$z]->id)->where('day_id', $days[$i]->id);
-                            return $check_period_for_day;
-                            if ($is_valid == true && !$check_period_for_day ) {
-                             
-                                $newslution = Solution::Create([
+                            $check_period_day=Solution::where('course_name_id', $course_names[$x])->where('period_id',$periods[$z]->i)->first();
+                            if ($is_valid == true && !$check_period_day) {
+                                $newslution =  Solution::Create([
                                     'class_id' => $classes[$j]->id,
                                     'teacher_id' => $teachers[$y]->id,
                                     'period_id' => $periods[$z]->id,
@@ -120,8 +119,8 @@ class AstartSolutionController extends Controller
                                     'course_name_id' => $course_names[$x]
 
                                 ]);
-                                $newslution->save();
-                           
+
+                                $result[] = $newslution;
                             }
                         }
                     }
@@ -129,12 +128,11 @@ class AstartSolutionController extends Controller
             }
         }
 
-      
+        return $result;
     }
 
     public function ProcessWorkDayConstraints()
     { //solution is list of object
-
         $WhichDay = 0;
         $cost = 0;
         $arr = array_fill(0, 6, 0);
@@ -144,13 +142,10 @@ class AstartSolutionController extends Controller
         $teacherIds = [];
         foreach ($result as $solution) {
             $teacherId = $solution->teacher_id;
-
             if (!in_array($teacherId, $teacherIds)) {
                 $uniqueResults[] = $solution;
                 $teacherIds[] = $teacherId;
             }
-        }
-
         for ($i = 0; $i < count($teacherIds); $i++) {
             $teacher_in_solution_id = $result[$i]->teacher_id;
 
@@ -172,13 +167,9 @@ class AstartSolutionController extends Controller
                     break;
                 }
             }
-            if ($check == 0) {
-                $cost += 1;
-            }
         }
-
-        return $cost;
     }
+}
 
     public function ProcessLongDayConstraints()
     { //solution is list of object

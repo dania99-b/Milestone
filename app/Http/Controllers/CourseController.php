@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\DB;
 class CourseController extends Controller
 {
     public function list(){
-        $courses = Course::with('courseName')->with('class')->with('teacher.employee.user')->get();
+        $courses = Course::with('courseName')->with('class')->with('teacher.employee.user')->with('period')->get();
         foreach($courses as $course){
         $course->days = collect(json_decode($course->days))->map(function ($dayId) {
             return Day::find($dayId);
