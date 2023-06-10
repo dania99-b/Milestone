@@ -9,6 +9,7 @@ use App\Models\Course;
 use App\Models\LogFile;
 use Illuminate\Http\Request;
 use App\Http\Requests\CourseRequest;
+use App\Models\Attendence;
 use App\Models\CourseAdvertisment;
 use App\Models\CourseName;
 use App\Models\EducationFile;
@@ -198,6 +199,19 @@ class CourseController extends Controller
 
 $period=Period::all();
 return response()->json($period,200);
+
+
+    }
+
+    public function get_attendence(Request $request){
+        $course=$request['course_id'];
+        $date=$request['date'];
+        $formattedDate = date('Y-m-d', strtotime($date));
+    
+        $attendances = Attendence::where('course_id', $course)
+            ->whereDate(DB::raw('DATE(created_at)'), '=', $formattedDate)
+            ->get();
+return response()->json($attendances ,200);
 
 
     }

@@ -20,6 +20,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\AttendenceRequest;
 use App\Models\Homework;
+use App\Models\Notification;
 
 class StudentController extends Controller
 {
@@ -207,5 +208,13 @@ $curr_course_id->transform(function ($item) {
 });
     return response()->json($curr_course_id,200);
 
+
+}
+public function deleteNotification(Request $request){
+    $id=$request['id'];
+    $user = JWTAuth::parseToken()->authenticate();
+    $notification=Notification::where('notifiable_id',$user->id)->where('id',$id);
+    $notification->delete();
+return response()->json(["meassage"=>"Notification Deleted Successfully"],200);
 
 }}

@@ -139,4 +139,10 @@ class AdvertismentController extends Controller
         $advertisment->course->course_name = $courseName;
         return response()->json( $advertisment, 200);
     }
+    public function getAdvertismentByType(Request $request){
+        $id=$request['id'];
+        $advertisments = Advertisment::where('advertisment_type_id', $id)->get();
+  return response()->json($advertisments,200);
+
+    }
 }

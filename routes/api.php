@@ -48,6 +48,7 @@ Route::group(['middleware' => 'api', 'prefix' => 'auth'], function ($router) {
     Route::post('logout', [AuthController::class,'logout']);
     Route::post('refresh',  [AuthController::class,'refresh']);
     Route::post('me',  [AuthController::class,'me']);   
+    Route::post('refreshh', [AuthController::class,'refreshh']);
 });
 
 Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin']], function() {
@@ -107,16 +108,6 @@ Route::group(['prefix' => 'reception', 'middleware' => ['role:Reception']], func
     Route::post('/delete/LeaveOrResignation/{id}',[TeacherController::class,'deleteLeave']);
     
     
-    
-    
-   
-    
-    
-    
-    
-   
-    
-
 });
 
 Route::get('/find/guest/{email}',[RegisterController::class,'currentGuest']);
@@ -136,6 +127,10 @@ Route::group(['prefix' => 'student', 'middleware' => ['role:Student']], function
     Route::get('/get/allMarks',[StudentController::class,'getAllMarks']);
     Route::post('/get/educationFile',[EducationFileController::class,'getEducationFile']);
     Route::get('/get/courseName',[CourseController::class,'getCourseseRequest']);
+    Route::post('/get/Advertisment/ByType',[AdvertismentController::class,'getAdvertismentByType']);
+    Route::post('/delete/Notification',[StudentController::class,'deleteNotification']);
+    
+    
     
     
    
@@ -168,6 +163,9 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['role:Teacher']], function
     Route::get('/get/activeCourses',[TeacherController::class,'getActiveCourse']);
     Route::get('/get/StudentResult/{student_id}',[ResultController::class,'getStudentResultById']);
     Route::get('/get/EducationFile/CoursenameById/{courseName_id}',[CourseController::class,'getCourseNameEducationFile']);
+    Route::post('/get/Attendence',[CourseController::class,'get_attendence']);
+
+    
 
     
    
