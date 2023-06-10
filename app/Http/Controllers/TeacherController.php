@@ -215,11 +215,18 @@ public function getTeacheCourse(){
     return response()->json($course,200);
 
 }
-public function getActiveCourse(){
-$now=Carbon::now();
-$courses=Course::where('end_day','>',$now)->get();
-return $courses;
+public function getActiveCourse()
+{
+    $now = Carbon::now();
+    $courses = Course::with("courseName:id,name")->where('end_day', '>', $now)->get();
 
+    $courses = $courses->map(function ($course) {
+        $course->name = $course->courseName->name;
+        unset($course->courseName);
+        return $course;
+    });
+
+    return $courses;
 }
 
 public function sendZoomNotification(Request $request)
