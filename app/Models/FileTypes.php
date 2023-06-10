@@ -14,7 +14,7 @@ class FileTypes extends Model
         'id'
     ];
     public function files(){
-        $this->hasMany(EducationFile::class);
+       return  $this->hasMany(EducationFile::class);
     }
 
 }

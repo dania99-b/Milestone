@@ -13,6 +13,7 @@ use App\Models\Attendence;
 use App\Models\CourseAdvertisment;
 use App\Models\CourseName;
 use App\Models\EducationFile;
+use App\Models\FileTypes;
 use App\Models\Period;
 use App\Models\Teacher;
 use Illuminate\Support\Facades\Auth;
@@ -192,8 +193,10 @@ class CourseController extends Controller
     public function getCourseNameEducationFile($courseName_id)
     {
         $coursesName = CourseName::find($courseName_id);
-        $education_files=EducationFile::with('types')->where('course_id',$coursesName->id)->get();
-        return response()->json($education_files,200);
+$types = FileTypes::with(['files' => function ($query) use ($coursesName) {
+    $query->where('course_id', $coursesName->id);
+      }])->get();
+     return response()->json($types, 200);
     }
     public function getperiod(){
 

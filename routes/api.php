@@ -24,6 +24,7 @@ use App\Http\Controllers\PlacementController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuestionTypeController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\StatisticController;
 use App\Http\Requests\HomeworkRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -67,6 +68,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin']], function() {
     Route::get('/HR',[AdminController::class,'allHR']);
     Route::get('/teachers',[AdminController::class,'allTeachers']);
     Route::get('/receptions',[AdminController::class,'allReceptions']);
+    Route::get('/get/studentNumber',[StatisticController::class,'getStudentNumber']);
+    
     
     
 });
@@ -130,13 +133,7 @@ Route::group(['prefix' => 'student', 'middleware' => ['role:Student']], function
     Route::post('/get/Advertisment/ByType',[AdvertismentController::class,'getAdvertismentByType']);
     Route::post('/delete/Notification',[StudentController::class,'deleteNotification']);
     
-    
-    
-    
-   
-    
-    
-   
+
    
 });
 
@@ -165,13 +162,7 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['role:Teacher']], function
     Route::get('/get/EducationFile/CoursenameById/{courseName_id}',[CourseController::class,'getCourseNameEducationFile']);
     Route::post('/get/Attendence',[CourseController::class,'get_attendence']);
 
-    
-
-    
-   
-  
 });
-
 
 Route::group(['prefix' => 'hr', 'middleware' => ['role:HR']], function() {
     Route::get('/get/AllLeaves',[TeacherController::class,'getAllLeave']);
@@ -211,3 +202,4 @@ Route::get('/count/{id}', [AstartSolutionController::class,'calcStudentNumbers']
 Route::get('/ddd', [AstartSolutionController::class,'getPossibleSolution']);
 Route::get('/search', [SearchController::class,'search']);
 Route::get('/getPeriod', [CourseController::class,'getperiod']);
+Route::get('/te', [EducationFileController::class,'test1']);
