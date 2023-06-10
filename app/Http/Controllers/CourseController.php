@@ -22,19 +22,21 @@ use Illuminate\Support\Facades\DB;
 
 class CourseController extends Controller
 {
-    public function list(){
+    public function list()
+    {
         $courses = Course::with('courseName')->with('class')->with('teacher.employee.user')->with('period')->get();
-        foreach($courses as $course){
-        $course->days = collect(json_decode($course->days))->map(function ($dayId) {
-            return Day::find($dayId);
-        });}
+        foreach ($courses as $course) {
+            $course->days = collect(json_decode($course->days))->map(function ($dayId) {
+                return Day::find($dayId);
+            });
+        }
         return response()->json($courses, 200);
     }
     public function create(CourseRequest $request)
     {
         $days = $request->validated()['days'];
         $dayIds = [];
-        
+
 
         foreach ($days as $day) {
             $dayModel = Day::where('name', $day)->firstOrFail();
@@ -53,53 +55,52 @@ class CourseController extends Controller
         $isAvailable = false;
         $isAvailable2 = false;
 
-        
+
         $classPeriod = $class['periods'];
-    
 
-        
+
+
         $teachePeriod = $teacher['periods'];
-    
-        $periodobject=Period::find($period_id);
+
+        $periodobject = Period::find($period_id);
         DB::beginTransaction();
-       
+
         try {
-           
+
             foreach ($classPeriod as $one_class_period) {
-               
-                if ($one_class_period->pivot->period_id== $period_id && $one_class_period->pivot->is_occupied==0) {
-                
-                        $isAvailable = true;
 
-                        $one_class_period->pivot->is_occupied=true;
+                if ($one_class_period->pivot->period_id == $period_id && $one_class_period->pivot->is_occupied == 0) {
 
-                       
+                    $isAvailable = true;
 
-                        // Update the "schedule" column in the database with the updated JSON string
-                        $one_class_period->pivot->save();
-                        $class->save();
-                        break;
-                    }
-                    $one_class_period->save();
+                    $one_class_period->pivot->is_occupied = true;
 
+
+
+                    // Update the "schedule" column in the database with the updated JSON string
+                    $one_class_period->pivot->save();
+                    $class->save();
+                    break;
                 }
-            
+                $one_class_period->save();
+            }
+
 
             if ($isAvailable) {
                 foreach ($teachePeriod as $one_teacher_period) {
-                    if ($one_teacher_period->pivot->period_id==$period_id &&$one_teacher_period->pivot->is_occupied==0) {
-                 
-                            $isAvailable2 = true;
-                            $one_teacher_period->pivot->is_occupied=1;
-                         
-                            $one_teacher_period->pivot->save();
-                            $teacher->save();
-                            break;
-                        }
-                        $one_teacher_period->save();
+                    if ($one_teacher_period->pivot->period_id == $period_id && $one_teacher_period->pivot->is_occupied == 0) {
+
+                        $isAvailable2 = true;
+                        $one_teacher_period->pivot->is_occupied = 1;
+
+                        $one_teacher_period->pivot->save();
+                        $teacher->save();
+                        break;
                     }
+                    $one_teacher_period->save();
                 }
-            
+            }
+
 
             if ($isAvailable && $isAvailable2) {
                 $newCourse = Course::create([
@@ -193,34 +194,27 @@ class CourseController extends Controller
     public function getCourseNameEducationFile($courseName_id)
     {
         $coursesName = CourseName::find($courseName_id);
-$types = FileTypes::with(['files' => function ($query) use ($coursesName) {
-    $query->where('course_id', $coursesName->id);
-      }])->get();
-     return response()->json($types, 200);
+        $types = FileTypes::with(['files' => function ($query) use ($coursesName) {
+            $query->where('course_id', $coursesName->id);
+        }])->get();
+        return response()->json($types, 200);
     }
-    public function getperiod(){
+    public function getperiod()
+    {
 
-$period=Period::all();
-return response()->json($period,200);
-
-
+        $period = Period::all();
+        return response()->json($period, 200);
     }
 
-    public function get_attendence(Request $request){
-        $course=$request['course_id'];
-        $date=$request['date'];
+    public function get_attendence(Request $request)
+    {
+        $course = $request['course_id'];
+        $date = $request['date'];
         $formattedDate = date('Y-m-d', strtotime($date));
-    
+
         $attendances = Attendence::where('course_id', $course)
             ->whereDate(DB::raw('DATE(created_at)'), '=', $formattedDate)
             ->get();
-return response()->json($attendances ,200);
-
-
+        return response()->json($attendances, 200);
     }
 }
-
-
-
-
-

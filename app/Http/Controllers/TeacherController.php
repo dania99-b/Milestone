@@ -2,30 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\EducationFileRequest;
-use App\Http\Requests\HomeworkRequest;
-use App\Http\Requests\LeaveOrResignationRequest;
+use Carbon\Carbon;
 use App\Models\Test;
 use App\Models\Type;
 use App\Models\User;
 use App\Models\Answer;
+use App\Models\Course;
+use App\Models\LogFile;
+use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\Employee;
+use App\Models\Homework;
 use App\Models\Question;
-use App\Models\LogFile;
+use App\Models\QuestionType;
 use Illuminate\Http\Request;
+use App\Models\EducationFile;
 use App\Http\Requests\TestRequest;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\QuestionRequest;
-use App\Models\Course;
-use App\Models\EducationFile;
-use App\Models\Homework;
 use App\Models\LeaveAndResignation;
-use App\Models\QuestionType;
-use App\Models\Student;
-use Carbon\Carbon;
+use App\Events\NotificationRecieved;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\HomeworkRequest;
+use App\Http\Requests\QuestionRequest;
+use App\Http\Requests\EducationFileRequest;
+use App\Http\Requests\LeaveOrResignationRequest;
+use App\Models\CourseResult;
+use App\Notifications\WebSocketSuccessNotification;
 
 class TeacherController extends Controller
 {
@@ -217,6 +220,31 @@ $courses=Course::where('end_day','>',$now)->get();
 return $courses;
 
 }
+
+public function sendZoomNotification(Request $request){
+  $course_id=$request['course_id'];
+  $zoom_url=$request['zoom_url'];
+  $student_in_this_course=CourseResult::
+  
+  $students = \App\Models\Role::where('name', 'student')->first()->users;
+       
+            // Send notification to each user with the "student" role
+            foreach ($students as $student) {
+                $student->notify(new WebSocketSuccessNotification('New Advertisment!'));
+                event(new NotificationRecieved($student));
+            }
+       
+
+          // Trigger a Pusher event
+    $pusher = new Pusher(env('PUSHER_APP_KEY'), env('PUSHER_APP_SECRET'), env('PUSHER_APP_ID'), [
+        'cluster' => env('PUSHER_APP_CLUSTER'),
+        'useTLS' => true,
+    ]);
+
+    $pusher->trigger('notification', 'new-advertisement', $upload);
+
+  
+  }
 
 
 }

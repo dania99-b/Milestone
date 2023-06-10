@@ -69,6 +69,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin']], function() {
     Route::get('/teachers',[AdminController::class,'allTeachers']);
     Route::get('/receptions',[AdminController::class,'allReceptions']);
     Route::get('/get/studentNumber',[StatisticController::class,'getStudentNumber']);
+    Route::get('/get/teacherNumber',[StatisticController::class,'getTeacherNumber']);
+    Route::get('/get/EmployeeNumber',[StatisticController::class,'getEmployeeNumber']);
+    Route::get('/get/rateRequest/InEachCourse',[StatisticController::class,'getRateRequestInEachCourse']);
+    
+    
+    
     
     
     

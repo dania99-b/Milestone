@@ -52,12 +52,12 @@ class AdvertismentController extends Controller
         ]);
 
           // Trigger a Pusher event
-    $pusher = new Pusher(env('PUSHER_APP_KEY'), env('PUSHER_APP_SECRET'), env('PUSHER_APP_ID'), [
-        'cluster' => env('PUSHER_APP_CLUSTER'),
-        'useTLS' => true,
-    ]);
+    //$pusher = new Pusher(env('PUSHER_APP_KEY'), env('PUSHER_APP_SECRET'), env('PUSHER_APP_ID'), [
+    //    'cluster' => env('PUSHER_APP_CLUSTER'),
+     //   'useTLS' => true,
+    //]);
 
-    $pusher->trigger('notification', 'new-advertisement', $upload);
+   // $pusher->trigger('notification', 'new-advertisement', $upload);
 
         if ($request['course_id']) {
             $course_info = Course::find($request['course_id']);

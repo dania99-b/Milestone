@@ -172,8 +172,14 @@ class StudentController extends Controller
         $user = JWTAuth::parseToken()->authenticate();
         $student = $user->student;
         $curr_course_id=CourseResult::where('student_id',$student->id)->latest()->value('course_id');
-        $course_info=Course::find($curr_course_id);
-   
+        $course_info=Course::with('period:id,start_hour,end_hour,is_available')->find($curr_course_id);
+   if ($course_info) {
+        $course_info->start_hour = $course_info->period->start_hour;
+        $course_info->end_hour = $course_info->period->end_hour;
+        $course_info->is_available = $course_info->period->is_available;
+        unset($course_info->period);
+    }
+
         if ($course_info) 
         $course_info->days = collect(json_decode($course_info->days))->map(function ($dayId) {
             return Day::find($dayId);
