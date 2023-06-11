@@ -217,4 +217,10 @@ class CourseController extends Controller
             ->get();
         return response()->json($attendances, 200);
     }
+
+    public function getCourseById($id)
+    {
+        $course=Course::where('id',$id)->get();
+        return response()->json($course,200);
+    }
 }

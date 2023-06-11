@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Course;
-use App\Models\CourseName;
-use App\Models\Employee;
-use App\Models\Reservation;
 use App\Models\Student;
 use App\Models\Teacher;
+use App\Models\Employee;
+use App\Models\CourseName;
+use App\Models\Reservation;
 use Illuminate\Http\Request;
 
 class StatisticController extends Controller
@@ -49,7 +50,13 @@ $result[$array[$j]] = $counter;
 
 return response()->json($result, 200);
 }
+public function getActiveCourseNumber(){
+    $now = Carbon::now();
+    $courses = Course::where('end_day', '>', $now)->count();
 
+return response()->json($courses,200);
+
+}
 
 
 

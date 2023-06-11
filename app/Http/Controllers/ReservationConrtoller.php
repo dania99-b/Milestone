@@ -94,8 +94,10 @@ class ReservationConrtoller extends Controller
         if ($function != null) {
             $the_courseName_id = CourseName::where('name', $function->name)->get()->pluck('id'); /// find course Name id
             $CourseId = Course::where('course_name_id', $the_courseName_id)->latest()->first()->id;
-
-
+            $reservation=Reservation::where('student_id',$student_id)->first();
+      
+            if(!$reservation){
+                
             $newreservation = Reservation::create([
                 'student_id' => $student_id,
                 'course_id' => $CourseId,
@@ -105,7 +107,7 @@ class ReservationConrtoller extends Controller
         } else {
             return response()->json(['message' => 'sorry cannot make reservation!!'], 400);
         }
-    }
+    }}
 
 
     public function approveReservation($id)

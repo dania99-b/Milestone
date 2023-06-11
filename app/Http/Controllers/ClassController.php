@@ -15,10 +15,9 @@ class ClassController extends Controller
 {
     public function list(){
    
-            $classes = Classs::all();
-            foreach ($classes as $class) {
-                $class->schedules = json_decode($class->schedules);
-            }
+            $classes = Classs::with("periods")->get();
+        
+            
           
             return response()->json($classes, 200);
         }
