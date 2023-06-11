@@ -208,7 +208,7 @@ public function getAllMarks(){
     ->get();
 
 $curr_course_id->transform(function ($item) {
-    $item->course_name = $item->course->courseName;
+    $item->course_name = $item->course->courseName->name;
     unset($item->course);
     return $item;
 });
