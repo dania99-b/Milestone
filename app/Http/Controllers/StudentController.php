@@ -122,11 +122,14 @@ class StudentController extends Controller
 
     public function rate(RateRequest $request)
     {
-        $student = Student::where('user_id', JWTAuth::parseToken()->authenticate()->id)->get()->first()->id;
-
+        $student = Student::where('user_id', JWTAuth::parseToken()->authenticate()->id)->get()->first()->value('id');
+        
+        $course_result=CourseResult::where('student_id',$student)->latest()->first()->value('course_id');
+        $course_teacher=Course::where('id',$course_result)->get()->value('teacher_id');
+      
         $rate = StudentRate::firstOrCreate([
             'student_id' => $student,
-            'teacher_id' => $request->validated()['teacher_id'],
+            'teacher_id' => $course_teacher,
             'rate' => $request->validated()['rate'],
             'note' => $request->validated()['note'],
         ]);

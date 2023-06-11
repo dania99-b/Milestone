@@ -139,7 +139,6 @@ public function uploadLeave(LeaveOrResignationRequest $request){
   $user = JWTAuth::parseToken()->authenticate();
   $employee = $user->employee;
   LeaveAndResignation::FirstOrCreate([
-           
             'employee_id'=>$employee->id,
               'reason'=>$request->validated()['reason'],
               'from'=>Carbon::now(),
@@ -148,18 +147,24 @@ public function uploadLeave(LeaveOrResignationRequest $request){
   ]);}
 
   public function uploadResignation(LeaveOrResignationRequest $request){
-    $file = $request->file('file')->move('files/', $request->file('file')->getClientOriginalName());
     $user = JWTAuth::parseToken()->authenticate();
     $employee = $user->employee;
-    LeaveAndResignation::FirstOrCreate([
-      'employee_id'=>$employee->id,
-      'reason'=>$request->validated()['reason'],
-      'file'=>$file,
-      'from'=>$request->validated()['from'],
-      'to'=>$request->validated()['to'],
-      'type'=>"Resignation",
-      'comment'=>$request->validated()['comment']
-    ]);
+    $data = [
+        'employee_id' => $employee->id,
+        'reason' => $request->validated()['reason'],
+        'from' => $request->validated()['from'],
+        'to' => $request->validated()['to'],
+        'type' => "Resignation",
+        'comment' => $request->validated()['comment']
+    ];
+
+    if ($request->hasFile('file')) {
+        $file = $request->file('file')->move('files/', $request->file('file')->getClientOriginalName());
+        $data['file'] = $file;
+    }
+
+    $Resignation=LeaveAndResignation::Create($data);
+$Resignation->save();
             }
 
 

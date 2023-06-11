@@ -76,7 +76,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin']], function() {
     Route::get('/get/rateRequest/InEachCourse',[StatisticController::class,'getRateRequestInEachCourse']);
     Route::delete('/delete/teacher/{id}',[RegisterController::class,'deleteTeacher']);
     Route::delete('/delete/reception/{id}',[RegisterController::class,'deleteReception']);
-    Route::delete('/delete/Hr/{id}',[RegisterController::class,'deleteReception']);
+    Route::delete('/delete/Hr/{id}',[RegisterController::class,'deletehr']);
     Route::get('/get/logFile',[AdminController::class,'getLogFile']);
     
     
@@ -121,7 +121,8 @@ Route::group(['prefix' => 'reception', 'middleware' => ['role:Reception']], func
     Route::get('/get/receptions',[ReceptionController::class,'list']);
     Route::get('/get/allGuests',[RegisterController::class,'getAllGuest']);
     Route::post('/get/guests/byEmail/{email}',[RegisterController::class,'searchGuestByEmail']);
-    Route::post('/upload/LeaveOrResignation',[TeacherController::class,'uploadLeaveOrResignation']);
+    Route::post('/upload/Leave',[TeacherController::class,'uploadLeave']);
+    Route::post('/upload/Resignation',[TeacherController::class,'uploadResignation']);
     Route::post('/add/fileType',[EducationFileController::class,'createFileTypes']);
     Route::post('/upload/educationFile',[EducationFileController::class,'uploadEducationFile']);
     Route::post('/delete/LeaveOrResignation/{id}',[TeacherController::class,'deleteLeave']);

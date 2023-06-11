@@ -160,7 +160,7 @@ public function deleteTeacher($id)
     $reception = Reception::find($id);
 
     if (!$reception) {
-        return response()->json(['message' => 'Teacher not found'], 404);
+        return response()->json(['message' => 'Reception not found'], 404);
     }
 
     $reception->delete();
@@ -168,7 +168,7 @@ public function deleteTeacher($id)
     $reception->employee->user->delete();
    
 
-    return response()->json(['message' => 'Teacher deleted successfully'], 200);
+    return response()->json(['message' => 'Reception deleted successfully'], 200);
 }
 
     public function HR(EmployeeRequest $request)
@@ -203,14 +203,14 @@ public function deleteTeacher($id)
     $hr = HumanResource::find($id);
 
     if (!$hr) {
-        return response()->json(['message' => 'Teacher not found'], 404);
+        return response()->json(['message' => 'Hr not found'], 404);
     }
     $hr->delete();
     $hr->employee->delete();
     $hr->employee->user->delete();
   
 
-    return response()->json(['message' => 'Teacher deleted successfully'], 200);
+    return response()->json(['message' => 'Hr deleted successfully'], 200);
 }
     public function currentGuest($email)
     {

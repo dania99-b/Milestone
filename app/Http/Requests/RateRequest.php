@@ -25,7 +25,7 @@ class RateRequest extends FormRequest
     {
         return [
      
-        'teacher_id' => 'required',
+       
         'rate' => 'required|max:255',
         'note' => 'required|max:255',
         ];
