@@ -104,10 +104,10 @@ class ClassController extends Controller
     }
     public function getClassById(Request $request){
             
-    $class = Classs::find($request['class_id']);
+    $class = Classs::with("periods")->where('id',$request['class_id'])->get();
     
     if ($class) {
-        $class->schedules = json_decode($class->schedules);
+
         return response()->json($class, 200);
     } else {
         return response()->json(['error' => 'Class not found'], 404);
