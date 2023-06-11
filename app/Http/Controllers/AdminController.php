@@ -11,6 +11,7 @@ use App\Models\Human_Resource;
 use App\Http\Requests\ImageRequest;
 use App\Models\HumanResource;
 use App\Models\Image;
+use App\Models\LogFile;
 
 class AdminController extends Controller
 {
@@ -80,5 +81,9 @@ class AdminController extends Controller
    
         $receptions = Reception::with('employee.user')->get();
         return response()->json($receptions, 200);
+    }
+    public function getLogFile(){
+        $logfile=LogFile::with("employee.user")->get();
+        return response()->json( $logfile);
     }
 }
