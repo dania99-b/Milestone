@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\User;
 use App\Models\Image;
 use App\Models\LogFile;
 use App\Models\Teacher;
 use App\Models\Employee;
-use App\Models\Reception;
 
+use App\Models\Reception;
 use Illuminate\Http\Request;
 use App\Models\HumanResource;
 use App\Models\Human_Resource;
@@ -116,7 +117,7 @@ class AdminController extends Controller
         return response()->json($receptions, 200);
     }
     public function getLogFile(){
-        $logfile=LogFile::with("employee.user")->get();
+        $logfile=LogFile::with("user")->get();
         return response()->json( $logfile);
     }
 
@@ -131,4 +132,23 @@ class AdminController extends Controller
     
         return response()->json($logFiles, 200);
 
-}}
+}
+public function addRoleToUser($userId, $roleId)
+{
+    
+    // Get the user by their ID
+    $user = User::findOrFail($userId);
+
+    // Get the role by its ID
+    $role = Role::findOrFail($roleId);
+
+    // Attach the role to the user
+    $user->attachRole($role);
+
+    return response()->json(['message' => 'Role added to the user successfully'], 200);
+}
+
+
+
+
+}

@@ -80,6 +80,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin']], function() {
     Route::get('/get/logFile',[AdminController::class,'getLogFile']);
     Route::get('/get/teacher/countRate',[StatisticController::class,'GetCountRates']);
     Route::get('/get/userLogFile/{email}',[AdminController::class,'searchInLogFile']);
+    Route::post('/add/RoleToUser/{userId}/{roleId}',[AdminController::class,'addRoleToUser']);
+    
    
     
     

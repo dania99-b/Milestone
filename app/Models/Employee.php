@@ -32,9 +32,7 @@ class Employee extends Model
        return $this->hasOne(HumanResource::class);
     }
 
-    public function log(){
-        return $this->hasMany(LogFile::class);
-    }
+   
     public function leave(){
         return $this->hasMany(LeaveAndResignation::class);
     }
