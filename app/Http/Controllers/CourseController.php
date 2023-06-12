@@ -233,6 +233,7 @@ class CourseController extends Controller
     public function getCourseById($id)
     {
         $courses = Course::with('period:id,start_hour,end_hour')
+                        ->with("class:id,name")
                         ->with("courseName:id,name")
                         ->where('id', $id)
                         ->get();
@@ -244,8 +245,10 @@ class CourseController extends Controller
             });
             $course->start_hour = $course->period->start_hour;
             $course->end_hour = $course->period->end_hour;
+            $course->class_name = $course->class->name;
             unset($course->courseName);
             unset($course->period);
+            unset($course->class);
             return $course;
         });
     

@@ -29,9 +29,17 @@ class AdminController extends Controller
             $image = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
             $employee->image = $image;
         }
+        if ($request->has('period_id')) {
+            $periodIds = $request->input('period_id');
+            $teacher->periods()->sync($periodIds); // Sync the period_ids in the pivot table
+            $teacher->save();
+        }
+
+
         $user->fill($request->only(['first_name', 'last_name', 'birth', 'email', 'phone', 'username']));
         if ($user->isDirty()) {$user->save();}
         if ($employee->isDirty()) {$employee->save();}
+
         return response()->json(['message' => 'Teacher info updated successfully'], 200);
     }
     public function updateReception(Request $request)
