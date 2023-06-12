@@ -52,12 +52,7 @@ class AdvertismentController extends Controller
             'course_id' => $request['course_id'],
         ]);
         // Trigger a Pusher event
-    $pusher = new Pusher(env('PUSHER_APP_KEY'), env('PUSHER_APP_SECRET'), env('PUSHER_APP_ID'), [
-        'cluster' => env('PUSHER_APP_CLUSTER'),
-        'useTLS' => true,
-    ]);
-
-    $pusher->trigger('notification', 'new-advertisement',  $add);
+   
 
    $user = JWTAuth::parseToken()->authenticate();
    $log = new LogFile();
