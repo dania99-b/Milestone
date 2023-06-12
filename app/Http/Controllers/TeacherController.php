@@ -273,8 +273,18 @@ public function getActiveCourseByTeacherId()
   $teacher=$employee->teacher;
 
 $now = Carbon::now();
-$courses = Course::where('teacher_id',$teacher->id)->where('end_day', '>', $now)->get();
-
+$courses = Course::with('period:id,start_hour,end_hour')->with("courseName:id,name")->where('teacher_id',$teacher->id)->where('end_day', '>', $now)->get();
+$courses = $courses->map(function ($course) {
+  $course->name = $course->courseName->name;
+  $course->days =  collect(json_decode($course->days))->map(function ($dayId) {
+    return Day::find($dayId);
+});
+$course->start_hour=$course->period->start_hour;
+$course->end_hour=$course->period->end_hour;
+  unset($course->courseName);
+  unset($course->period);
+  return $course;
+});
 return response()->json($courses,200);
 
 }

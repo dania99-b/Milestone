@@ -65,16 +65,21 @@ class ClassController extends Controller
     public function update(Request $request, $id)
     {
         $class = Classs::find($id);
-        
+    
         if (!$class) {
             return response()->json(['message' => 'Class not found'], 404);
         }
     
-        $updateData = $request->only(['name', 'max_num', 'status', 'period_id']);
+        $updateData = $request->only(['name', 'max_num', 'status']);
+        $periodId = $request->input('period_id');
     
         if (!empty($updateData)) {
             $class->fill($updateData);
             $class->save();
+        }
+    
+        if (!is_null($periodId)) {
+            $class->periods()->sync([$periodId]); // Sync the period_id in the pivot table
         }
     
         $user = JWTAuth::parseToken()->authenticate();
