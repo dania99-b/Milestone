@@ -24,6 +24,7 @@ class Guest extends Model implements MustVerifyEmail, JWTSubject
         'phone',
         'verification_code',
 		'email_verified_at',
+		'device_id'
         ];
 
 		public function cvs(){

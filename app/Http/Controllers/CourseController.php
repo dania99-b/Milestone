@@ -206,6 +206,8 @@ class CourseController extends Controller
     public function getCourseNameEducationFile($courseName_id)
     {
         $coursesName = CourseName::find($courseName_id);
+        $education_files=EducationFile::with('types')->where('course_id',$coursesName->id)->get();
+        return response()->json($education_files,200);
         $types = FileTypes::with(['files' => function ($query) use ($coursesName) {
             $query->where('course_id', $coursesName->id);
         }])->get();

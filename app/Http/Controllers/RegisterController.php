@@ -326,33 +326,34 @@ public function deleteTeacher($id)
             'phone' => $request->phone,
             'education' => $request->education,
             'verification_code' => Str::random(4), // Generate a verification code
+            'device_id'=> $request->device_id
         ]);
         Mail::to($guest->email)->send(new \App\Mail\VerifyEmail($guest));
         return response()->json(['message' => 'User registered successfully. Please check your email to verify your account.'], 201);
     }
 
+    
     public function verify(Request $request)
     {
+        // Find the user by email and verification code
         $guest = Guest::where('email', $request->email)
-            ->where('verification_code', $request->verification_code)
-            ->first();
+                    ->where('verification_code', $request->verification_code)
+                    ->first();
 
+        // If the user exists, mark their email as verified and log them in
         if ($guest) {
-           
-            try {
-                $token = $token = JWTAuth::fromUser($guest);
+           // $guest->markEmailAsVerified();
+          // $guest->verification_code = null;
+            $guest->save();
 
+            // Log the user in
+          //  Auth::login($guest);
 
-                if ($token) {
-                    return response()->json(['token' => $token], 200);
-                } else {
-                    return response()->json(['message' => 'Failed to generate token.'], 500);
-                }
-            } catch (JWTException $e) {
-                return response()->json(['message' => 'Failed to generate token.'], 500);
-            }
+            // Return a success response
+            return response()->json(['message' => 'Email verified successfully.'], 200);
         }
 
+        // Return an error response
         return response()->json(['message' => 'Invalid verification code.'], 400);
     }
 

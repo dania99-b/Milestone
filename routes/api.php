@@ -219,7 +219,6 @@ Route::post('/result',[ResultConrtoller::class,'calcResult']);
 Route::post('/uploadCv',[GuestController::class,'uploadCv']);
 Route::post('/submit',[GuestController::class,'storeAnswers']);
 Route::get('/getTest',[PlacementController::class,'getTest']);
-Route::get('/getTest',[PlacementController::class,'getTest']);
 Route::get('/CheckBeforeReservation',[ReservationConrtoller::class,'CheckBeforeReservation']);
 Route::get('/MakeReservation',[ReservationConrtoller::class,'makeReservation']);
 Route::get('/get/nformation',[InformationController::class,'getInfo']);
