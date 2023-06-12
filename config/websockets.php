@@ -42,7 +42,8 @@ return [
      * `AppProvider` interface.
      */
     'app_provider' => BeyondCode\LaravelWebSockets\Apps\ConfigAppProvider::class,
-
+    'route' => env('LARAVEL_WEBSOCKETS_ROUTE', 'laravel-websockets'),
+    'default' => 'pusher',
     /*
      * This array contains the hosts of which you want to allow incoming requests.
      * Leave this empty if you want to accept requests from all hosts.

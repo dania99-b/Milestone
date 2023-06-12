@@ -42,7 +42,7 @@ class AdvertismentController extends Controller
                 event(new NotificationRecieved($student));
             }
         $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
-        Advertisment::firstOrCreate([
+        $add=Advertisment::firstOrCreate([
             'title' => $request->validated()['title'],
             'image' => $upload,
             'description' => $request->validated()['description'],
@@ -51,14 +51,14 @@ class AdvertismentController extends Controller
             'advertisment_type_id' => $request->validated()['advertisment_type_id'],
             'course_id' => $request['course_id'],
         ]);
+        // Trigger a Pusher event
+    $pusher = new Pusher(env('PUSHER_APP_KEY'), env('PUSHER_APP_SECRET'), env('PUSHER_APP_ID'), [
+        'cluster' => env('PUSHER_APP_CLUSTER'),
+        'useTLS' => true,
+    ]);
 
-          // Trigger a Pusher event
-    //$pusher = new Pusher(env('PUSHER_APP_KEY'), env('PUSHER_APP_SECRET'), env('PUSHER_APP_ID'), [
-    //    'cluster' => env('PUSHER_APP_CLUSTER'),
-     //   'useTLS' => true,
-    //]);
+    $pusher->trigger('notification', 'new-advertisement',  $add);
 
-   // $pusher->trigger('notification', 'new-advertisement', $upload);
    $user = JWTAuth::parseToken()->authenticate();
    $log = new LogFile();
    $log->user_id= $user->id;
@@ -71,11 +71,6 @@ class AdvertismentController extends Controller
         
         
         else   return response()->json(['message' => 'Advertisment added successfully'], 200);
-
-        
-    
-     
-
 
     }
 

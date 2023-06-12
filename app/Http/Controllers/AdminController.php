@@ -43,6 +43,18 @@ class AdminController extends Controller
 
         return response()->json(['message' => 'Teacher info updated successfully'], 200);
     }
+  
+    public function UploadImage(ImageRequest $request){
+        $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
+        $mainuser = Image::firstOrCreate([
+                'published_at' => $request->validated()['published_at'],
+                'is_show' =>$request->validated()['is_show'],
+                'image'=>$upload
+
+        ]);
+        return response()->json(["successfully uploaded"], 200);
+
+}
     public function updateReception(Request $request)
     {
         $receptionId = $request->input('reception_id');

@@ -24,9 +24,10 @@ class ImageRequest extends FormRequest
     public function rules()
     {
         return [
-            'file_path' => 'required|max:255',
-            'publish_date' => 'required|date_format:Y-m-d',
-            'is_appear' => 'required|max:255',
+           
+            'image' => 'required|max:255',
+            'published_at' => 'required|date_format:Y-m-d',
+            'is_show' => 'required|max:255',
             
             ];
     }
