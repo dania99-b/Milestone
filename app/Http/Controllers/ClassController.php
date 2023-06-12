@@ -62,31 +62,30 @@ class ClassController extends Controller
         return response()->json(['message' => 'Class added successfully'], 200);
     }
     
-    public function update(Request $request,$id){
-       
+    public function update(Request $request, $id)
+    {
         $class = Classs::find($id);
+        
         if (!$class) {
-            return response()->json(['message' => 'Course not found'], 400);
+            return response()->json(['message' => 'Class not found'], 404);
         }
-        if ($request->has('name')) {
-            $class->name = $request->name;
+    
+        $updateData = $request->only(['name', 'max_num', 'status', 'period_id']);
+    
+        if (!empty($updateData)) {
+            $class->fill($updateData);
             $class->save();
         }
-        if ($request->has('max_num')) {
-            $class->max_num = $request->max_num;
-            $class->save();
-        }
-        if ($request->has('status')) {
-            $class->status = $request->status;
-            $class->save();
-        }
+    
         $user = JWTAuth::parseToken()->authenticate();
         $log = new LogFile();
-        $log->user_id= $user->id;
+        $log->user_id = $user->id;
         $log->action = 'Edit Class';
         $log->save();
+    
         return response()->json(['message' => 'Class updated successfully'], 200);
     }
+    
 
     public function delete($id){
        

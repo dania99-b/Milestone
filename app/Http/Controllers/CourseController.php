@@ -162,6 +162,10 @@ class CourseController extends Controller
             $course->days = json_encode($dayIds);
             $course->save();
         }
+        if ($request->has('period_id')) {
+            $course->period_id = $request->input('period_id');
+            $course->save();
+        }
 
         $user = JWTAuth::parseToken()->authenticate();
         $log = new LogFile();

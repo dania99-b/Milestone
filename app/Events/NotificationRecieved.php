@@ -39,7 +39,7 @@ class NotificationRecieved implements ShouldBroadcast
 
     public function broadcastAs()
     {
-        return 'notification-received.' . $this->user->id;
+        return 'notification-received' ;
     }
      public function broadcastToEveryone()
     {

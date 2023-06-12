@@ -281,9 +281,6 @@ public function sendZoomNotification(Request $request)
         $array_of_userid[$i] = $user;
     }
 
-
-    // Handle the response
-
     // Send notification to each user with the "student" role
     foreach ($array_of_userid as $item) {
         $curr_user = User::find($item);
@@ -301,7 +298,7 @@ public function sendZoomNotification(Request $request)
 }
 
 public function getAttendence($course_id){
-$attendence=Attendence::where('course_id',$course_id);
+$attendence=Attendence::where('course_id',$course_id)->get();
 return response()->json($attendence,200);
 
 

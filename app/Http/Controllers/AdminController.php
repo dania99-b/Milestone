@@ -111,4 +111,16 @@ class AdminController extends Controller
         $logfile=LogFile::with("employee.user")->get();
         return response()->json( $logfile);
     }
-}
+
+    public function searchInLogFile($email){
+        $user = User::where('email', $email)->first();
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+    
+        $logFiles = LogFile::where('user_id', $user->id)->get();
+    
+        return response()->json($logFiles, 200);
+
+}}

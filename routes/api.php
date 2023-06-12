@@ -79,6 +79,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin']], function() {
     Route::delete('/delete/Hr/{id}',[RegisterController::class,'deletehr']);
     Route::get('/get/logFile',[AdminController::class,'getLogFile']);
     Route::get('/get/teacher/countRate',[StatisticController::class,'GetCountRates']);
+    Route::get('/get/userLogFile/{email}',[AdminController::class,'searchInLogFile']);
+   
     
     
     
@@ -184,6 +186,8 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['role:Teacher']], function
     Route::post('/send/ZoomNotification',[TeacherController::class,'sendZoomNotification']);
     Route::post('/get/FileById',[EducationFileController::class,'getEducationFileById']);
     Route::get('/get/Course/ById/{id}',[CourseController::class,'getCourseById']);
+    Route::get('/get/courseAttendence/{id}',[TeacherController::class,'getAttendence']);
+    
    
     
     
