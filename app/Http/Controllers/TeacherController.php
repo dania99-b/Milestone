@@ -31,6 +31,7 @@ use App\Http\Requests\HomeworkRequest;
 use App\Http\Requests\QuestionRequest;
 use App\Http\Requests\EducationFileRequest;
 use App\Http\Requests\LeaveOrResignationRequest;
+use App\Models\Attendence;
 use App\Notifications\WebSocketSuccessNotification;
 
 class TeacherController extends Controller
@@ -247,14 +248,17 @@ public function getTeacheCourse(){
 public function getActiveCourse()
 {
     $now = Carbon::now();
-    $courses = Course::with("courseName:id,name")->where('end_day', '>', $now)->get();
+    $courses = Course::with('period:id,start_hour,end_hour')->with("courseName:id,name")->where('end_day', '>', $now)->get();
 
     $courses = $courses->map(function ($course) {
         $course->name = $course->courseName->name;
         $course->days =  collect(json_decode($course->days))->map(function ($dayId) {
           return Day::find($dayId);
       });
+      $course->start_hour=$course->period->start_hour;
+      $course->end_hour=$course->period->end_hour;
         unset($course->courseName);
+        unset($course->period);
         return $course;
     });
    
@@ -296,11 +300,12 @@ public function sendZoomNotification(Request $request)
  
 }
 
-//public function getAttendence(){
-//$attendence
+public function getAttendence($course_id){
+$attendence=Attendence::where('course_id',$course_id);
+return response()->json($attendence,200);
 
 
 
 //}
 
-}
+}}
