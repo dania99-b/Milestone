@@ -4,16 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Day;
 use App\Models\User;
+use App\Models\Guest;
 use App\Models\Classs;
 use App\Models\Course;
 use App\Models\LogFile;
 use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\Employee;
+use App\Models\Reception;
 use App\Models\Course_Day;
 use Illuminate\Http\Request;
 use App\Models\Class_Schedule;
+use App\Models\GuestPlacement;
 use App\Models\Teacher_Schedule;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Requests\ClassRequest;
 use App\Http\Requests\CourseRequest;
 use Illuminate\Support\Facades\Auth;
@@ -22,9 +26,6 @@ use App\Http\Requests\AdvertismentRequest;
 use App\Http\Requests\ClassScheduleRequest;
 use Illuminate\Console\Scheduling\Schedule;
 use App\Http\Requests\TeacherScheduleRequest;
-use App\Models\Guest;
-use App\Models\GuestPlacement;
-use App\Models\Reception;
 
 class ReceptionController extends Controller
 {
@@ -62,10 +63,9 @@ class ReceptionController extends Controller
       $user->save();
     }
 
-    $user=Auth::user();
-    $employee=$user->employee;
+    $user = JWTAuth::parseToken()->authenticate();
     $log = new LogFile();
-$log->employee_id= $employee->id;
+    $log->user_id= $user->id;
 $log->action = 'Edit Student information';
 $log->save();
     return response()->json(['message' => 'Student info updated successfully'], 200);
@@ -84,10 +84,9 @@ $log->save();
         'end_time' => $request->validated()['end_time'],
 
       ]);
-      $user=Auth::user();
-    $employee=$user->employee;
-    $log = new LogFile();
-$log->employee_id= $employee->id;
+      $user = JWTAuth::parseToken()->authenticate();
+        $log = new LogFile();
+        $log->user_id= $user->id;
 $log->action = 'Create Schedule Class';
 $log->save();
       return response()->json(['message' => 'Schedule Created Successfully'], 200);
@@ -112,10 +111,9 @@ $log->save();
     if ($schedule->isDirty()) {
       $schedule->save();
     }
-    $user=Auth::user();
-    $employee=$user->employee;
+    $user = JWTAuth::parseToken()->authenticate();
     $log = new LogFile();
-$log->employee_id= $employee->id;
+    $log->user_id= $user->id;
 $log->action = 'Edit Schedule Class';
 $log->save();
 
@@ -138,10 +136,9 @@ $log->save();
       $schedule->save();
     }
 
-    $user=Auth::user();
-    $employee=$user->employee;
+    $user = JWTAuth::parseToken()->authenticate();
     $log = new LogFile();
-$log->employee_id= $employee->id;
+    $log->user_id= $user->id;
 $log->action = 'Edit Schedule Teacher';
 $log->save();
     return response()->json(['message' => 'Schedule info updated successfully'], 200);
@@ -158,10 +155,9 @@ $log->save();
     }
 
     $schedule->delete();
-    $user=Auth::user();
-    $employee=$user->employee;
+    $user = JWTAuth::parseToken()->authenticate();
     $log = new LogFile();
-$log->employee_id= $employee->id;
+    $log->user_id= $user->id;
 $log->action = 'Delete Schedule Teacher';
 $log->save();
 
@@ -179,10 +175,9 @@ $log->save();
     }
 
     $schedule->delete();
-    $user=Auth::user();
-    $employee=$user->employee;
+    $user = JWTAuth::parseToken()->authenticate();
     $log = new LogFile();
-$log->employee_id= $employee->id;
+    $log->user_id= $user->id;
 $log->action = 'Delete Schedule Class';
 $log->save();
 

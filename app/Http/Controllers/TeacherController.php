@@ -29,6 +29,7 @@ use App\Http\Requests\HomeworkRequest;
 use App\Http\Requests\QuestionRequest;
 use App\Http\Requests\EducationFileRequest;
 use App\Http\Requests\LeaveOrResignationRequest;
+use App\Models\StudentRate;
 use App\Notifications\WebSocketSuccessNotification;
 
 class TeacherController extends Controller
@@ -102,11 +103,10 @@ class TeacherController extends Controller
   if ($employee->isDirty()) {
       $employee->save();
   }
-  $user=Auth::user();
-  $employee=$user->employee;
+  $user = JWTAuth::parseToken()->authenticate();
   $log = new LogFile();
-$log->employee_id= $employee->id;
-$log->action = 'Edi Own Profile';
+  $log->user_id= $user->id;
+$log->action = 'Edit Own Profile';
 $log->save();
   return response()->json(['message' => 'Teacher info updated successfully'], 200);
 }
@@ -131,6 +131,11 @@ public function uploadHomework(HomeworkRequest $request){
          'text'=>$request->validated()['text'],
          'file'=>$filename
   ]);
+  $user = JWTAuth::parseToken()->authenticate();
+  $log = new LogFile();
+      $log->user_id = $user->id;
+      $log->action = 'Upload Homework';
+      $log->save();
 return response()->json(['message'=>'Homework Uploaded Successfully'],200);
 }
 
@@ -144,7 +149,15 @@ public function uploadLeave(LeaveOrResignationRequest $request){
               'from'=>Carbon::now(),
               'type'=>"Leave"
 
-  ]);}
+  ]);
+
+  $log = new LogFile();
+      $log->user_id = $user->id;
+      $log->action = 'Upload Leave Request';
+      $log->save();
+return response()->json(['message'=>'Leaver Request Uploaded Successfully'],200);
+
+}
 
   public function uploadResignation(LeaveOrResignationRequest $request){
     $user = JWTAuth::parseToken()->authenticate();
@@ -165,6 +178,11 @@ public function uploadLeave(LeaveOrResignationRequest $request){
 
     $Resignation=LeaveAndResignation::Create($data);
 $Resignation->save();
+$log = new LogFile();
+    $log->user_id = $user->id;
+    $log->action = 'Upload Residnation';
+    $log->save();
+return response()->json(['message'=>'Resignation Uploaded Successfully'],200);
             }
 
 
@@ -175,12 +193,17 @@ $Resignation->save();
         return response()->json(['message' => 'Class not found'], 400);
     }
     $leave->delete();
-    $user=Auth::user();
-    $employee=$user->employee;
+    $user = JWTAuth::parseToken()->authenticate();
     $log = new LogFile();
-    $log->employee_id= $employee->id;
+    $log->user_id= $user->id;
     $log->action = 'Delete Leave Or Resignation';
     $log->save();
+   
+    $log = new LogFile();
+        $log->user_id = $user->id;
+        $log->action = 'Delete Leave Or Resignation';
+        $log->save();
+
     return response()->json(['message' => 'Leave Or Resignation deleted successfully'], 200);
 }
 public function getAllLeave(){
@@ -258,10 +281,13 @@ public function sendZoomNotification(Request $request)
         event(new NotificationRecieved($curr_user));
     }
 
-
+    $user1 = JWTAuth::parseToken()->authenticate();
+    $log = new LogFile();
+        $log->user_id = $user1->id;
+        $log->action = 'Send Zoom Notification';
+        $log->save();
+  return response()->json(['message'=>'Zoom Notification Sent Successfully'],200);
  
 }
-
-
 
 }

@@ -9,10 +9,12 @@ class LogFile extends Model
 {
     use HasFactory;
     public $timestamps = true;
+    protected $table=  'log_files';
+  
     protected $fillable=[
         'id',
         'action',
-        'employee_id',
+        'user_id',
         ];
         public function employee(){
 			return $this->belongsTo(Employee::class);

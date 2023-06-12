@@ -14,13 +14,16 @@ class InformationController extends Controller
 {
     public function store(InformationRequest $request)
     {
+      $whoWeAre = substr($request->input('who_we_are'), 0, 255); // Adjust the length as per the column's current length
+;
      
             $newInfo = Information::firstOrCreate([
-                'who_we_are' => $request->validated()['who_we_are'],
+                'who_we_are' =>  $whoWeAre,
                 'contact_us' => $request->validated()['contact_us'],
                 'services' => $request->validated()['services'],
                
             ]);
+
 
         return response()->json(['data' => "Store Successfully"], 200);
     }
@@ -31,18 +34,23 @@ class InformationController extends Controller
     {
      
     $information = Information::find(1);
-    $information->fill($request->only(['who_we_are', 'contact_us', 'services']));
+    $information->fill($request->only(['who_we_are', 'contact_us', 'services','email']));
 
     if ($information->isDirty()) {
         $information->save();
     }
   
-    $user=User::find(JWTAuth::parseToken()->authenticate()->id)->id;
-   
+    $user = JWTAuth::parseToken()->authenticate();
     $log = new LogFile();
-  $log->employee_id= $user;
+    $log->user_id= $user->id;
   $log->action = 'Edit App Information';
   $log->save();
+  $user = JWTAuth::parseToken()->authenticate();
+  $log = new LogFile();
+      $log->user_id = $user->id;
+      $log->action = 'Edit Information';
+      $log->save();
+  
     return response()->json(['message' => 'info updated successfully'], 200);
   }
   public function getInfo()

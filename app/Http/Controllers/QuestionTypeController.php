@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\LogFile;
 use App\Models\QuestionType;
+use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Auth;
 
 class QuestionTypeController extends Controller
 {
@@ -18,10 +19,9 @@ class QuestionTypeController extends Controller
         $type = QuestionType::firstOrCreate([
             'name' => $request['name'],
         ]);
-        $user=Auth::user();
-        $employee=$user->employee;
+        $user = JWTAuth::parseToken()->authenticate();
         $log = new LogFile();
-        $log->employee_id= $employee->id;
+        $log->user_id= $user->id;
         $log->action = 'Add Question Type';
         $log->save();
         return response()->json(['message' => 'Question type added successfully'], 200);
@@ -37,10 +37,9 @@ class QuestionTypeController extends Controller
             $type->name = $request['name'];
         }
         $type->save();
-        $user=Auth::user();
-        $employee=$user->employee;
+        $user = JWTAuth::parseToken()->authenticate();
         $log = new LogFile();
-        $log->employee_id= $employee->id;
+        $log->user_id= $user->id;
         $log->action = 'Update question type';
         $log->save();
         return response()->json(['message' => 'Type updated successfully'], 200);

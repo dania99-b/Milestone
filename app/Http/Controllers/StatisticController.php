@@ -9,6 +9,7 @@ use App\Models\Teacher;
 use App\Models\Employee;
 use App\Models\CourseName;
 use App\Models\Reservation;
+use App\Models\StudentRate;
 use Illuminate\Http\Request;
 
 class StatisticController extends Controller
@@ -58,6 +59,36 @@ return response()->json($courses,200);
 
 }
 
+public function GetCountRates(Request $request)
+{
+    $teachers = Teacher::all();
+    $monthlyRates = [];
+
+    foreach ($teachers as $teacher) {
+        $totalRates = 0;
+        $teacherCount = 0;
+
+        $teacher_rates = StudentRate::where('teacher_id', $teacher->id)
+            ->whereBetween('created_at', [
+                Carbon::now()->startOfMonth(), 
+                Carbon::now()->endOfMonth(),   
+            ])
+            ->get();
+
+        $totalRates = $teacher_rates->sum('rate');
+        $teacherCount = $teacher_rates->count();
+        $averageRate = ($teacherCount > 0) ? $totalRates / $teacherCount : 0;
+        $convertedRate = $averageRate * 5 / 100; // Convert to a scale of 5
+
+        $monthlyRates[$teacher->id] = $convertedRate;
+    }
+
+    return response()->json(['monthlyRates' => $monthlyRates], 200);
+  }
+
 
 
 }
+
+
+

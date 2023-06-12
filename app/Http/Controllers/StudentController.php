@@ -7,11 +7,14 @@ use App\Models\User;
 use App\Models\Answer;
 use App\Models\Course;
 use App\Models\Country;
+use App\Models\LogFile;
 use App\Models\Student;
+use App\Models\Homework;
 use App\Models\Question;
 use App\Models\Attendence;
 use App\Models\StudentRate;
 use App\Models\CourseResult;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Models\StudentPlacement;
 use App\Http\Requests\RateRequest;
@@ -19,14 +22,9 @@ use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\AttendenceRequest;
-use App\Models\Homework;
-use App\Models\Notification;
 
 class StudentController extends Controller
 {
-
-
-
 
     public function storeAnswers(Request $request){
         $total_mark = 0;
@@ -54,6 +52,10 @@ class StudentController extends Controller
             
            ]);
         $store->save();
+        $log = new LogFile();
+            $log->user_id = $user->id;
+            $log->action = 'Submit Answers';
+            $log->save();
      
         return response()->json(['message' => 'Answer Submited Successfully ', 'data'=> $total_mark],200);
     }
@@ -79,7 +81,11 @@ class StudentController extends Controller
             $attendance->student_id = $student;
             $attendance->course_id = $course->id;
             $attendance->save();
-
+            $user = JWTAuth::parseToken()->authenticate();
+            $log = new LogFile();
+                $log->user_id = $user->id;
+                $log->action = 'Scan Barcode';
+                $log->save();
             return response()->json(['message' => 'Attendance recorded'], 200);
         } else {
             // The QR code is incorrect
@@ -133,6 +139,11 @@ class StudentController extends Controller
             'rate' => $request->validated()['rate'],
             'note' => $request->validated()['note'],
         ]);
+        $user = JWTAuth::parseToken()->authenticate();
+        $log = new LogFile();
+            $log->user_id = $user->id;
+            $log->action = 'Rate Teacher';
+            $log->save();
         return response()->json(['message' => 'Rate is successfully sent'], 200);
     }
     public function editProfile(Request $request)
@@ -162,7 +173,11 @@ class StudentController extends Controller
         if ($student->isDirty()) {
             $student->save();
         }
-
+        $user = JWTAuth::parseToken()->authenticate();
+        $log = new LogFile();
+            $log->user_id = $user->id;
+            $log->action = 'Edit Student Profile';
+            $log->save();
         return response()->json(['message' => 'Student info updated successfully'], 200);
     }
 

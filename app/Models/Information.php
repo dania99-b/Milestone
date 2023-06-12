@@ -14,5 +14,6 @@ class Information extends Model
         'who_we_are',
         'contact_us',
         'services',
+        'email'
         ];
 }

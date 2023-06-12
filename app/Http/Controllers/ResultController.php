@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Mark;
 use App\Models\User;
+use App\Models\LogFile;
 use App\Models\Student;
 use App\Models\CourseResult;
 use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Events\NotificationRecieved;
 use App\Http\Requests\ResultRequest;
 use App\Notifications\WebSocketSuccessNotification;
@@ -16,7 +18,7 @@ class ResultController extends Controller
     public function uploadStudentResult(ResultRequest $request)
     {
 
-        
+
         $validatedData = $request->validated();
         $studentId = $validatedData['student_id'];
         $student=Student::find($studentId)->user_id;
@@ -55,7 +57,11 @@ class ResultController extends Controller
                 'total' => $total,
                 'status' => $status
             ]);
-            
+            $user = JWTAuth::parseToken()->authenticate();
+            $log = new LogFile();
+                $log->user_id = $user->id;
+                $log->action = 'Upload Student Result';
+                $log->save();
             
             
             return response()->json([

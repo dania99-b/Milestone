@@ -6,19 +6,20 @@ use Carbon\Carbon;
 use App\Models\Day;
 use App\Models\Classs;
 use App\Models\Course;
-use App\Models\LogFile;
-use Illuminate\Http\Request;
-use App\Http\Requests\CourseRequest;
-use App\Models\Attendence;
-use App\Models\CourseAdvertisment;
-use App\Models\CourseName;
-use App\Models\EducationFile;
-use App\Models\FileTypes;
 use App\Models\Period;
+use App\Models\LogFile;
 use App\Models\Teacher;
+use App\Models\FileTypes;
+use App\Models\Attendence;
+use App\Models\CourseName;
+use Illuminate\Http\Request;
+use App\Models\EducationFile;
+use App\Models\CourseAdvertisment;
+use Illuminate\Support\Facades\DB;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Http\Requests\CourseRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\DB;
 
 class CourseController extends Controller
 {
@@ -115,7 +116,11 @@ class CourseController extends Controller
                 ]);
 
                 DB::commit();
-
+                $user = JWTAuth::parseToken()->authenticate();
+                $log = new LogFile();
+                    $log->user_id = $user->id;
+                    $log->action = 'Create Course';
+                    $log->save();
                 return response()->json($newCourse, 200);
             }
 
@@ -158,11 +163,9 @@ class CourseController extends Controller
             $course->save();
         }
 
-        $user = Auth::user();
-        $employee = $user->employee;
-
+        $user = JWTAuth::parseToken()->authenticate();
         $log = new LogFile();
-        $log->employee_id = $employee->id;
+        $log->user_id= $user->id;
         $log->action = 'Edit Course';
         $log->save();
 
@@ -176,6 +179,11 @@ class CourseController extends Controller
         $course = Course::find($id);
         if ($course) {
             $course->delete();
+            $user = JWTAuth::parseToken()->authenticate();
+            $log = new LogFile();
+                $log->user_id = $user->id;
+                $log->action = 'Delete Course';
+                $log->save();
             return response()->json(['message' => 'Course deleted successfully'], 200);
         }
         return response()->json(['message' => 'Course not found'], 400);

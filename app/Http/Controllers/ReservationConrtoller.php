@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Course;
+use App\Models\LogFile;
 use App\Models\Student;
 use App\Models\CourseName;
 use App\Models\Reservation;
@@ -21,7 +22,6 @@ class ReservationConrtoller extends Controller
 {
     public function CheckBeforeReservation( $request)
     {
-
        
         $addvertisment = Advertisment::find($request);
         $addvertisment->course_id;
@@ -103,6 +103,11 @@ class ReservationConrtoller extends Controller
                 'course_id' => $CourseId,
                 
             ])->load('student.user');
+            $user = JWTAuth::parseToken()->authenticate();
+            $log = new LogFile();
+                $log->user_id = $user->id;
+                $log->action = 'Make Reservation';
+                $log->save();
             return response()->json(['message' => 'reservation done successfully'] , 200);
         } else {
             return response()->json(['message' => 'sorry cannot make reservation!!'], 400);
@@ -133,6 +138,11 @@ class ReservationConrtoller extends Controller
                     $user->notify(new WebSocketSuccessNotification('Your Reservation Approved'));
                     event(new NotificationRecieved($user));
             $requestfind->delete();
+            $user = JWTAuth::parseToken()->authenticate();
+            $log = new LogFile();
+                $log->user_id = $user->id;
+                $log->action = 'Approve Reservation';
+                $log->save();
             return response()->json(['message' => 'Reservation Approved Successfully'], 200);
           
         } else {

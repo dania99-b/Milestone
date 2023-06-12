@@ -8,6 +8,7 @@ use App\Models\QuestionType;
 use Illuminate\Http\Request;
 use App\Http\Requests\TestRequest;
 use Illuminate\Support\Facades\DB;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Auth;
 
 class PlacementController extends Controller
@@ -29,10 +30,9 @@ class PlacementController extends Controller
             'questions' => json_encode($questions->pluck('id')),
           ]);
           
-          $user=Auth::user();
-          $employee=$user->employee;
+          $user = JWTAuth::parseToken()->authenticate();
           $log = new LogFile();
-          $log->employee_id= $employee->id;
+          $log->user_id= $user->id;
           $log->action = 'Create Test';
           $log->save();
           return response()->json(['message' => 'Test Created Successfully', $newTest], 200);

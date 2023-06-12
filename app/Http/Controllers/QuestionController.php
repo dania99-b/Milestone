@@ -7,6 +7,7 @@ use App\Models\LogFile;
 use App\Models\Question;
 use App\Models\QuestionType;
 use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\QuestionRequest;
 
@@ -36,11 +37,9 @@ class QuestionController extends Controller
           'is_true' => $answerData['is_true'],
         ]);
       }
-        $user=Auth::user();
-        $employee=$user->employee;
-   
-        $log = new LogFile();
-        $log->employee_id= $employee->id;
+      $user = JWTAuth::parseToken()->authenticate();
+      $log = new LogFile();
+      $log->user_id= $user->id;
         $log->action = 'Add new question';
         $log->save();
       return response()->json(['message' => 'Question Added Successfully'], 200);
@@ -63,10 +62,9 @@ class QuestionController extends Controller
             $question->mark = $request->mark;
             $question->save();
         }
-        $user=Auth::user();
-        $employee=$user->employee;
+        $user = JWTAuth::parseToken()->authenticate();
         $log = new LogFile();
-        $log->employee_id= $employee->id;
+        $log->user_id= $user->id;
         $log->action = 'Edit question';
         $log->save();
         return response()->json(['message' => 'Question updated successfully'], 200);
@@ -76,10 +74,9 @@ class QuestionController extends Controller
       $question = Question::find($question_id)->first();
       if ($question) {
             $question->delete();
-            $user=Auth::user();
-            $employee=$user->employee;
+            $user = JWTAuth::parseToken()->authenticate();
             $log = new LogFile();
-            $log->employee_id= $employee->id;
+            $log->user_id= $user->id;
             $log->action = 'Delete Question';
             $log->save();
             return response()->json(['message' => 'Question deleted Successfully'], 200);

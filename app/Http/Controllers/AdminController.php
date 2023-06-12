@@ -3,15 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Image;
+use App\Models\LogFile;
 use App\Models\Teacher;
 use App\Models\Employee;
 use App\Models\Reception;
+
 use Illuminate\Http\Request;
-use App\Models\Human_Resource;
-use App\Http\Requests\ImageRequest;
 use App\Models\HumanResource;
-use App\Models\Image;
-use App\Models\LogFile;
+use App\Models\Human_Resource;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Http\Requests\ImageRequest;
 
 class AdminController extends Controller
 {
@@ -32,23 +34,41 @@ class AdminController extends Controller
         if ($employee->isDirty()) {$employee->save();}
         return response()->json(['message' => 'Teacher info updated successfully'], 200);
     }
-    public function updateReception(Request $request){
+    public function updateReception(Request $request)
+    {
         $receptionId = $request->input('reception_id');
         $reception = Reception::with('employee.user')->find($receptionId);
+        
         if (!$reception) {
-            return response()->json(['message' => 'receprion not found'], 404);
+            return response()->json(['message' => 'Reception not found'], 404);
         }
+    
         $employee = $reception->employee;
         $user = $employee->user;
+    
         if ($request->hasFile('image')) {
             $image = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
             $employee->image = $image;
         }
+    
         $user->fill($request->only(['first_name', 'last_name', 'birthdate', 'email', 'phone', 'username']));
-        if ($user->isDirty()) {$user->save();}
-        if ($employee->isDirty()) {$employee->save();}
+        
+        if ($user->isDirty()) {
+            $user->save();
+        }
+    
+        if ($employee->isDirty()) {
+            $employee->save();
+        }
+        $user = JWTAuth::parseToken()->authenticate();
+        $log = new LogFile();
+        $log->user_id= $user->id;
+        $log->action = 'Edit Reception';
+        $log->save();
+    
         return response()->json(['message' => 'Reception info updated successfully'], 200);
     }
+    
     public function updateHR(Request $request){
         $hrId = $request->input('hr_id');
         $hr = HumanResource::with('employee.user')->find($hrId);
@@ -65,6 +85,11 @@ class AdminController extends Controller
         $user->fill($request->only(['first_name', 'last_name', 'birthdate', 'email', 'phone', 'username']));
         if ($user->isDirty()) {$user->save();}
         if ($employee->isDirty()) {$employee->save();}
+        $user = JWTAuth::parseToken()->authenticate();
+        $log = new LogFile();
+        $log->user_id= $user->id;
+        $log->action = 'Edit Hr';
+        $log->save();
         return response()->json(['message' => 'HR info updated successfully'], 200);
     }
     public function allHR(){

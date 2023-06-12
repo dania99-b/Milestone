@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Guest;
+use App\Models\LogFile;
 use Illuminate\Http\Request;
 use App\Events\NotificationRecieved;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\WebSocketSuccessNotification;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -58,6 +59,11 @@ class AuthController extends Controller
                 'email' => $user->email,
                 'roles' => $user_roles,
         ]);
+      
+        $log = new LogFile();
+            $log->user_id = $user->id;
+            $log->action = 'Logged In';
+            $log->save();
     }
     /**
      * Get the authenticated User.

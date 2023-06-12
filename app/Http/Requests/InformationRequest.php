@@ -24,9 +24,9 @@ class InformationRequest extends FormRequest
     public function rules()
     {
         return [
-            'who_we_are' => 'required',
-            'contact_us' => 'required',
-            'services' => 'required',
+            'who_we_are' => 'required|string|max:10000',  // Maximum of 5000 characters
+            'contact_us' => 'required|string|max:10000',  // Maximum of 5000 characters
+            'services' => 'required|string|max:10000',    // Maximum of 5000 characters
         ];
     }
 }

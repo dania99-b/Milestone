@@ -78,6 +78,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin']], function() {
     Route::delete('/delete/reception/{id}',[RegisterController::class,'deleteReception']);
     Route::delete('/delete/Hr/{id}',[RegisterController::class,'deletehr']);
     Route::get('/get/logFile',[AdminController::class,'getLogFile']);
+    Route::get('/get/teacher/countRate',[StatisticController::class,'GetCountRates']);
+    
     
     
 

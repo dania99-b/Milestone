@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\AdvertismentType;
 use App\Models\LogFile;
 use Illuminate\Http\Request;
+use App\Models\AdvertismentType;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Contracts\Providers\Auth;
 
 class AdvertismentTypeController extends Controller
 {
@@ -16,6 +18,11 @@ class AdvertismentTypeController extends Controller
         $newType = AdvertismentType::firstOrCreate([
             'name' => $request['name'],
         ]);
+        $user = JWTAuth::parseToken()->authenticate();
+        $log = new LogFile();
+            $log->user_id = $user->id;
+            $log->action = 'Create Advertisment Type';
+            $log->save();
         return response()->json(['message' => 'Type added successfully'], 200);
     }
 
@@ -29,11 +36,11 @@ class AdvertismentTypeController extends Controller
             $type->name = $request['name'];
         }
         $type->save();
-        $user=Auth::user();
-        $employee=$user->employee;
+        $user = JWTAuth::parseToken()->authenticate();
+      
         $log = new LogFile();
-        $log->employee_id= $employee->id;
-        $log->action = 'Update advertisment type';
+        $log->user_id= $user->id;
+        $log->action = 'Update advertisment Type';
         $log->save();
         return response()->json(['message' => 'Type updated successfully'], 200);
     }
@@ -44,6 +51,11 @@ class AdvertismentTypeController extends Controller
         if($type){
             $type->delete();
         }
+        $user = JWTAuth::parseToken()->authenticate();
+        $log = new LogFile();
+            $log->user_id = $user->id;
+            $log->action = 'Delete Advertisment Type';
+            $log->save();
         return response()->json(['message' => 'Advertisment type deleted successfully'], 200);
     }
 }

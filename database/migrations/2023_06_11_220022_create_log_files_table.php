@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('log_files', function (Blueprint $table) {
             $table->id();
-            $table->string('action');
-            $table->foreignId('empoloyee_id')->constrained('employees');
             $table->timestamps();
+            $table->string('action');
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
         });
     }
 

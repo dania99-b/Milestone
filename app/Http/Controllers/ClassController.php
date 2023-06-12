@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ClassRequest;
-use App\Models\ClassPeriod;
 use App\Models\Classs;
-use App\Models\LogFile;
 use App\Models\Period;
+use App\Models\LogFile;
+use App\Models\ClassPeriod;
+use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Http\Requests\ClassRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\Request;
 
 class ClassController extends Controller
 {
@@ -48,13 +49,14 @@ class ClassController extends Controller
             'period_id' => $period,
             'is_occupied'=>0
         ]);
-        $newperiod_class->save();
+      
+        
     }
         
-        $user=Auth::user();
-        $employee=$user->employee;
+    $user = JWTAuth::parseToken()->authenticate();
+       
         $log = new LogFile();
-        $log->employee_id= $employee->id;
+        $log->user_id= $user->id;
         $log->action = 'Opened a New Class';
         $log->save();
         return response()->json(['message' => 'Class added successfully'], 200);
@@ -78,10 +80,9 @@ class ClassController extends Controller
             $class->status = $request->status;
             $class->save();
         }
-        $user=Auth::user();
-        $employee=$user->employee;
+        $user = JWTAuth::parseToken()->authenticate();
         $log = new LogFile();
-        $log->employee_id= $employee->id;
+        $log->user_id= $user->id;
         $log->action = 'Edit Class';
         $log->save();
         return response()->json(['message' => 'Class updated successfully'], 200);
@@ -94,10 +95,9 @@ class ClassController extends Controller
             return response()->json(['message' => 'Class not found'], 400);
         }
         $class->delete();
-        $user=Auth::user();
-        $employee=$user->employee;
+        $user = JWTAuth::parseToken()->authenticate();
         $log = new LogFile();
-        $log->employee_id= $employee->id;
+        $log->user_id= $user->id;
         $log->action = 'Delete Class';
         $log->save();
         return response()->json(['message' => 'Class deleted successfully'], 200);

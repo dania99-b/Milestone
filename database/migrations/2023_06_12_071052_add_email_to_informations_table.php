@@ -13,7 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('log_files', function (Blueprint $table) {
+        Schema::table('information', function (Blueprint $table) {
+            $table->text('email');
+        });
     }
 
     /**
@@ -23,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('informations', function (Blueprint $table) {
+            //
+        });
     }
 };
