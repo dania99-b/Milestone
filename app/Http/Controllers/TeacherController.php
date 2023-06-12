@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use Pusher\Pusher;
+use App\Models\Day;
 use App\Models\Test;
 use App\Models\Type;
 use App\Models\User;
@@ -15,6 +16,7 @@ use App\Models\Teacher;
 use App\Models\Employee;
 use App\Models\Homework;
 use App\Models\Question;
+use App\Models\StudentRate;
 use App\Models\CourseResult;
 use App\Models\QuestionType;
 use Illuminate\Http\Request;
@@ -29,7 +31,6 @@ use App\Http\Requests\HomeworkRequest;
 use App\Http\Requests\QuestionRequest;
 use App\Http\Requests\EducationFileRequest;
 use App\Http\Requests\LeaveOrResignationRequest;
-use App\Models\StudentRate;
 use App\Notifications\WebSocketSuccessNotification;
 
 class TeacherController extends Controller
@@ -250,9 +251,14 @@ public function getActiveCourse()
 
     $courses = $courses->map(function ($course) {
         $course->name = $course->courseName->name;
+        $course->days =  collect(json_decode($course->days))->map(function ($dayId) {
+          return Day::find($dayId);
+      });
         unset($course->courseName);
         return $course;
     });
+   
+   
 
     return $courses;
 }
@@ -289,5 +295,12 @@ public function sendZoomNotification(Request $request)
   return response()->json(['message'=>'Zoom Notification Sent Successfully'],200);
  
 }
+
+//public function getAttendence(){
+//$attendence
+
+
+
+//}
 
 }

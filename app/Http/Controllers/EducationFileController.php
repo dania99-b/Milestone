@@ -58,10 +58,8 @@ class EducationFileController extends Controller
       }
       public function getEducationFile(Request $request){
         $course_name_id=$request['course_name_id'];
-        $education_files=EducationFile::where('course_id',$course_name_id)->get();
-        $education_files_type= $education_files->with('files')->get();
-       
-        return response()->json($education_files_type,200);
+        $education_files=EducationFile::with('types')->where('course_id',$course_name_id)->get();
+        return response()->json($education_files,200);
 }
 
 public function test1(Request $request){
