@@ -27,14 +27,14 @@ class NotificationRecieved implements ShouldBroadcast
 
     public $user;
 
-    public function __construct(User $user)
+    public function __construct()
     {
-        $this->user = $user;
+     
     }
 
     public function broadcastOn()
     {
-        return new PresenceChannel('notification');
+        return new Channel('notification');
     }
 
     public function broadcastAs()
