@@ -78,10 +78,12 @@ class ClassController extends Controller
             $class->save();
         }
     
-        if (!is_null($periodId)) {
-            $class->periods()->sync([$periodId]); // Sync the period_id in the pivot table
+        if ($request->has('period_id')) {
+            $periodIds = $request->input('period_id');
+            $class->periods()->sync($periodIds); // Sync the period_ids in the pivot table
+            $class->save();
         }
-    
+        
         $user = JWTAuth::parseToken()->authenticate();
         $log = new LogFile();
         $log->user_id = $user->id;

@@ -105,6 +105,13 @@ class TeacherController extends Controller
   if ($employee->isDirty()) {
       $employee->save();
   }
+  
+  if ($request->has('period_id')) {
+    $periodIds = $request->input('period_id');
+    $teacher->periods()->sync($periodIds); // Sync the period_ids in the pivot table
+    $teacher->save();
+}
+
   $user = JWTAuth::parseToken()->authenticate();
   $log = new LogFile();
   $log->user_id= $user->id;

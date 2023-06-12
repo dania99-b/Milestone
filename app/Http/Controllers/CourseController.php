@@ -162,10 +162,10 @@ class CourseController extends Controller
             $course->days = json_encode($dayIds);
             $course->save();
         }
-        if ($request->has('period_id')) {
-            $course->period_id = $request->input('period_id');
-            $course->save();
-        }
+         if ($request->has('period_id')) {
+        $course->period_id = $request->input('period_id');
+        $course->save();
+    }
 
         $user = JWTAuth::parseToken()->authenticate();
         $log = new LogFile();
@@ -232,7 +232,24 @@ class CourseController extends Controller
 
     public function getCourseById($id)
     {
-        $course=Course::where('id',$id)->get();
-        return response()->json($course,200);
+        $courses = Course::with('period:id,start_hour,end_hour')
+                        ->with("courseName:id,name")
+                        ->where('id', $id)
+                        ->get();
+    
+        $courses = $courses->map(function ($course) {
+            $course->name = $course->courseName->name;
+            $course->days = collect(json_decode($course->days))->map(function ($dayId) {
+                return Day::find($dayId);
+            });
+            $course->start_hour = $course->period->start_hour;
+            $course->end_hour = $course->period->end_hour;
+            unset($course->courseName);
+            unset($course->period);
+            return $course;
+        });
+    
+        return $courses; 
     }
+    
 }
