@@ -58,6 +58,15 @@ public function getActiveCourseNumber(){
 return response()->json($courses,200);
 
 }
+public function getActiveCourseNumberByTeacherId(){
+    $now = Carbon::now();
+    $courses = Course::where('end_day', '>', $now)->count();
+
+return response()->json($courses,200);
+
+}
+
+
 
 public function GetCountRates(Request $request)
 {

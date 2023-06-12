@@ -187,7 +187,7 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['role:Teacher']], function
     Route::post('/get/FileById',[EducationFileController::class,'getEducationFileById']);
     Route::get('/get/Course/ById/{id}',[CourseController::class,'getCourseById']);
     Route::get('/get/courseAttendence/{id}',[TeacherController::class,'getAttendence']);
-    
+    Route::get('/get/ActiveCourse/forTeacher',[TeacherController::class,'getActiveCourseByTeacherId']);
    
     
     

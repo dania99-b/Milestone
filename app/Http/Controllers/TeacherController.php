@@ -266,6 +266,20 @@ public function getActiveCourse()
 
     return $courses;
 }
+public function getActiveCourseByTeacherId()
+{
+  $user = JWTAuth::parseToken()->authenticate();
+  $employee = $user->employee;
+  $teacher=$employee->teacher;
+
+$now = Carbon::now();
+$courses = Course::where('teacher_id',$teacher->id)->where('end_day', '>', $now)->get();
+
+return response()->json($courses,200);
+
+}
+
+
 
 public function sendZoomNotification(Request $request)
 {
