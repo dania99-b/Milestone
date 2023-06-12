@@ -179,7 +179,7 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['role:Teacher']], function
     Route::post('/upload/StudentResult',[ResultController::class,'uploadStudentResult']);
     Route::post('/upload/Resignation',[TeacherController::class,'uploadResignation']);
     Route::get('/get/Requests',[TeacherController::class,'getRequest']);
-    Route::post('/get/courseStudent/{course_id}',[TeacherController::class,'getCourseStudent']);
+    Route::get('/get/courseStudent/{course_id}',[TeacherController::class,'getCourseStudent']);
     Route::get('/get/courseTeacher',[TeacherController::class,'getTeacheCourse']);
     Route::get('/get/activeCourses',[TeacherController::class,'getActiveCourse']);
     Route::get('/get/StudentResult/{student_id}',[ResultController::class,'getStudentResultById']);
