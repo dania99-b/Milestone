@@ -39,7 +39,7 @@ class DeletedImageCommand extends Command
         foreach ($images as $image) {
             DB::table('images')
                 ->where('id', $image->id)
-                ->update(['is_appear' => false]);
+                ->update(['is_show' => false]);
         }
         return Command::SUCCESS;
     }

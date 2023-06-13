@@ -129,10 +129,8 @@ Route::group(['prefix' => 'reception', 'middleware' => ['role:Reception']], func
     Route::post('/delete/LeaveOrResignation/{id}',[TeacherController::class,'deleteLeave']);
     Route::delete('/delete/EducationFile/{id}',[EducationFileController::class,'deleteEducationFile']);
     Route::post('/UploadImage',[ReceptionController::class,'UploadImage']);
-    Route::post('/EditImage',[ReceptionController::class,'EditImage']);
-    Route::delete('/DeleteImage',[ReceptionController::class,'deleteImage']);
-    
-    
+    Route::post('/EditImage/{id}',[ReceptionController::class,'EditImage']);
+    Route::delete('/DeleteImage/{id}',[ReceptionController::class,'deleteImage']);
     
 });
 

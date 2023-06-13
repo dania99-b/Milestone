@@ -78,6 +78,7 @@ class GuestController extends Controller
         $teachers = Teacher::with('employee.user')->get();
         $users = $teachers->pluck('employee.user')->map(function ($user) {
             $user->image = $user->employee->image;
+            $user->experince_years = $user->employee->teacher->experince_years;
             unset($user->employee);
             return $user;
         })->filter();

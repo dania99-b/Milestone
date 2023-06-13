@@ -148,15 +148,15 @@ if ($request->hasFile('image')) {
 
 
 if ($request->has('published_at')) {
-    $image->published_at = $request->validated()['published_at'];
+    $image->published_at = $request['published_at'];
 }
 
 
 if ($request->has('is_show')) {
-    $image->is_show = $request->validated()['is_show'];
+    $image->is_show = $request['is_show'];
 }
 if ($request->has('expired_at')) {
-    $image->expired_at = $request->validated()['expired_at'];
+    $image->expired_at = $request['expired_at'];
 }
 
 
@@ -166,12 +166,14 @@ return response()->json(["message" => "Image updated successfully"], 200);
 }
 public function deleteImage( $id)
 {
-  $image = Image::findOrFail($id);
+  $image = Image::find($id);
   if($image){
    $image->delete();
    return response()->json(['message'=>'Image Deleted Successfully'],200);
 
   }
+  else 
+  return response()->json(['message'=>'Image Not Found'],400);
 
 
 
