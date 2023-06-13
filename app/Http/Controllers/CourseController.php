@@ -18,6 +18,7 @@ use App\Models\CourseAdvertisment;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Requests\CourseRequest;
+use App\Models\CourseResult;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -181,7 +182,8 @@ class CourseController extends Controller
     {
 
         $course = Course::find($id);
-        if ($course) {
+        $course_result=CourseResult::where('course_id',$course->id)->get();
+        if ($course&& !$course_result) {
             $course->delete();
             $user = JWTAuth::parseToken()->authenticate();
             $log = new LogFile();
@@ -190,7 +192,7 @@ class CourseController extends Controller
                 $log->save();
             return response()->json(['message' => 'Course deleted successfully'], 200);
         }
-        return response()->json(['message' => 'Course not found'], 400);
+        return response()->json(['message' => 'Cant Delete This Course'], 400);
     }
     public function getAllCourseName()
     {

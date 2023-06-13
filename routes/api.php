@@ -198,10 +198,8 @@ Route::group(['prefix' => 'hr', 'middleware' => ['role:HR']], function() {
     Route::get('/get/RequestById/{id}',[HrController::class,'getRequestById']);
     Route::get('/accept/Request/{id}',[HrController::class,'approveRequest']);
     Route::post('/refuse/Request/{id}',[HrController::class,'refuseRequest']);
+    Route::get('/get/AllCv',[HrController::class,'getAllCv']);
    
-   
-    
-
 });
 
 Route::post('/register/guest',[RegisterController::class,'guestVertification']);

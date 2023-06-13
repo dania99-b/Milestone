@@ -255,10 +255,11 @@ public function getTeacheCourse(){
 public function getActiveCourse()
 {
     $now = Carbon::now();
-    $courses = Course::with('period:id,start_hour,end_hour')->with("courseName:id,name")->where('end_day', '>', $now)->get();
+    $courses = Course::with('period:id,start_hour,end_hour')->with("courseName:id,name")->with('class:id,name')->where('end_day', '>', $now)->get();
 
     $courses = $courses->map(function ($course) {
         $course->name = $course->courseName->name;
+        $course->class_name = $course->class->name;
         $course->days =  collect(json_decode($course->days))->map(function ($dayId) {
           return Day::find($dayId);
       });
@@ -266,6 +267,7 @@ public function getActiveCourse()
       $course->end_hour=$course->period->end_hour;
         unset($course->courseName);
         unset($course->period);
+        unset($course->class);
         return $course;
     });
    

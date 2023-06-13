@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cv;
 use App\Models\LogFile;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -41,5 +42,9 @@ public function refuseRequest($id,Request $body){
       $log->save();
   
   return response()->json(["message"=>"Request Refused Successfully"],200);
+}
+public function getAllCV(){
+$cv=Cv::all();
+return response()->json($cv,200);
 }
 }

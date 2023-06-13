@@ -249,7 +249,4 @@ public function getNotification()
     $notification=Notification::where('notifiable_id',$user->id)->get();
     return response()->json($notification,200);
 
-
-
-
 }}
