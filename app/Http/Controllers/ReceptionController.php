@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Day;
 use App\Models\User;
 use App\Models\Guest;
+use App\Models\Image;
 use App\Models\Classs;
 use App\Models\Course;
 use App\Models\LogFile;
@@ -19,6 +20,7 @@ use App\Models\GuestPlacement;
 use App\Models\Teacher_Schedule;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Requests\ClassRequest;
+use App\Http\Requests\ImageRequest;
 use App\Http\Requests\CourseRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -123,6 +125,54 @@ $log->save();
     
     return response()->json($days, 200);
   }
+  public function UploadImage(ImageRequest $request){
+    $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
+    $mainuser = Image::firstOrCreate([
+            'published_at' => $request->validated()['published_at'],
+            'is_show' =>$request->validated()['is_show'],
+            'image'=>$upload
 
-  
+    ]);
+    return response()->json(["successfully uploaded"], 200);
+
 }
+
+public function editImage(Request $request, $id)
+{
+$image = Image::findOrFail($id);
+
+if ($request->hasFile('image')) {
+    $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
+    $image->image = $upload;
+}
+
+
+if ($request->has('published_at')) {
+    $image->published_at = $request->validated()['published_at'];
+}
+
+
+if ($request->has('is_show')) {
+    $image->is_show = $request->validated()['is_show'];
+}
+if ($request->has('expired_at')) {
+    $image->expired_at = $request->validated()['expired_at'];
+}
+
+
+$image->save();
+
+return response()->json(["message" => "Image updated successfully"], 200);
+}
+public function deleteImage( $id)
+{
+  $image = Image::findOrFail($id);
+  if($image){
+   $image->delete();
+   return response()->json(['message'=>'Image Deleted Successfully'],200);
+
+  }
+
+
+
+}}

@@ -62,7 +62,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin']], function() {
     Route::post('/update/teacher',[AdminController::class,'updateTeacher']);
     Route::post('/update/reception',[AdminController::class,'updateReception']);
     Route::post('/update/hr',[AdminController::class,'updateHR']);
-    Route::post('/UploadImage',[AdminController::class,'UploadImage']);
+    Route::post('/UploadImage',[ReceptionController::class,'UploadImage']);
+    Route::post('/EditImage',[ReceptionController::class,'EditImage']);
     Route::post('/EditInfo',[InformationController::class,'editInfo']);
     Route::post('/Add/information',[InformationController::class,'store']);
     Route::get('/HR',[AdminController::class,'allHR']);
@@ -127,6 +128,10 @@ Route::group(['prefix' => 'reception', 'middleware' => ['role:Reception']], func
     Route::post('/upload/educationFile',[EducationFileController::class,'uploadEducationFile']);
     Route::post('/delete/LeaveOrResignation/{id}',[TeacherController::class,'deleteLeave']);
     Route::delete('/delete/EducationFile/{id}',[EducationFileController::class,'deleteEducationFile']);
+    Route::post('/UploadImage',[ReceptionController::class,'UploadImage']);
+    Route::post('/EditImage',[ReceptionController::class,'EditImage']);
+    Route::delete('/DeleteImage',[ReceptionController::class,'deleteImage']);
+    
     
     
 });

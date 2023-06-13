@@ -180,7 +180,6 @@ class CourseController extends Controller
 
     public function delete($id)
     {
-
         $course = Course::find($id);
         $course_result=CourseResult::where('course_id',$course->id)->get();
         if ($course&& !$course_result) {

@@ -87,7 +87,7 @@ class TeacherController extends Controller
     $teacher=$employee->teacher;
    
     if (!$teacher) {
-      return response()->json(['message' => 'Student not found'], 404);
+      return response()->json(['message' => 'Teacher not found'], 404);
   }
 
   if ($request->hasFile('image')) {
@@ -96,7 +96,7 @@ class TeacherController extends Controller
   }
 
   $user = $employee->user;
-  $user->fill($request->only(['first_name', 'last_name', 'birthdate', 'email', 'phone']));
+  $user->fill($request->only(['first_name', 'last_name', 'birth', 'email', 'phone','username','gender']));
 
   if ($user->isDirty()) {
       $user->save();
