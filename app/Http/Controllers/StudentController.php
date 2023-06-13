@@ -62,19 +62,15 @@ class StudentController extends Controller
 
     public function scan(AttendenceRequest $request)
     {
-
-        
         $qrCode = $request->validated()['qr_code'];
        
-      
         $student = Student::where('user_id', JWTAuth::parseToken()->authenticate()->id)->get()->first()->id;
-    
+
         $courseId =CourseResult::where('student_id',$student)->latest()->value('course_id');
        
         if($courseId){
         $course = Course::find($courseId);
         
-    
         if ($course->qr_code == $qrCode) {
            
             $attendance = new Attendence;
@@ -93,7 +89,6 @@ class StudentController extends Controller
         }}
         else   return response()->json(['message' => 'Student Not In This Course'], 400);
     }
-
 
     public function viewProfileStudent()
     {

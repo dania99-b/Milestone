@@ -232,3 +232,4 @@ Route::get('/ddd', [AstartSolutionController::class,'getPossibleSolution']);
 Route::get('/search', [SearchController::class,'search']);
 Route::get('/getPeriod', [CourseController::class,'getperiod']);
 Route::get('/te', [EducationFileController::class,'test1']);
+Route::post('/get/advertismentById',[AdvertismentController::class,'getAdvertismentById']);
