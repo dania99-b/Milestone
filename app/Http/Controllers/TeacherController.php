@@ -156,7 +156,7 @@ public function uploadLeave(LeaveOrResignationRequest $request){
             'employee_id'=>$employee->id,
               'reason'=>$request->validated()['reason'],
               'from'=>Carbon::now(),
-              'type'=>"Leave"
+              'type'=>"Resignation"
 
   ]);
 
@@ -176,7 +176,7 @@ return response()->json(['message'=>'Leaver Request Uploaded Successfully'],200)
         'reason' => $request->validated()['reason'],
         'from' => $request->validated()['from'],
         'to' => $request->validated()['to'],
-        'type' => "Resignation",
+        'type' => "Leave",
         'comment' => $request->validated()['comment']
     ];
 

@@ -1,0 +1,105 @@
+import frappe
+from frappe.model.document import Document
+
+
+class Card(Document):
+    pass
+
+
+@frappe.whitelist()
+def scan_barcode(barcode):
+    result_returned = ""
+    card_name = ""
+    cards = frappe.get_all('Card', fields=['name', 'prefix', 'suffix', 'card_title', 'priority', 'delimeter'],
+                           filters={'active': 1}, order_by='priority')
+    
+
+    for card in cards:
+
+        chopped_barcode = barcode.split(str(card.delimeter))
+        prefix_length = len(card.prefix)
+        suffix_length = len(card.suffix)
+
+        prefix_substr = barcode[:prefix_length]
+
+        suffix_substr = barcode[:-suffix_length]
+
+        if prefix_substr != card.prefix or suffix_substr != card.suffix:
+
+            continue
+        else:
+            card_name = card.name
+
+        is_castable = True
+        fields = frappe.get_all('Field', fields=['name', 'server_title', 'display_title', '`order`', 'display', 'cod'],
+                                filters={'parent': card_name, 'display': 1}, order_by='`idx`')
+        for field in fields:
+
+            if field.order > len(chopped_barcode):
+
+                is_castable = False
+                break
+
+            field_value = chopped_barcode[field.order - 1]
+
+            if field.order == 1:
+
+                field_value = field_value.strip()[prefix_length:]
+
+            if field_value and field_value.strip():
+              
+                try:
+
+                    import_frappe = 'import frappe'
+                    import_datetime = 'from datetime import datetime'
+                    additional_code = field.cod
+                    is_castable = True
+                    if bool(field.cod):
+
+                        code_with_import = import_frappe + ';' + \
+                            import_datetime + ';\n' + additional_code
+                        global_vars = {'field': field,
+                                       'field_value': field_value}
+                        local_vars = {}
+                        exec(code_with_import, global_vars, local_vars)
+
+                        result = local_vars.get('result', None)
+
+                        if result == True:
+
+                            is_castable = True
+
+                        else:
+                            is_castable = False
+
+                except ValueError:
+                    is_castable = False
+
+        if is_castable == True:
+
+            card =  card.name 
+            field_fields = ['display_title', '`order`']
+            parent_fields = ['card_title']
+
+            field_filters = {'parent': card, 'display': 1}
+            parent_filters = {'name': card}
+
+            fields_data = frappe.get_all(doctype='Field', fields=field_fields, filters=field_filters, order_by='`idx`')
+            parent_data = frappe.get_all(doctype='Card', fields=parent_fields, filters=parent_filters)
+
+            result_returned = {
+                'card_title': parent_data[0]['card_title'],
+                'fields': fields_data
+                }
+
+            break
+        else:
+
+            continue
+
+    if result_returned == "":
+        result_returned = "Invalid card"
+
+    return result_returned
+
+
