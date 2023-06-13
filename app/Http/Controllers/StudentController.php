@@ -72,7 +72,7 @@ class StudentController extends Controller
         $courseId =CourseResult::where('student_id',$student)->latest()->value('course_id');
        
         if($courseId){
-        $course = Course::find($courseId)->first();
+        $course = Course::find($courseId);
         
     
         if ($course->qr_code == $qrCode) {
