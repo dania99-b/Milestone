@@ -26,7 +26,7 @@ class EducationFileRequest extends FormRequest
         return [
         'course_id' => 'required|string|max:255',
         'file_types_id' => 'required|string|max:255',
-        'file' => 'required|mimes:mp3|max:10240',
+        'file' => 'required|max:10240',
         
         ];
     }
