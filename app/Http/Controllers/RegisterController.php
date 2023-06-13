@@ -259,7 +259,7 @@ public function deleteTeacher($id)
 
     public function getAllGuest()
     {
-        $guests = Guest::all();
+        $guests = Guest::with('tests')->get();
         return response()->json($guests, 200);
     }
     public function searchGuestByEmail($email)
@@ -298,7 +298,7 @@ public function deleteTeacher($id)
             'mark' => $guest_placement->mark, //request
             'created_at' => $guest_placement->created_at,
             'updated_at' => $guest_placement->updated_at,
-            'level' => $request['level'],
+       
 
 
         ]);

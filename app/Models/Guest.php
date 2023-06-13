@@ -33,7 +33,7 @@ class Guest extends Model implements MustVerifyEmail, JWTSubject
 
 		public function tests()
 		{
-			return $this->belongsToMany(Guest::class,'guest_placement_tests')->withPivot('mark', 'level');
+			return $this->belongsToMany(Guest::class,'guest_placement_tests')->withPivot('mark');
 		}
 	/**
 	 * Determine if the user has verified their email address.
