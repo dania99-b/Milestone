@@ -130,8 +130,8 @@ $log->save();
     $mainuser = Image::firstOrCreate([
             'published_at' => $request->validated()['published_at'],
             'is_show' =>$request->validated()['is_show'],
-            'image'=>$upload
-
+            'image'=>$upload,
+            'expired_at'=>$request->validated()['expired_at']
     ]);
     return response()->json(["successfully uploaded"], 200);
 

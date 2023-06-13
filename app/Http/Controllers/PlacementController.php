@@ -40,15 +40,11 @@ class PlacementController extends Controller
       public function getTest()
       {
           $lastTest = Test::latest()->first();
-      
           if ($lastTest && isset($lastTest->questions)) {
               $questionIds = json_decode($lastTest->questions);
-      
-              $questions = Question::with('answers')->whereIn('id', $questionIds)->paginate(2);
-      
+              $questions = Question::with('answers')->whereIn('id', $questionIds)->paginate(1);
               $lastTest->questions = $questions;
           }
-      
           return $lastTest;
       }
       

@@ -34,7 +34,7 @@ class PublishAdCommand extends Command
         $currentDateTime = Carbon::now()->addHours(3);
 
         $advertisements = DB::table('advertisments')
-        ->where('expired_at', '<=>', $currentDateTime->toDateTimeString())
+        ->where('expired_at', '>=', $currentDateTime->toDateTimeString())
         ->get();
     
         foreach ($advertisements as $advertisement) {

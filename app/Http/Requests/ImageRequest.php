@@ -28,6 +28,7 @@ class ImageRequest extends FormRequest
             'image' => 'required|max:255',
             'published_at' => 'required|date_format:Y-m-d',
             'is_show' => 'required|max:255',
+            'expired_at'=>'required|max:255',
             
             ];
     }

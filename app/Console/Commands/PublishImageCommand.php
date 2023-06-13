@@ -33,13 +33,12 @@ class PublishImageCommand extends Command
         $currentDateTime = Carbon::now()->addHours(3);
 
         $images = DB::table('images')
-        ->where('expired_at', '<=>', $currentDateTime->toDateTimeString())
+        ->where('published_at','<=', $currentDateTime->toDateTimeString())
         ->get();
-    
         foreach ($images as $image) {
             DB::table('images')
                 ->where('id', $image->id)
-                ->update(['is_appear' => true]);
+                ->update(['is_show' => true]);
         }
         return Command::SUCCESS;
     }

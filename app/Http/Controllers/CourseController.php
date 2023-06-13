@@ -177,7 +177,6 @@ class CourseController extends Controller
         return response()->json(['message' => 'Course updated successfully'], 200);
     }
 
-
     public function delete($id)
     {
         $course = Course::find($id);
