@@ -216,7 +216,7 @@ return response()->json(['message'=>'Resignation Uploaded Successfully'],200);
     return response()->json(['message' => 'Leave Or Resignation deleted successfully'], 200);
 }
 public function getAllLeave(){
-  $leaves=LeaveAndResignation::with('employee.teacher.user')->get();
+  $leaves=LeaveAndResignation::with('employee.user')->get();
   return response()->json($leaves,200);
 }
 
