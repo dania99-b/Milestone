@@ -164,7 +164,7 @@ class StudentController extends Controller
         }
 
         $user = $student->user;
-        $user->fill($request->only(['first_name', 'last_name', 'birthdate', 'email', 'phone']));
+        $user->fill($request->only(['first_name', 'last_name', 'birthdate', 'email', 'phone','username']));
 
         if ($user->isDirty()) {
             $user->save();
