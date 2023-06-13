@@ -26,7 +26,8 @@ class InformationRequest extends FormRequest
         return [
             'who_we_are' => 'required|string|max:10000',  // Maximum of 5000 characters
             'contact_us' => 'required|string|max:10000',  // Maximum of 5000 characters
-            'services' => 'required|string|max:10000',    // Maximum of 5000 characters
+            'services' => 'required|string|max:10000', 
+            'email' => 'required|string|email',    // Maximum of 5000 characters
         ];
     }
 }

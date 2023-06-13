@@ -129,7 +129,7 @@ class AdminController extends Controller
         return response()->json($receptions, 200);
     }
     public function getLogFile(){
-        $logfile=LogFile::with("user")->get();
+        $logfile=LogFile::with("user")->orderBy('created_at', 'desc')->get();
         return response()->json( $logfile);
     }
 

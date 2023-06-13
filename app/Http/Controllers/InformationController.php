@@ -21,6 +21,7 @@ class InformationController extends Controller
                 'who_we_are' =>  $whoWeAre,
                 'contact_us' => $request->validated()['contact_us'],
                 'services' => $request->validated()['services'],
+                'email' => $request->validated()['email'],
                
             ]);
 

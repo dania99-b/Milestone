@@ -87,19 +87,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin']], function() {
     
     
     
-    
-   
-    
-    
-    
 
-    
-
-    
-    
-    
-    
-    
 });
 
 Route::group(['prefix' => 'reception', 'middleware' => ['role:Reception']], function() {
@@ -162,6 +150,7 @@ Route::group(['prefix' => 'student', 'middleware' => ['role:Student']], function
     Route::get('/get/courseName',[CourseController::class,'getCourseseRequest']);
     Route::post('/get/Advertisment/ByType',[AdvertismentController::class,'getAdvertismentByType']);
     Route::post('/delete/Notification',[StudentController::class,'deleteNotification']);
+    Route::get('/get/Notification',[StudentController::class,'getNotification']);
     
 
    
@@ -196,6 +185,8 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['role:Teacher']], function
     Route::get('/get/Course/ById/{id}',[CourseController::class,'getCourseById']);
     Route::get('/get/courseAttendence/{id}',[TeacherController::class,'getAttendence']);
     Route::get('/get/ActiveCourse/forTeacher',[TeacherController::class,'getActiveCourseByTeacherId']);
+    Route::get('/get/Notification',[StudentController::class,'getNotification']);
+    
    
     
     
