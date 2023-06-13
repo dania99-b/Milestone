@@ -25,8 +25,8 @@ class CvRequest extends FormRequest
     {
         return [
             'file' => 'required|mimes:pdf|max:2048',
-            'guest_id'=>'required',
-            'advertisment_id'=>'string'
+            'device_id'=>'required',
+            'advertisment_id'=>'string|nullable'
         
         ];
     }

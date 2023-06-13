@@ -19,7 +19,7 @@ class PlacementController extends Controller
        
     
         //we can filter here with type_id
-        $questions = Question::with('answers')->orderBy(DB::raw('RAND()'))->take(3)->get();
+        $questions = Question::with('answers')->orderBy(DB::raw('RAND()'))->take(10)->get();
 
         $newTest = Test::firstOrCreate([
           'start_date' => $request->validated()['start_date'],

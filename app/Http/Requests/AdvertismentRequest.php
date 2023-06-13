@@ -27,10 +27,12 @@ class AdvertismentRequest extends FormRequest
             'title'=>'required',
             'images'=>'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'advertisment_type_id'=>'required',
-            'tips'=>'string',
+            'tips'=>'string|nullable',
             'is_shown'=>'required',
-            'description'=>'max:255' ,
-            'course_id'=>'max:255'  
+            'description'=>'max:5000' ,
+            'course_id'=>'max:255' ,
+            'published_at'=>'date',
+            'expired_at'=>'date|after:today' 
         ];
     }
 }

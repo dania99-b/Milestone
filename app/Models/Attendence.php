@@ -17,4 +17,7 @@ class Attendence extends Model
         'created_at',
    
         ];
+        public function student(){
+            return $this->belongsTo(Student::class);
+        }
 }

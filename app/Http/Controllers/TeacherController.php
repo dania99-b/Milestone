@@ -216,7 +216,7 @@ return response()->json(['message'=>'Resignation Uploaded Successfully'],200);
     return response()->json(['message' => 'Leave Or Resignation deleted successfully'], 200);
 }
 public function getAllLeave(){
-  $leaves=LeaveAndResignation::with('employee.user')->get();
+  $leaves=LeaveAndResignation::with('employee.teacher.user')->get();
   return response()->json($leaves,200);
 }
 
@@ -329,11 +329,6 @@ public function sendZoomNotification(Request $request)
 }
 
 public function getAttendence($course_id){
-$attendence=Attendence::where('course_id',$course_id)->get();
-return response()->json($attendence,200);
-
-
-
-//}
-
+  $attendence=Attendence::where('course_id',$course_id)->with('student.user')->get();
+  return response()->json($attendence,200);
 }}

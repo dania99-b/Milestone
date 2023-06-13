@@ -81,6 +81,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin']], function() {
     Route::get('/get/teacher/countRate',[StatisticController::class,'GetCountRates']);
     Route::get('/get/userLogFile/{email}',[AdminController::class,'searchInLogFile']);
     Route::post('/add/RoleToUser/{userId}/{roleId}',[AdminController::class,'addRoleToUser']);
+    Route::get('/get/role',[PermissionController::class,'roles']);
+    Route::delete('/delete/role/{id}',[PermissionController::class,'deleteRole']);
+    Route::post('/register/subAdmin',[RegisterController::class,'subAdmin']);
+    
+    
+    
     
    
     

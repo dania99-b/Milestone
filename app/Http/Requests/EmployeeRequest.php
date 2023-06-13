@@ -28,11 +28,11 @@ class EmployeeRequest extends FormRequest
         'last_name' => 'required|string|max:255',
         'email' => 'required|email|unique:users|max:255',
         'password' => 'required|string|min:6|max:255',
-        'phone' => 'required|string|max:20|unique:users',
+        'phone' => 'required|string|max:10|unique:users',
         'username'=> 'required|string|max:255|unique:users',
-        'image'=>'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        'image'=>'image|mimes:jpeg,png,jpg,gif,svg|max:2048|nullable',
         'birth'=>'date|before:today',
-        'period_id' => 'required',
+        'period_id' => 'nullable',
         ];
     }
 }

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class TeacherPeriod extends Model
 {
     use HasFactory;
+    protected $table='teacher_periods';
     public $timestamps = false;
     protected $fillable=[
         'id',

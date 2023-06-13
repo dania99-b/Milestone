@@ -140,7 +140,7 @@ class AdminController extends Controller
             return response()->json(['message' => 'User not found'], 404);
         }
     
-        $logFiles = LogFile::where('user_id', $user->id)->get();
+        $logFiles = LogFile::with('user')->where('user_id', $user->id)->get();
     
         return response()->json($logFiles, 200);
 

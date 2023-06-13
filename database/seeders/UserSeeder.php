@@ -26,7 +26,8 @@ class UserSeeder extends Seeder
                 'gender' => 'MALE',
             ],
         ]);
-        DB::table('roles')->insert([
+
+        $roles = [
             [
                 'name' => 'Admin',
                 'display_name' => 'admin',
@@ -47,31 +48,52 @@ class UserSeeder extends Seeder
                 'display_name' => 'student',
                 'description' => 'Student\'s of the Milestone institute',
             ],
-        ]);
+        ];
+
+        $adminRoleId = null;
+        $receptionRoleId = null;
+        $teacherRoleId = null;
+        $studentRoleId = null;
+
+        foreach ($roles as $role) {
+            $roleId = DB::table('roles')->insertGetId($role);
+
+            if ($role['name'] === 'Admin') {
+                $adminRoleId = $roleId;
+            } elseif ($role['name'] === 'Reception') {
+                $receptionRoleId = $roleId;
+            } elseif ($role['name'] === 'Teacher') {
+                $teacherRoleId = $roleId;
+            } elseif ($role['name'] === 'Student') {
+                $studentRoleId = $roleId;
+            }
+        }
+
         DB::table('admins')->insert([
             [
                 'user_id' => 1,
             ],
         ]);
+
         DB::table('role_user')->insert([
             [
                 'user_id' => 1,
-                'role_id' => 1,
+                'role_id' => $adminRoleId,
                 'user_type' => 'App\Models\User',
             ],
             [
                 'user_id' => 1,
-                'role_id' => 2,
+                'role_id' => $receptionRoleId,
                 'user_type' => 'App\Models\User',
             ],
             [
                 'user_id' => 1,
-                'role_id' => 3,
+                'role_id' => $teacherRoleId,
                 'user_type' => 'App\Models\User',
             ],
             [
                 'user_id' => 1,
-                'role_id' => 5,
+                'role_id' => $studentRoleId,
                 'user_type' => 'App\Models\User',
             ],
         ]);

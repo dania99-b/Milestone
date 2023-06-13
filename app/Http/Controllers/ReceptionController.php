@@ -30,6 +30,45 @@ use App\Http\Requests\TeacherScheduleRequest;
 class ReceptionController extends Controller
 {
   
+  public function editProfile(Request $request)
+  {
+    $user = JWTAuth::parseToken()->authenticate();
+    $employee = $user->employee;
+    $teacher=$employee->reciption;
+   
+    if (!$teacher) {
+      return response()->json(['message' => 'Student not found'], 404);
+  }
+
+  if ($request->hasFile('image')) {
+      $image = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
+      $employee->image = $image;
+  }
+
+  $user = $employee->user;
+  $user->fill($request->only(['first_name', 'last_name', 'birthdate', 'email', 'phone']));
+
+  if ($user->isDirty()) {
+      $user->save();
+  }
+
+  if ($employee->isDirty()) {
+      $employee->save();
+  }
+  
+  if ($request->has('period_id')) {
+    $periodIds = $request->input('period_id');
+    $teacher->periods()->sync($periodIds); // Sync the period_ids in the pivot table
+    $teacher->save();
+}
+
+  $user = JWTAuth::parseToken()->authenticate();
+  $log = new LogFile();
+  $log->user_id= $user->id;
+$log->action = 'Edit Own Profile';
+$log->save();
+  return response()->json(['message' => 'Reception info updated successfully'], 200);
+}
 
   public function EditStudentInfo(Request $request)
   {
@@ -72,117 +111,6 @@ $log->save();
   }
   
 
-  public function ScheduleClass(ClassScheduleRequest $request)
-  {
-    $ClassId = $request->validated()['class_id'];
-    $class = Classs::find($ClassId);
-    if ($class) {
-      $newSchedule = Class_Schedule::Create([
-        'class_id' => $ClassId,
-        'day' => $request->validated()['day'],
-        'start_time' => date('H:i:s', strtotime($request->validated()['start_time'])),
-        'end_time' => $request->validated()['end_time'],
-
-      ]);
-      $user = JWTAuth::parseToken()->authenticate();
-        $log = new LogFile();
-        $log->user_id= $user->id;
-$log->action = 'Create Schedule Class';
-$log->save();
-      return response()->json(['message' => 'Schedule Created Successfully'], 200);
-    }
-    return response()->json(['message' => 'Schedule Created Error'], 400);
-  }
-
-  
-  public function EditScheduleClass(Request $request)
-  {
-    $id = $request['schedule_id'];
-    $schedule = Class_Schedule::find($id);
-   
-
-    if (!$schedule) {
-      return response()->json(['message' => 'Schedule not found'], 400);
-    }
-
-
-    $schedule->fill($request->only(['day', 'start_time', 'end_time']));
-
-    if ($schedule->isDirty()) {
-      $schedule->save();
-    }
-    $user = JWTAuth::parseToken()->authenticate();
-    $log = new LogFile();
-    $log->user_id= $user->id;
-$log->action = 'Edit Schedule Class';
-$log->save();
-
-    return response()->json(['message' => 'Schedule info updated successfully'], 200);
-  }
-
-  public function EditScheduleTeacher(Request $request)
-  {
-    $id = $request['schedule_id'];
-    $schedule = Teacher_Schedule::find($id);
-
-    if (!$schedule) {
-      return response()->json(['message' => 'Schedule not found'], 400);
-    }
-
-
-    $schedule->fill($request->only(['day', 'start_time', 'end_time']));
-
-    if ($schedule->isDirty()) {
-      $schedule->save();
-    }
-
-    $user = JWTAuth::parseToken()->authenticate();
-    $log = new LogFile();
-    $log->user_id= $user->id;
-$log->action = 'Edit Schedule Teacher';
-$log->save();
-    return response()->json(['message' => 'Schedule info updated successfully'], 200);
-  }
-
-  public function deleteScheduleTeacher(Request $request)
-  {
-    $id = $request['schedule_id'];
-    $schedule = Teacher_Schedule::find($id);
-
-
-    if (!$schedule) {
-      return response()->json(['message' => 'Schedule not found'], 400);
-    }
-
-    $schedule->delete();
-    $user = JWTAuth::parseToken()->authenticate();
-    $log = new LogFile();
-    $log->user_id= $user->id;
-$log->action = 'Delete Schedule Teacher';
-$log->save();
-
-    return response()->json(['message' => 'Schedule deleted successfully'], 200);
-  }
-
-  public function deleteScheduleClass(Request $request)
-  {
-
-    $schedule = Class_Schedule::find( $request['schedule_id'])->get();
-
-
-    if (!$schedule) {
-      return response()->json(['message' => 'Schedule not found'], 400);
-    }
-
-    $schedule->delete();
-    $user = JWTAuth::parseToken()->authenticate();
-    $log = new LogFile();
-    $log->user_id= $user->id;
-$log->action = 'Delete Schedule Class';
-$log->save();
-
-    return response()->json(['message' => 'Schedule deleted successfully'], 200);
-  }
   public function list(){
   
     $receptions = Reception::with('employee.user')->get();

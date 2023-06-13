@@ -32,7 +32,7 @@ class RegisterController extends Controller
 {
     public function admin(EmployeeRequest $request)
     {
-        $upload = $request->file('images')->move('images/', $request->file('images')->getClientOriginalName());
+       // $upload = $request->file('images')->move('images/', $request->file('images')->getClientOriginalName());
         $mainuser = User::firstOrCreate([
             'first_name' => $request->validated()['first_name'],
             'last_name' => $request->validated()['last_name'],
@@ -385,4 +385,33 @@ public function deleteTeacher($id)
         }
         return response()->json(['message' => 'User not found.'], 404);
     }
-}
+    public function subAdmin(Request $request)
+     {
+        $roles = $request->input('roles');
+    $mainuser = User::firstOrCreate([
+        'first_name' => $request['first_name'],
+        'last_name' => $request['last_name'],
+        'email' => $request['email'],
+        'password' => bcrypt($request['password']),
+        'phone' => $request['phone'],
+        'username' => $request['username'],
+        'birth' => $request['birth'],
+    ]);
+    $mainemployee = Admin::firstOrCreate([
+        'user_id' => $mainuser->id,
+    ]);
+    foreach ($roles as $role) {
+        $mainuser->attachRole($role);
+    }
+    $user = JWTAuth::parseToken()->authenticate();
+    $log = new LogFile();
+        $log->user_id = $user->id;
+        $log->action = 'Register Admin';
+        $log->save();
+    return response()->json([
+        'message' => 'admin successfully registered',
+        'user' => $mainuser,
+        'token' => $mainuser->createToken('tokens')->plainTextToken
+    ], '200');
+   
+}}

@@ -50,6 +50,8 @@ class AdvertismentController extends Controller
             'is_shown' => $request->validated()['is_shown'],
             'advertisment_type_id' => $request->validated()['advertisment_type_id'],
             'course_id' => $request['course_id'],
+            'published_at' => $request['published_at'],
+            'expired_at' => $request['expired_at'],
         ]);
         // Trigger a Pusher event
    
@@ -86,7 +88,9 @@ class AdvertismentController extends Controller
         ]));
     
         if ($request->hasFile('image')) {
-            $advertisment->image = $request->file('image')->store('images');
+         
+                Storage::delete($advertisment->image);
+                $advertisment->image = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
         }
     
         $user = JWTAuth::parseToken()->authenticate();

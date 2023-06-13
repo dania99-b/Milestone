@@ -56,9 +56,11 @@ class GuestController extends Controller
 
     public function uploadCv(CvRequest $request){
         $file = $request->file('file')->move('pdf/', $request->file('file')->getClientOriginalName());
-        $guest = Guest::find($request->validated()['guest_id']);
+        $device_id= $request->validated()['device_id'];
+        $guest=Guest::where('device_id',$device_id)->get()->value('id');
+        if( $guest){
         $cvData = [
-            'guest_id' => $request->validated()['guest_id'],
+            'guest_id' =>  $guest,
             'file' => $file
         ];
         if ($request->has('advertisment_id')) {
@@ -68,6 +70,8 @@ class GuestController extends Controller
             $cv = Cv::firstOrCreate($cvData);
         }
         return response()->json(['message' => 'CV uploaded successfully'], 200);
+    }
+    else   return response()->json(['message' => 'Guest Not Found'], 400);
     }
 
     public function teachersList(){
