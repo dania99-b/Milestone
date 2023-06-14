@@ -242,7 +242,7 @@ public function getNotification()
 {
     $user = JWTAuth::parseToken()->authenticate();
     $notification=Notification::where('notifiable_id',$user->id)->get();
-    $notification->data = json_decode($notification->data);
+   
    
    
     return response()->json($notification,200);

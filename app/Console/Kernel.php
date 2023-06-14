@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Console\Scheduling\Schedule;
@@ -22,6 +23,20 @@ class Kernel extends ConsoleKernel
           //  DB::table('guests')->delete();
             DB::table('guest_question_lists')->delete();
             Log::info('Cron job finished');
+        })->everyMinute();
+
+        $schedule->call(function () {
+            $currentDateTime = Carbon::now()->addHours(3);
+    
+            $images = DB::table('images')
+                ->where('published_at', '<=', $currentDateTime->toDateTimeString())
+                ->get();
+    
+            foreach ($images as $image) {
+                DB::table('images')
+                    ->where('id', $image->id)
+                    ->update(['is_show' => true]);
+            }
         })->everyMinute();
         
         $schedule->command('ad:publish')->everyMinute();

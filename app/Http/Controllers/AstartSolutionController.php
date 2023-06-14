@@ -87,53 +87,49 @@ class AstartSolutionController extends Controller
     }
 
     public function getPossibleSolution()
-{
-    $allReservations = Reservation::pluck('course_id');
-    $courseNames = [];
-    
-    foreach ($allReservations as $reservation) {
-        $courses = Course::where('id', $reservation)->pluck('course_name_id')->toArray();
-        $courseNames = array_merge($courseNames, $courses);
-    }
+    {
+        $allreservation = Reservation::pluck('course_id');
+        foreach ($allreservation as $reservation) {
+            $courses = Course::where('id', $reservation)->get()->pluck('course_name_id');
+            $course_name = CourseName::where('id', $courses)->get();
 
-    $courseNames = array_unique($courseNames);
-    $teachers = Teacher::all();
-    $classes = classs::all();
-    $course_names = $courseNames;
-    $days = [1, 3, 5]; // Modify this array to [2, 4, 6] for 2, 4, 6 alternating days
-    $periods = Period::all();
-    $result = [];
+            $c[] = $course_name->value('id');
+            $c = array_unique($c);
+        }
 
-    foreach ($days as $day) {
-        for ($z = 0; $z < count($periods); $z++) {
-            for ($j = 0; $j < count($classes); $j++) {
-                for ($y = 0; $y < count($teachers); $y++) {
-                    for ($x = 0; $x < count($course_names); $x++) {
-                        $is_valid = $this->validSolution($course_names[$x], $classes[$j]->id, $teachers[$y]->id, $day, $periods[$z]->id);
-                        $checkPeriodDay = Solution::where('course_name_id', $course_names[$x])
-                            ->where('day_id', $day)
-                            ->first();
+        $teachers = Teacher::all();
+        $classes = classs::all();
+        $course_names = $c;
+        $days = Day::all();
+        $periods = Period::all();
+        for ($i = 0; $i < count($days); $i++) {
+            for ($z = 0; $z < count($periods); $z++) {
+                for ($j = 0; $j < count($classes); $j++) {
+                    for ($y = 0; $y < count($teachers); $y++) {
+                        for ($x = 0; $x < count($course_names); $x++) {
+                          
+                            $is_valid = $this->validSolution($course_names[$x], $classes[$j]->id, $teachers[$y]->id, $days[$i]->id, $periods[$z]->id);
+                            $check_period_day=Solution::where('course_name_id', $course_names[$x])->where('period_id',$days[$i]->id)->first();
+                            if ($is_valid == true && !$check_period_day) {
+                                $newslution =  Solution::Create([
+                                    'class_id' => $classes[$j]->id,
+                                    'teacher_id' => $teachers[$y]->id,
+                                    'period_id' => $periods[$z]->id,
+                                    'day_id' => $days[$i]->id,
+                                    'course_name_id' => $course_names[$x]
 
-                        if ($is_valid && !$checkPeriodDay) {
-                            $newSolution = Solution::create([
-                                'class_id' => $classes[$j]->id,
-                                'teacher_id' => $teachers[$y]->id,
-                                'period_id' => $periods[$z]->id,
-                                'day_id' => $day,
-                                'course_name_id' => $course_names[$x]
-                            ]);
+                                ]);
 
-                            $result[] = $newSolution;
-                            break; // Break the loop once a valid solution is found for the current day
+                                $result[] = $newslution;
+                            }
                         }
                     }
                 }
             }
         }
-    }
 
-    return $result;
-}
+        return $result;
+    }
 
 
     public function ProcessWorkDayConstraints()

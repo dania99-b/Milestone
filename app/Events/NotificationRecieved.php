@@ -34,7 +34,7 @@ class NotificationRecieved implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        return new PrivateChannel('notification');
+        return new PresenceChannel('notification');
     }
 
     public function broadcastAs()
