@@ -28,6 +28,7 @@ class InformationRequest extends FormRequest
             'contact_us' => 'required|string|max:10000',  // Maximum of 5000 characters
             'services' => 'required|string|max:10000', 
             'email' => 'required|string|email',    // Maximum of 5000 characters
+            'image'=>'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 }

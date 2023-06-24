@@ -11,10 +11,12 @@ use App\Models\Answer;
 use App\Models\Teacher;
 use App\Models\Employee;
 use App\Models\Question;
+use App\Models\StudentRate;
 use App\Models\Advertisment;
 use Illuminate\Http\Request;
 use App\Models\Question_List;
 use App\Models\GuestPlacement;
+use Illuminate\Support\Carbon;
 use App\Http\Requests\CvRequest;
 use App\Models\GuestQuestionList;
 
@@ -74,16 +76,47 @@ class GuestController extends Controller
     else   return response()->json(['message' => 'Guest Not Found'], 400);
     }
 
-    public function teachersList(){
+    public function teachersList()
+    {
         $teachers = Teacher::with('employee.user')->get();
         $users = $teachers->pluck('employee.user')->map(function ($user) {
             $user->image = $user->employee->image;
-            $user->experince_years = $user->employee->teacher->experince_years;
+            $user->experience_years = $user->employee->teacher->experience_years;
             unset($user->employee);
             return $user;
         })->filter();
-        return response()->json($users, 200);
+    
+        $monthlyRates = [];
+        foreach ($teachers as $teacher) {
+            $totalRates = 0;
+            $teacherCount = 0;
+    
+            $teacher_rates = StudentRate::where('teacher_id', $teacher->id)
+                ->whereBetween('created_at', [
+                    Carbon::now()->startOfMonth(),
+                    Carbon::now()->endOfMonth(),
+                ])
+                ->get();
+    
+            $totalRates = $teacher_rates->sum('rate');
+            $teacherCount = $teacher_rates->count();
+            $averageRate = ($teacherCount > 0) ? $totalRates / $teacherCount : 0;
+            $convertedRate = $averageRate * 5 / 100; // Convert to a scale of 5
+    
+            $monthlyRates[$teacher->id] = $convertedRate;
+        }
+    
+        $response = $teachers->map(function ($teacher) use ($monthlyRates) {
+            $user = $teacher->employee->user;
+            $user->image = $teacher->employee->image;
+            $user->experience_years = $teacher->experience_years;
+            $user->rate = $monthlyRates[$teacher->id] ?? 0;
+            return $user;
+        });
+    
+        return response()->json($response, 200);
     }
+    
 
     public function imagesList(){
         $images = Image::all();
