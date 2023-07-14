@@ -132,18 +132,19 @@ class AdvertismentController extends Controller
     public function getAdvertismentById(Request $request)
     {
         $id=$request['advertisment_id'];
-        $advertisment = Advertisment::with('course', 'course.period')->find($id);
+        $advertisment = Advertisment::find($id);
+        
         // Decode the "days" field in the Course model
-        $advertisment->course->days = collect(json_decode($advertisment->course->days))->map(function ($dayId) {
-            return Day::find($dayId);
-        });
+      //  $advertisment->course->days = collect(json_decode($advertisment->course->days))->map(function ($dayId) {
+      //      return Day::find($dayId);
+      //  });
 
-        $courseName = CourseName::find($advertisment->course->course_name_id)->latest()->value('name');
+        /*$courseName = CourseName::find($advertisment->course->course_name_id)->latest()->value('name');
         $advertisment->course->course_name = $courseName;
-        $advertisment->course->start_hour = $advertisment->course->period->start_hour;
-        $advertisment->course->end_hour = $advertisment->course->period->end_hour;
-    
-        unset($advertisment->course->period);
+         $advertisment->course->start_hour = $advertisment->course->period->start_hour;
+    $advertisment->course->end_hour = $advertisment->course->period->end_hour;
+
+    unset($advertisment->course->period);*/
         return response()->json( $advertisment, 200);
     }
     public function getAdvertismentByType(Request $request){

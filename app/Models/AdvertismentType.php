@@ -12,6 +12,7 @@ class AdvertismentType extends Model
     protected $fillable=[
         'id',
         'name',
+        'shown_for'
         ];
 
     public function advertisment(){

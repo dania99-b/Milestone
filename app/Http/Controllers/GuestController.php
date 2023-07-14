@@ -124,7 +124,12 @@ class GuestController extends Controller
     }
 
     public function advertisementsList(){
-        $ads = Advertisment::all();
-        return response()->json($ads, 200);
+        $advertisment = Advertisment::with(['advertismentType'])
+        ->whereHas('advertismentType', function ($query) {
+            $query->where('shown_for',2)
+            ->orWhere('shown_for',3);
+        })
+        ->get();
+        return response()->json($advertisment, 200);
     }
 }

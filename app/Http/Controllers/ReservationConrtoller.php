@@ -32,6 +32,7 @@ class ReservationConrtoller extends Controller
         $check = CourseResult::where('student_id', $student)->latest()->first();
        
         if ($check ) {
+         
             $after6 = $check->created_at->addMonths(6);
             $currentDate = Carbon::now();
             if($currentDate <= $after6){
@@ -74,7 +75,7 @@ class ReservationConrtoller extends Controller
             $currentDate = Carbon::now();
 
             if ($currentDate <= $after6) {
-               
+             
                 $level = $placement->level;
                 
                 if ($level) {
