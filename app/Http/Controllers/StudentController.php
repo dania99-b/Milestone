@@ -76,6 +76,7 @@ class StudentController extends Controller
             $attendance = new Attendence;
             $attendance->student_id = $student;
             $attendance->course_id = $course->id;
+    
             $attendance->save();
             $user = JWTAuth::parseToken()->authenticate();
             $log = new LogFile();

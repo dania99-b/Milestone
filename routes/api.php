@@ -1,33 +1,35 @@
 <?php
 
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\GuestController;
-use App\Http\Controllers\TeacherController;
-use App\Http\Controllers\ResultController;
-use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\ReceptionController;
-use App\Http\Controllers\StudentController;
-use App\Http\Controllers\ReservationConrtoller;
-use App\Http\Controllers\ClassController;
-use App\Http\Controllers\AdvertismentController;
-use App\Http\Controllers\AdvertismentTypeController;
-use App\Http\Controllers\AstartSolutionController;
-use App\Http\Controllers\CourseController;
-use App\Http\Controllers\EducationFileController;
-use App\Http\Controllers\FiltersController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\HrController;
-use App\Http\Controllers\InformationController;
-use App\Http\Controllers\PlacementController;
-use App\Http\Controllers\QuestionController;
-use App\Http\Controllers\QuestionTypeController;
-use App\Http\Controllers\SearchController;
-use App\Http\Controllers\StatisticController;
-use App\Http\Requests\HomeworkRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HrController;
+use App\Http\Requests\HomeworkRequest;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ClassController;
+use App\Http\Controllers\GuestController;
+use App\Http\Controllers\CourseController;
+use App\Http\Controllers\ResultController;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\FiltersController;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\PlacementController;
+use App\Http\Controllers\ReceptionController;
+use App\Http\Controllers\StatisticController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\InformationController;
+use App\Http\Controllers\ReservationConrtoller;
+use App\Http\Controllers\AdvertismentController;
+use App\Http\Controllers\QuestionTypeController;
+use App\Http\Controllers\EducationFileController;
+use App\Http\Controllers\AstartSolutionController;
+use App\Http\Controllers\AdvertismentTypeController;
+
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -233,3 +235,6 @@ Route::get('/search', [SearchController::class,'search']);
 Route::get('/getPeriod', [CourseController::class,'getperiod']);
 Route::get('/te', [EducationFileController::class,'test1']);
 Route::post('/get/advertismentById',[AdvertismentController::class,'getAdvertismentById']);
+Route::post('/sendNotification/{tokens}/{msg}/{notifyData}',[NotificationController::class, 'send']);
+Route::post('/dayByDay',[TeacherController::class,'getAttendenceCourseDayByDay']);
+

@@ -80,4 +80,7 @@ class User extends Authenticatable implements JWTSubject
     public function humanResource(){
         return $this->hasOne(HumanResource::class);
     }
+    public function fcmtokens(){
+        return $this->hasMany(fcmToken::class);
+    }
 }

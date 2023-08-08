@@ -333,4 +333,49 @@ public function sendZoomNotification(Request $request)
 public function getAttendence($course_id){
   $attendence=Attendence::where('course_id',$course_id)->with('student.user')->get();
   return response()->json($attendence,200);
-}}
+}
+public function getAttendenceCourseDayByDay(Request $request)
+{
+    $courseId = $request->input('course_id');
+    $course = Course::findOrFail($courseId);
+    $attendanceData = [];
+
+    $startDate = new \DateTime($course->start_day);
+    $endDate = new \DateTime($course->end_day);
+
+    $currentDate = clone $startDate;
+    $dayCount = 0;
+    while ($currentDate <= $endDate) {
+        if ($dayCount % 2 == 0) { // On days
+            $attendance = Attendence::where('course_id', $course->id)
+                ->whereDate('created_at', $currentDate->format('Y-m-d'))
+                ->with(['student.user:id,first_name,last_name']) // Load specific user attributes
+                ->get();
+
+            $formattedAttendance = $attendance->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'first_name' => $item->student->user->first_name,
+                    'last_name' => $item->student->user->last_name,
+                ];
+            });
+
+            $attendanceData[] = [
+                'date' => $currentDate->format('Y-m-d'),
+                'attendance' => $formattedAttendance,
+            ];
+        }
+        $dayCount++;
+
+        $currentDate->add(new \DateInterval('P1D'));
+    }
+
+    return response()->json($attendanceData);
+}
+
+
+
+
+
+
+}

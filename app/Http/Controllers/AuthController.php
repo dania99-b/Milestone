@@ -7,6 +7,7 @@ use App\Models\Guest;
 use App\Models\LogFile;
 use Illuminate\Http\Request;
 use App\Events\NotificationRecieved;
+use App\Models\fcmToken;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\Mail;
@@ -40,13 +41,17 @@ class AuthController extends Controller
      */
     public function login()
     {
-        $credentials = request(['email', 'password']);
+        $credentials = request(['email', 'password','fcm_token']);
         if (! $token = auth()->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
         $user = Auth::user();
         $user_roles = $user->roles()->pluck('name');
+        $store_fcm=new fcmToken();
+        $store_fcm=$user->id;
+        $store_fcm->fcm_token=$credentials['fcm_token'];
+        $store_fcm->save();
       //  $user->notify(new WebSocketSuccessNotification('New order placed!'));
     //   Notification::send($user, new WebSocketSuccessNotification('you are logged in'));
     
@@ -59,6 +64,9 @@ class AuthController extends Controller
                 'email' => $user->email,
                 'roles' => $user_roles,
         ]);
+       
+
+
       
         $log = new LogFile();
             $log->user_id = $user->id;
