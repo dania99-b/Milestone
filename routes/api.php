@@ -235,6 +235,6 @@ Route::get('/search', [SearchController::class,'search']);
 Route::get('/getPeriod', [CourseController::class,'getperiod']);
 Route::get('/te', [EducationFileController::class,'test1']);
 Route::post('/get/advertismentById',[AdvertismentController::class,'getAdvertismentById']);
-Route::post('/sendNotification/{tokens}/{msg}/{notifyData}',[NotificationController::class, 'send']);
+Route::post('/sendNotification',[NotificationController::class, 'send']);
 Route::post('/dayByDay',[TeacherController::class,'getAttendenceCourseDayByDay']);
 

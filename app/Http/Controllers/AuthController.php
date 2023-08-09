@@ -41,16 +41,17 @@ class AuthController extends Controller
      */
     public function login()
     {
-        $credentials = request(['email', 'password','fcm_token']);
+        $credentials = request(['email', 'password']);
+
         if (! $token = auth()->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
-
+        $fcm_token=request("fcm_token");
         $user = Auth::user();
         $user_roles = $user->roles()->pluck('name');
         $store_fcm=new fcmToken();
-        $store_fcm=$user->id;
-        $store_fcm->fcm_token=$credentials['fcm_token'];
+        $store_fcm->user_id=$user->id;
+        $store_fcm->fcm_token=$fcm_token;
         $store_fcm->save();
       //  $user->notify(new WebSocketSuccessNotification('New order placed!'));
     //   Notification::send($user, new WebSocketSuccessNotification('you are logged in'));
