@@ -26,9 +26,20 @@ class ResultController extends Controller
         print($user);
        
             // Send notification to each user with the "student" role
-         
-                $user->notify(new WebSocketSuccessNotification('New Marks Uploaded'));
-                event(new NotificationRecieved($user));
+            $notificationHelper = new NotificationController();
+            $msg = array(
+                'title' => 'Good Evening',
+                'body'  => 'New Marks Uploaded',
+            );
+            $notifyData = [
+                'title' => 'Good Evening',
+                'body'  => 'New Marks Uploaded',
+            ];
+            
+            foreach ($user->fcmtokens as $fcmtoken) {
+                $notificationHelper->send($fcmtoken->fcm_token, $msg, $notifyData);
+            }
+                
             
         
         $courseResult=CourseResult::where('student_id', $studentId)

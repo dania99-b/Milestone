@@ -130,14 +130,24 @@ class ReservationConrtoller extends Controller
                     'student_id' => $requestfind->student_id
                 ]
             );
-            $student=Student::find($requestfind->student_id)->user_id;
-            $user=User::find( $student);
-            print($user);
+            $student = Student::find($requestfind->student_id);
+            if ($student) {
+                $user = $student->user;
+                $notificationHelper = new NotificationController();
+                $msg = array(
+                    'title' => 'Welcome !! ',
+                    'body'  => 'Your Reservation Approved',
+                );
+                $notifyData = [
+                    'title' => 'Welcome !!',
+                    'body'  => 'Your Reservation Approved',
+                ];
            
-                // Send notification to each user with the "student" role
-             
-                    $user->notify(new WebSocketSuccessNotification('Your Reservation Approved'));
-                    event(new NotificationRecieved($user));
+
+                foreach ($user->fcmtokens as $fcmtoken) {
+                    $notificationHelper->send($fcmtoken->fcm_token, $msg, $notifyData);
+                }
+            }
             $requestfind->delete();
             $user = JWTAuth::parseToken()->authenticate();
             $log = new LogFile();

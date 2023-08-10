@@ -7,21 +7,22 @@ use Pusher\Pusher;
 use App\Models\Day;
 
 use App\Models\Role;
+use App\Models\User;
 use App\Models\Course;
 use App\Models\LogFile;
 use App\Models\CourseName;
 use App\Models\Advertisment;
 use App\Models\Notification;
 use Illuminate\Http\Request;
-use function PHPSTORM_META\map;
 
+use function PHPSTORM_META\map;
 use App\Models\CourseAdvertisment;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Events\NotificationRecieved;
-use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\AdvertismentRequest;
+use App\Http\Controllers\NotificationController;
 use App\Notifications\WebSocketSuccessNotification;
 
 class AdvertismentController extends Controller
@@ -35,25 +36,27 @@ class AdvertismentController extends Controller
     public function create(AdvertismentRequest $request)
     {
 
-        $students = \App\Models\Role::where('name', 'student')->first()->users->with('fcmtokens')->get();
-
-        $tokens = []; // Array to store FCM tokens of students
-    
+        $students = User::whereHas('roles', function ($query) {
+            $query->where('name', 'student');
+        })->with('fcmtokens')->get();
+        
+        $notificationHelper = new NotificationController();
+        $msg = array(
+            'title' => 'New Advertisement',
+            'body'  => 'New Advertisement',
+        );
+        $notifyData = [
+            'title' => 'New Advertisement',
+            'body'  => 'New Advertisement',
+        ];
+        
         foreach ($students as $student) {
-            // Assuming each student has an 'fcm_token' field in the database
             foreach ($student->fcmtokens as $fcmtoken) {
-                $tokens[] = $fcmtoken->fcm_token;
+               
+                $notificationHelper->send( $fcmtoken->fcm_token, $msg, $notifyData);
             }
-            $notificationHelper = new NotificationController();
-            $msg = array(
-                'title'     => 'New Addvertisment',
-                'body' => 'new Addvertisment',
-            );
-            $notifyData = [
-                'title'     => 'New Addvertisment',
-                'body' => 'New Addvertisment',
-            ];
-            $notificationHelper->send($tokens, $msg, $notifyData);
+        }
+       
         $upload = $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
         $add=Advertisment::firstOrCreate([
             'title' => $request->validated()['title'],
@@ -82,7 +85,7 @@ class AdvertismentController extends Controller
         
         else   return response()->json(['message' => 'Advertisment added successfully'], 200);
 
-        }}
+    }
 
     public function update(Request $request, $id)
     {

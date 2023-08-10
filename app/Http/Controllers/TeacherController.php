@@ -304,7 +304,7 @@ public function sendZoomNotification(Request $request)
 {
     $course_id = $request['course_id'];
     $zoom_url = $request['zoom_url'];
- 
+    $decoded_zoom_url = html_entity_decode($zoom_url);
     $student_in_this_course = CourseResult::where('course_id', $course_id)->get();
     $array_of_userid = [];
 
@@ -314,11 +314,25 @@ public function sendZoomNotification(Request $request)
         $array_of_userid[$i] = $user;
     }
 
+
     // Send notification to each user with the "student" role
     foreach ($array_of_userid as $item) {
+    
         $curr_user = User::find($item);
-        $curr_user->notify(new WebSocketSuccessNotification($zoom_url));
-        event(new NotificationRecieved($curr_user));
+        $notificationHelper = new NotificationController();
+    $msg = array(
+        "title" => "new Meeting",
+        "body" => $decoded_zoom_url,
+    );
+    $notifyData = [
+      "title" =>  "new Meeting",
+      "body"  =>  $decoded_zoom_url,
+    ];
+   
+    foreach ($curr_user->fcmtokens as $fcmtoken) {
+     
+        $notificationHelper->send($fcmtoken->fcm_token, $msg, $notifyData);
+    }
     }
 
     $user1 = JWTAuth::parseToken()->authenticate();
