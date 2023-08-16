@@ -156,6 +156,8 @@ Route::group(['prefix' => 'student', 'middleware' => ['role:Student']], function
     Route::post('/get/Advertisment/ByType',[AdvertismentController::class,'getAdvertismentByType']);
     Route::post('/delete/Notification',[StudentController::class,'deleteNotification']);
     Route::get('/get/Notification',[StudentController::class,'getNotification']);
+    Route::post('/get/MarksForSpecificCourse',[StudentController::class,'getAllMarksForSpecificCourse']);
+    
     
 
    

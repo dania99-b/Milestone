@@ -124,16 +124,18 @@ class StudentController extends Controller
 
     public function rate(RateRequest $request)
     {
-        $student = Student::where('user_id', JWTAuth::parseToken()->authenticate()->id)->get()->first()->value('id');
-        
-        $course_result=CourseResult::where('student_id',$student)->latest()->first()->value('course_id');
+        $user = JWTAuth::parseToken()->authenticate();
+        $student = $user->student;
+ 
+        $course_result=CourseResult::where('student_id',$student->id)->latest()->first()->value('course_id');
         $course_teacher=Course::where('id',$course_result)->get()->value('teacher_id');
       
         $rate = StudentRate::firstOrCreate([
-            'student_id' => $student,
+            'student_id' => $student->id,
             'teacher_id' => $course_teacher,
             'rate' => $request->validated()['rate'],
             'note' => $request->validated()['note'],
+            'course_id' => $course_result,
         ]);
         $user = JWTAuth::parseToken()->authenticate();
         $log = new LogFile();
@@ -216,7 +218,7 @@ return response()->json($course_info,200);
 public function getAllMarks(){
     $user = JWTAuth::parseToken()->authenticate();
     $student = $user->student;
-    $curr_course_id=$curr_course_id =CourseResult::where('student_id', $student->id)
+    $curr_course_id =CourseResult::where('student_id', $student->id)
     ->with(['course.courseName:id,name','mark'])
     ->select('id', 'total', 'status', 'course_id', 'student_id', 'created_at', 'updated_at')
     ->get();
@@ -230,6 +232,52 @@ $curr_course_id->transform(function ($item) {
 
 
 }
+
+public function getAllMarksForSpecificCourse(Request $request)
+{
+    $user = JWTAuth::parseToken()->authenticate();
+    $student = $user->student;
+   
+    $course_id = $request['course_id'];
+    
+    $curr_course_id = CourseResult::where('student_id', $student->id)
+        ->where('course_id', $course_id)
+        ->with(['course.courseName:id,name', 'mark'])
+        ->select('id', 'total', 'status', 'course_id', 'student_id', 'created_at', 'updated_at')
+        ->get();
+
+    $curr_course_id->transform(function ($item) {
+        $item->course_name = $item->course->courseName->name;
+        unset($item->course);
+        return $item;
+    });
+    
+    // Debug output to check if rates exist
+    $ratesExist = $this->checkIfrates($student, $course_id);
+
+    if ($ratesExist) {
+        return response()->json($curr_course_id, 200);
+    } else {
+        return response()->json(['message' => 'Cannot watch the marks before making rate'], 400);
+    }
+}
+
+public function checkIfrates($student, $course_id)
+{
+    return StudentRate::where('student_id', $student->id)
+        ->where('course_id', $course_id)
+        ->exists();
+}
+
+
+
+
+
+
+
+
+
+
 public function deleteNotification(Request $request){
     $id=$request['id'];
     $user = JWTAuth::parseToken()->authenticate();

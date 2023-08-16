@@ -16,13 +16,17 @@ class StudentRate extends Model
         'rate',
         'created_at',
         'updated_at',
-        'note'
+        'note',
+        'course_id'
         ];
 
         public function student(){
-            $this->belongsTo(Student::class);
+            return $this->belongsTo(Student::class);
         }
         public function teacher(){
-            $this->belongsTo(Teacher::class);
+           return  $this->belongsTo(Teacher::class);
+        }
+        public function course(){
+          return   $this->belongsTo(Course::class);
         }
 }
