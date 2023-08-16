@@ -213,6 +213,32 @@ class CourseController extends Controller
         }])->get();
         return response()->json($types, 200);
     }
+
+    public function getCourseNameEducationFileInTypes($courseName_id)
+    {
+        $coursesName = CourseName::find($courseName_id);
+    
+        $education_files = EducationFile::with(['types', 'types.files' => function ($query) use ($coursesName) {
+            $query->where('course_id', $coursesName->id);
+        }])
+        ->where('course_id', $coursesName->id)
+        ->get();
+    
+        // Organize the data by types and files
+        $formatted_data = $education_files->groupBy(function ($item) {
+            return $item->types->id;
+        });
+ 
+        $formatted_collection = collect([]);
+        foreach ($formatted_data as $type_id => $files) {
+            $type = $files->first()->types;
+            $type->files = $files->pluck('types.files')->collapse(); 
+            $formatted_collection->push($type);
+        }
+    
+        return response()->json($formatted_collection, 200);
+    }
+
     public function getperiod()
     {
 

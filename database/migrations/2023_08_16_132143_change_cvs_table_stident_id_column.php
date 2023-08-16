@@ -14,8 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::table('cvs', function (Blueprint $table) {
-            $table->foreignId('student_id')->nullable()->constrained('students')->cascadeOnUpdate()->change();        });
-    }
+$table->dropForeign(['student_id']);
+
+          });
+        }
 
     /**
      * Reverse the migrations.

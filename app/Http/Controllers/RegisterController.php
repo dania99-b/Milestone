@@ -307,7 +307,7 @@ public function deleteTeacher($id)
         foreach ($checkCv as $one) {
          
             $one->guest_id = null;
-            $one->student_id = $mainstudent->id; 
+            $one->student_id =  $student->id; 
             $one->save(); 
         }
 

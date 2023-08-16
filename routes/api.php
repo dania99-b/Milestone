@@ -192,6 +192,10 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['role:Teacher']], function
     Route::get('/get/ActiveCourse/forTeacher',[TeacherController::class,'getActiveCourseByTeacherId']);
     Route::get('/get/Notification',[StudentController::class,'getNotification']);
     Route::get('/get/EducationFileType',[EducationFileController::class,'getEducationFileType']);
+    Route::get('/get/EducationFileInType/{id}',[CourseController::class,'getCourseNameEducationFileInTypes']);
+
+
+    
 
     
     
