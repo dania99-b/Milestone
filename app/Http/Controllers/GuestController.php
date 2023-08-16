@@ -109,7 +109,7 @@ class GuestController extends Controller
         $response = $teachers->map(function ($teacher) use ($monthlyRates) {
             $user = $teacher->employee->user;
             $user->image = $teacher->employee->image;
-            $user->experience_years = $teacher->experience_years;
+            $user->experience_years = $teacher->experince_years;
             $user->rate = $monthlyRates[$teacher->id] ?? 0;
             return $user;
         });

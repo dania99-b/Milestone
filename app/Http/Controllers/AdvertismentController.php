@@ -42,13 +42,14 @@ class AdvertismentController extends Controller
         
         $notificationHelper = new NotificationController();
         $msg = array(
-            'title' => 'New Advertisement',
-            'body'  => 'New Advertisement',
+
+            'New Advertisement',
         );
         $notifyData = [
-            'title' => 'New Advertisement',
-            'body'  => 'New Advertisement',
+             'Check For New Addvertisment',
+           
         ];
+        
         
         foreach ($students as $student) {
             foreach ($student->fcmtokens as $fcmtoken) {

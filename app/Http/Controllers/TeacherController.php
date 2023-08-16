@@ -129,9 +129,8 @@ public function list(){
 
 public function uploadHomework(HomeworkRequest $request){
   if ($request->hasFile('file')) {
-    $file = $request->file('file');
-    $filename = $file->getClientOriginalName();
-    $file->move('files/', $filename);
+    $filename = $request->file('file')->move('files/', $request->file('file')->getClientOriginalName());
+  
 } else {
     $filename = null;
 }

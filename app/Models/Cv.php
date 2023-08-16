@@ -12,7 +12,9 @@ class Cv extends Model
         'id',
         'file',
         'guest_id',
-        'advertisment_id'
+        'advertisment_id',
+        'student_id'
+        
         ];
     public $timestamps = true;
     
@@ -21,5 +23,8 @@ class Cv extends Model
     }
     public function advertisement(){
         $this->belongsTo(Advertisment::class);
+    }
+    public function student(){
+        $this->belongsTo(Student::class);
     }
 }

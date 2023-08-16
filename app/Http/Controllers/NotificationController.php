@@ -14,9 +14,11 @@ class NotificationController extends Controller
         // payload data, it will vary according to requirement
         $data = [
             "to" =>$token,
-            "notification"     =>  [
-                'title'     => $title,
-                'body' => $body,]
+            "notification" => [
+                'title' => $title,
+                'body' => $body,
+               
+            ]
         ];
         $dataString = json_encode($data);
     

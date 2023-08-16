@@ -24,6 +24,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\StudentRequest;
 use App\Http\Requests\EmployeeRequest;
+use App\Models\Cv;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Contracts\Providers\Auth;
 use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
@@ -296,12 +297,20 @@ public function deleteTeacher($id)
             'test_id' => $guest_placement->test_id,
             'student_id' =>  $student->id,
             'mark' => $guest_placement->mark, //request
+            'level' => $request['level'], 
             'created_at' => $guest_placement->created_at,
             'updated_at' => $guest_placement->updated_at,
-       
-
-
         ]);
+
+        $checkCv = Cv::where('guest_id', $id)->get();
+
+        foreach ($checkCv as $one) {
+         
+            $one->guest_id = null;
+            $one->student_id = $mainstudent->id; 
+            $one->save(); 
+        }
+
         $guest_placement->delete();
         $guest->delete();
         $mainstudent->attachRole('Student');

@@ -191,6 +191,9 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['role:Teacher']], function
     Route::get('/get/courseAttendence/{id}',[TeacherController::class,'getAttendence']);
     Route::get('/get/ActiveCourse/forTeacher',[TeacherController::class,'getActiveCourseByTeacherId']);
     Route::get('/get/Notification',[StudentController::class,'getNotification']);
+    Route::get('/get/EducationFileType',[EducationFileController::class,'getEducationFileType']);
+
+    
     
    
     

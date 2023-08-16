@@ -75,4 +75,10 @@ return response()->json(["message"=>"file does not exist"],400);
 else 
 return response()->json($file,200);
 
+}
+public function getEducationFileType(){
+
+$fileType=FileTypes::all();
+return response()->json($fileType,200);
+
 }}
