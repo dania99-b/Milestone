@@ -290,7 +290,7 @@ return response()->json(["meassage"=>"Notification Deleted Successfully"],200);
 public function getNotification()
 {
     $user = JWTAuth::parseToken()->authenticate();
-    $notification=Notification::where('notifiable_id',$user->id)->get();
+    $notification=Notification::where('user_id',$user->id)->get();
     return response()->json($notification,200);
 
 }}

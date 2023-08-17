@@ -158,9 +158,7 @@ Route::group(['prefix' => 'student', 'middleware' => ['role:Student']], function
     Route::get('/get/Notification',[StudentController::class,'getNotification']);
     Route::post('/get/MarksForSpecificCourse',[StudentController::class,'getAllMarksForSpecificCourse']);
     
-    
 
-   
 });
 
 Route::group(['prefix' => 'teacher', 'middleware' => ['role:Teacher']], function() {

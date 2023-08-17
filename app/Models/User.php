@@ -84,4 +84,7 @@ class User extends Authenticatable implements JWTSubject
     public function fcmtokens(){
         return $this->hasMany(fcmToken::class);
     }
+    public function notifications(){
+        return $this->hasMany(Notification::class);
+    }
 }

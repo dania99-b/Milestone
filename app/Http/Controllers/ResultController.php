@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Events\NotificationRecieved;
 use App\Http\Requests\ResultRequest;
+use App\Models\Notification;
 use App\Notifications\WebSocketSuccessNotification;
 
 class ResultController extends Controller
@@ -23,8 +24,7 @@ class ResultController extends Controller
         $studentId = $validatedData['student_id'];
         $student=Student::find($studentId)->user_id;
         $user=User::find( $student);
-        print($user);
-       
+      
             // Send notification to each user with the "student" role
             $notificationHelper = new NotificationController();
             $msg = array(
@@ -39,6 +39,11 @@ class ResultController extends Controller
             foreach ($user->fcmtokens as $fcmtoken) {
                 $notificationHelper->send($fcmtoken->fcm_token, $msg, $notifyData);
             }
+            $notification = new Notification();
+            $notification->user_id = $user->id;
+            $notification->title = implode(', ', $msg);
+            $notification->body = implode(', ', $notifyData);
+            $notification->save();
                 
             
         

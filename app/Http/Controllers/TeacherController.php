@@ -32,6 +32,7 @@ use App\Http\Requests\QuestionRequest;
 use App\Http\Requests\EducationFileRequest;
 use App\Http\Requests\LeaveOrResignationRequest;
 use App\Models\Attendence;
+use App\Models\Notification;
 use App\Notifications\WebSocketSuccessNotification;
 
 class TeacherController extends Controller
@@ -332,6 +333,11 @@ public function sendZoomNotification(Request $request)
      
         $notificationHelper->send($fcmtoken->fcm_token, $msg, $notifyData);
     }
+    $notification = new Notification();
+    $notification->user_id =$curr_user->id;
+    $notification->title = implode(', ', $msg);
+    $notification->body = implode(', ', $notifyData);
+    $notification->save();
     }
 
     $user1 = JWTAuth::parseToken()->authenticate();

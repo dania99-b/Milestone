@@ -16,6 +16,7 @@ use App\Models\CourseAdvertisment;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Events\NotificationRecieved;
 use App\Http\Requests\CourseRequest;
+use App\Models\Notification;
 use App\Notifications\WebSocketSuccessNotification;
 
 class ReservationConrtoller extends Controller
@@ -147,6 +148,11 @@ class ReservationConrtoller extends Controller
                 foreach ($user->fcmtokens as $fcmtoken) {
                     $notificationHelper->send($fcmtoken->fcm_token, $msg, $notifyData);
                 }
+                $notification = new Notification();
+                $notification->user_id = $user->id;
+                $notification->title = implode(', ', $msg);
+                $notification->body = implode(', ', $notifyData);
+                $notification->save();
             }
             $requestfind->delete();
             $user = JWTAuth::parseToken()->authenticate();
