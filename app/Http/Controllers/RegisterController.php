@@ -28,6 +28,7 @@ use App\Models\Cv;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Contracts\Providers\Auth;
 use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
+use Exception;
 
 class RegisterController extends Controller
 {
@@ -328,18 +329,27 @@ public function deleteTeacher($id)
 
     public function guestVertification(Request $request)
     {
+        $existingGuest = Guest::where('email', $request->email)->first();
+    
+        if ($existingGuest) {
+            return response()->json(['message' => 'Email is already registered.'], 400);
+        }
+    
         $guest = Guest::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
             'phone' => $request->phone,
             'education' => $request->education,
-            'verification_code' => Str::random(4), // Generate a verification code
+            'verification_code' => Str::random(4), 
             'device_id'=> $request->device_id
         ]);
+    
         Mail::to($guest->email)->send(new \App\Mail\VerifyEmail($guest));
         return response()->json(['message' => 'User registered successfully. Please check your email to verify your account.'], 201);
     }
+    
+    
 
     
     public function verify(Request $request)

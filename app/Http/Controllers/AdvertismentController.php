@@ -55,9 +55,7 @@ class AdvertismentController extends Controller
             foreach ($student->fcmtokens as $fcmtoken) {
           
                 $notificationHelper->send( $fcmtoken->fcm_token, $msg, $notifyData);
-              
-               
-    
+            
             }
             $notification = new Notification();
             $notification->user_id = $student->id;
