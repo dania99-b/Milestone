@@ -157,6 +157,9 @@ Route::group(['prefix' => 'student', 'middleware' => ['role:Student']], function
     Route::post('/delete/Notification',[StudentController::class,'deleteNotification']);
     Route::get('/get/Notification',[StudentController::class,'getNotification']);
     Route::post('/get/MarksForSpecificCourse',[StudentController::class,'getAllMarksForSpecificCourse']);
+    Route::post('/uploadCv',[StudentController::class,'uploadCv']);
+    Route::get('/advertisements',[StudentController::class,'advertisementsList']);
+    
     
 
 });

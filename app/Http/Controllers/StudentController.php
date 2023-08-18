@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cv;
 use App\Models\Day;
 use App\Models\User;
 use App\Models\Answer;
@@ -13,9 +14,11 @@ use App\Models\Homework;
 use App\Models\Question;
 use App\Models\Attendence;
 use App\Models\StudentRate;
+use App\Models\Advertisment;
 use App\Models\CourseResult;
 use App\Models\Notification;
 use Illuminate\Http\Request;
+use App\Http\Requests\CvRequest;
 use App\Models\StudentPlacement;
 use App\Http\Requests\RateRequest;
 use Illuminate\Support\Facades\DB;
@@ -127,7 +130,8 @@ class StudentController extends Controller
         $user = JWTAuth::parseToken()->authenticate();
         $student = $user->student;
  
-        $course_result=CourseResult::where('student_id',$student->id)->latest()->first()->value('course_id');
+        $course_result=CourseResult::where('student_id',$student->id)->latest()->value('course_id');
+        
         $course_teacher=Course::where('id',$course_result)->get()->value('teacher_id');
       
         $rate = StudentRate::firstOrCreate([
@@ -293,4 +297,38 @@ public function getNotification()
     $notification=Notification::where('user_id',$user->id)->get();
     return response()->json($notification,200);
 
-}}
+}
+
+public function uploadCv(Request $request){
+    $file = $request->file('file')->move('pdf/', $request->file('file')->getClientOriginalName());
+    $user = JWTAuth::parseToken()->authenticate();
+    $student = $user->student;
+    if( $student){
+    $cvData = [
+        'student_id' =>  $student->id,
+        'file' => $file
+    ];
+    if ($request->has('advertisment_id')) {
+        $cvData['advertisment_id'] = $request['advertisment_id'];
+    }
+    if ($student) {
+        $cv = Cv::firstOrCreate($cvData);
+    }
+    return response()->json(['message' => 'CV uploaded successfully'], 200);
+}
+else   return response()->json(['message' => 'Guest Not Found'], 400);
+}
+public function advertisementsList(){
+    $advertisment = Advertisment::with(['advertismentType'])
+    ->whereHas('advertismentType', function ($query) {
+        $query->where('shown_for',2)
+        ->orWhere('shown_for',3)
+        ->orWhere('shown_for',4)
+        ->orWhere('shown_for',1);
+    })
+    ->get();
+    return response()->json($advertisment, 200);
+}
+
+
+}

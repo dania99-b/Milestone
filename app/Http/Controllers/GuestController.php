@@ -128,6 +128,7 @@ class GuestController extends Controller
         ->whereHas('advertismentType', function ($query) {
             $query->where('shown_for',2)
             ->orWhere('shown_for',3);
+           
         })
         ->get();
         return response()->json($advertisment, 200);
