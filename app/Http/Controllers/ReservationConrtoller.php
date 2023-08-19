@@ -135,18 +135,22 @@ class ReservationConrtoller extends Controller
             if ($student) {
                 $user = $student->user;
                 $notificationHelper = new NotificationController();
-                $msg = array(
-                    'title' => 'Welcome !! ',
-                    'body'  => 'Your Reservation Approved',
-                );
+                $title = 'Welcome !!';
+                $body = 'Your Reservation has been Approved.';
+            
+                $msg = [
+                    'title' => $title,
+                    'body' => $body,
+                ];
+            
                 $notifyData = [
-                    'title' => 'Welcome !!',
-                    'body'  => 'Your Reservation Approved',
+                    'title' => $title,
+                    'body' => $body,
                 ];
            
 
                 foreach ($user->fcmtokens as $fcmtoken) {
-                    $notificationHelper->send($fcmtoken->fcm_token, $msg, $notifyData);
+                    $notificationHelper->send($fcmtoken->fcm_token, $title, $body);
                 }
                 $notification = new Notification();
                 $notification->user_id = $user->id;
