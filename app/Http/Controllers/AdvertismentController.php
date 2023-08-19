@@ -42,7 +42,7 @@ class AdvertismentController extends Controller
        
         $notificationHelper = new NotificationController();
         $title = 'Welcome !!';
-        $body = 'Yourc have New Advertisement.';
+        $body = 'Your have New Advertisement.';
     
         $msg = [
             'title' => $title,
@@ -167,7 +167,7 @@ class AdvertismentController extends Controller
             return Day::find($dayId);
         });
 
-       $courseName = CourseName::find($advertisment->course->course_name_id)->value('name');
+       $courseName = CourseName::find($advertisment->course->course_name_id)->name;
         $advertisment->course->course_name = $courseName;
          $advertisment->course->start_hour = $advertisment->course->period->start_hour;
     $advertisment->course->end_hour = $advertisment->course->period->end_hour;

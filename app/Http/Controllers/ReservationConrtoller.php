@@ -138,24 +138,15 @@ class ReservationConrtoller extends Controller
                 $title = 'Welcome !!';
                 $body = 'Your Reservation has been Approved.';
             
-                $msg = [
-                    'title' => $title,
-                    'body' => $body,
-                ];
-            
-                $notifyData = [
-                    'title' => $title,
-                    'body' => $body,
-                ];
-           
+               
 
                 foreach ($user->fcmtokens as $fcmtoken) {
                     $notificationHelper->send($fcmtoken->fcm_token, $title, $body);
                 }
                 $notification = new Notification();
                 $notification->user_id = $user->id;
-                $notification->title = implode(', ', $msg);
-                $notification->body = implode(', ', $notifyData);
+                $notification->title =  $title;
+                $notification->body = $title;
                 $notification->save();
             }
             $requestfind->delete();
